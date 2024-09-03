@@ -1,5 +1,6 @@
 package com.fdmgroup.forex.repos;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,5 @@ import com.fdmgroup.forex.models.User;
  */
 @Repository
 public interface UserRepo extends JpaRepository<User, UUID> {
+	Optional<User> findByUsername(String username);
 }
