@@ -24,10 +24,4 @@ public class CurrencyService {
             new RecordNotFoundException("Currency with id '" + id + "'' not found"));
     }
 
-    public Currency findByCurrencyName(String currencyName) throws RecordNotFoundException {
-        Optional<Currency> currencyOptional = currencyRepo.findByCurrencyName(currencyName);
-        return currencyOptional.orElseThrow(() -> 
-            new RecordNotFoundException("Currency with name '" + currencyName + "'' not found"));
-    }
-
 }
