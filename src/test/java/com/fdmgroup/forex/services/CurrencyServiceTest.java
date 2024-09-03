@@ -3,6 +3,8 @@ package com.fdmgroup.forex.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +42,20 @@ public class CurrencyServiceTest {
     @Test
     void testCurrencyServiceInitialization() {
         verify(currencyRepo, times(0)).save(null);
+    }
+
+    @Test
+    void testFindAllCurrencies() {
+        List<Currency> currencies = Arrays.asList(
+            new Currency("JPY", "Japanese Yen"),
+            new Currency("EUR", "Euros")
+        );
+        when(currencyRepo.findAll()).thenReturn(currencies);
+        List<Currency> foundCurrencies = currencyService.findAllCurrencies();
+
+        assertNotNull(foundCurrencies, "List of currencies should not be empty");
+        assertEquals(2, foundCurrencies.size(), "Number of currencies should match");
+        verify(currencyRepo, times(1)).findAll();
     }
 
     @Test
