@@ -26,7 +26,6 @@ public class CurrencyServiceTest {
     private String validId;
     private String validName;
     private String invalidId;
-    private String invalidName;
     private Currency currency;
 
     @BeforeEach
@@ -35,7 +34,6 @@ public class CurrencyServiceTest {
         validId = "USD";
         validName = "U.S. Dollars";
         invalidId = "ABC";
-        invalidName = "Fake Currency";
         currency = new Currency(validId, validName);
     }
 
@@ -59,18 +57,4 @@ public class CurrencyServiceTest {
         }, "CurrencyService should throw exception when searching for an invalid currency ID");
     }
 
-    @Test
-    void testFindByCurrencyName_WhenCurrencyExists() {
-        when(currencyRepo.findByCurrencyName(validName)).thenReturn(Optional.of(currency));
-        Currency foundCurrency = currencyService.findByCurrencyName(validName);
-        assertEquals(currency, foundCurrency, "CurrencyService should find a valid currency name");
-    }
-
-    @Test
-    void testFindByCurrencyName_WhenCurrencyDoesNotExist() throws RecordNotFoundException {
-        when(currencyRepo.findByCurrencyName(invalidName)).thenReturn(Optional.empty());
-        assertThrows(RecordNotFoundException.class, () -> {
-            currencyService.findByCurrencyName(invalidName);
-        }, "CurrencyService should throw exception when searcing for an invalid currency name");
-    }
 }

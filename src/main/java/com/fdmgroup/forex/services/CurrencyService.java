@@ -1,5 +1,6 @@
 package com.fdmgroup.forex.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +17,10 @@ public class CurrencyService {
     public CurrencyService(CurrencyRepo currencyRepo) {
         super();
         this.currencyRepo = currencyRepo;
+    }
+
+    public List<Currency> findAllCurrencies() {
+        return currencyRepo.findAll();
     }
 
     public Currency findById(String id) throws RecordNotFoundException {
