@@ -1,6 +1,10 @@
 package com.fdmgroup.forex.models;
 
+import java.util.Date;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /**
  * Model a user account on the Forex platform
@@ -35,11 +41,22 @@ public class User {
 
 	private String bankAccount;
 
-	public User() {
-	}
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
+
+	@Column(nullable = false, updatable = false)
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createdDate;
+
+	@Column(nullable = false, updatable = false)
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date modifiedDate;
 
 	public User(UUID id, String username, String email, String password, Currency preferredCurrency,
-			String bankAccount) {
+			String bankAccount, Role role) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
@@ -94,6 +111,30 @@ public class User {
 
 	public void setBankAccount(String bankAccount) {
 		this.bankAccount = bankAccount;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 
 }
