@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.fdmgroup.forex.enums.TransferType;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class FundTransfer {
@@ -18,24 +19,25 @@ public class FundTransfer {
 	@Column(nullable = false)
 	private Currency currency;
 	@Column(nullable = false)
+	@Positive(message = "Amount must be positive")
 	private double amount;
 	@Column(nullable = false)
 	private TransferType transferType;
 	@Column(nullable = false)
 	private Date transferDate;
 	@ManyToOne()
-	@JoinColumn(name = "FK_User_ID")
+	@JoinColumn(name = "FK_Portfolio_ID")
 	@Column(nullable = false)
-	private User user;
+	private Portfolio portfolio;
 	
 	public FundTransfer() {}	
 	
-	public FundTransfer(Currency currency, double amount, TransferType transferType, Date transferDate, User user) {
+	public FundTransfer(Currency currency, double amount, TransferType transferType, Date transferDate, Portfolio portfolio) {
 		this.currency = currency;
 		this.amount = amount;
 		this.transferType = transferType;
 		this.transferDate = transferDate;
-		this.user = user;
+		this.portfolio = portfolio;
 	}
 
 	public UUID getId() {
@@ -68,11 +70,11 @@ public class FundTransfer {
 	public void setTransferDate(Date transferDate) {
 		this.transferDate = transferDate;
 	}
-	public User getUser() {
-		return user;
+	public Portfolio getPortfolio() {
+		return portfolio;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setPortfolio(Portfolio portfolio) {
+		this.portfolio = portfolio;
 	}
 	
 	
