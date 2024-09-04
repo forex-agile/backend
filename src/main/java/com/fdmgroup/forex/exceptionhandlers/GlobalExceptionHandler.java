@@ -10,6 +10,13 @@ import com.fdmgroup.forex.exceptions.InternalServerErrorException;
 import com.fdmgroup.forex.exceptions.ResourceConflictException;
 import com.fdmgroup.forex.response.ResourceConflictResponse;
 
+/**
+ * Class for defining responses for different thrown exceptions.
+ *
+ * Apart from building custom responses, this class is needed because OAuth
+ * Resource Server filter chain will turn all responses to every failed request
+ * into 401 unauthorized.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
