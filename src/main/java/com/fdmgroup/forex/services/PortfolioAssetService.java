@@ -16,13 +16,13 @@ public class PortfolioAssetService {
         this.portfolioAssetRepo = portfolioAssetRepo;
     }
 
-    public PortfolioAsset findById(UUID id) throws RecordNotFoundException {
+    public PortfolioAsset findPortfolioAssetById(UUID id) throws RecordNotFoundException {
         Optional<PortfolioAsset> portfolioAssetOptional = portfolioAssetRepo.findById(id);
         return portfolioAssetOptional.orElseThrow(() -> 
-            new RecordNotFoundException("portfolio asset with ID '" + id + "'' not found"));
+            new RecordNotFoundException("Portfolio asset with ID '" + id + "'' not found"));
     }
 
-    public List<PortfolioAsset> findByPortfolioId(UUID id) throws RecordNotFoundException {
+    public List<PortfolioAsset> findPortfolioAssetByPortfolioId(UUID id) throws RecordNotFoundException {
         List<PortfolioAsset> portfolioAssets = portfolioAssetRepo.findByPortfolio_Id(id);
         return portfolioAssets;
     }

@@ -20,11 +20,11 @@ public class PortfolioAsset {
     private UUID id;
 
     @ManyToOne()
-    @JoinColumn(name = "FK_Portfolio_ID")
+    @JoinColumn(name = "FK_Portfolio_ID", nullable = false)
     private Portfolio portfolio;
 
     @ManyToMany()
-    @JoinColumn(name = "FK_Currency_Code")
+    @JoinColumn(name = "FK_Currency_Code", nullable = false)
     private Currency currency;
 
     private double balance;
@@ -32,7 +32,6 @@ public class PortfolioAsset {
     public PortfolioAsset() {}
 
     public PortfolioAsset(Portfolio portfolio, Currency currency, double balance) {
-        super();
         this.portfolio = portfolio;
         this.currency = currency;
         this.balance = balance;
@@ -52,16 +51,20 @@ public class PortfolioAsset {
         return portfolio;
     }
 
-    public void setPortfolio(Portfolio portfolio) {
-        this.portfolio = portfolio;
+    public void setPortfolio(Portfolio newPortfolio) {
+        if (newPortfolio != null) {
+            this.portfolio = newPortfolio;
+        }
     }
 
     public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setCurrency(Currency newCurrency) {
+        if (newCurrency != null) {
+            this.currency = newCurrency;
+        }
     }
 
     public double getBalance() {
