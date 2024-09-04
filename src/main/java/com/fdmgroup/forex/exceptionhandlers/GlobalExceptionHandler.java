@@ -1,13 +1,19 @@
 package com.fdmgroup.forex.exceptionhandlers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fdmgroup.forex.exceptions.InternalServerErrorException;
 import com.fdmgroup.forex.exceptions.ResourceConflictException;
+import com.fdmgroup.forex.response.ErrorResponse;
 import com.fdmgroup.forex.response.ResourceConflictResponse;
 
 /**
@@ -34,15 +40,21 @@ public class GlobalExceptionHandler {
 	}
 
 	/**
-	 * Throws a 400 Bad Request with empty body if a request body doesn't
-	 * pass @Valid validation
-	 *
-	 * Empty body because message may expose sensitive info about the backend
-	 * architecture
+	 * Throws a 400 Bad Request if a request body doesn't pass @Valid validation
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		BindingResult result = ex.getBindingResult();
+		List<ObjectError> errors = result.getAllErrors();
+
+		String errorMessage = errors.stream()
+				.map(ObjectError::getDefaultMessage)
+				.collect(Collectors.joining("\n"));
+
+		ErrorResponse responseBody = new ErrorResponse(status.value(), status.getReasonPhrase(), errorMessage);
+
+		return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
 	}
 
 }

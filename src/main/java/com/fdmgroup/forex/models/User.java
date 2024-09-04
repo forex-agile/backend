@@ -29,18 +29,18 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	@NotNull
-	@NotBlank
+	@NotNull(message = "'username' must be present.")
+	@NotBlank(message = "'username' cannot be blank, i.e. is empty or contains only white spaces.")
 	@Column(unique = true, nullable = false)
 	private String username;
 
-	@NotNull
-	@Email
+	@NotNull(message = "'email' must be present.")
+	@Email(message = "'email' must be a valid Email address.")
 	@Column(unique = true, nullable = false)
 	private String email;
 
-	@NotNull
-	@NotBlank
+	@NotNull(message = "'password' must be present.")
+	@NotBlank(message = "'password' cannot be blank, i.e. is empty or contains only white spaces.")
 	@Column(nullable = false)
 	private String password;
 
