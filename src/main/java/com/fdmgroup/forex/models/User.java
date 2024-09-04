@@ -30,7 +30,7 @@ public class User {
 	private String password;
 
 	@ManyToOne
-	@JoinColumn(name = "preferred_currency_code")
+	@JoinColumn(name = "FK_Preferred_Currency_Code")
 	private Currency preferredCurrency;
 
 	private String bankAccount;
