@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fdmgroup.forex.models.PortfolioAsset;
 
 @Entity
@@ -20,6 +21,7 @@ public class PortfolioAsset {
     private UUID id;
 
     @ManyToOne()
+    @JsonIgnore
     @JoinColumn(name = "FK_Portfolio_ID", nullable = false)
     private Portfolio portfolio;
 
