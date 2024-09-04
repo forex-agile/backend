@@ -21,11 +21,11 @@ public class Portfolio {
     @JoinColumn(name = "FK_User_ID", nullable = false)
     private User user;
 
-    private List<PortfolioAsset> portfolioAssets;
+    private List<Asset> assets;
 
     public Portfolio() {}
 
-    public Portfolio(User user, List<PortfolioAsset> portfolioAssets) {
+    public Portfolio(User user, List<Asset> assets) {
         setUser(user);
     }
 
@@ -49,13 +49,13 @@ public class Portfolio {
         }
     }
 
-    public List<PortfolioAsset> getPortfolioAssets() {
-        return portfolioAssets;
+    public List<Asset> getAssets() {
+        return assets;
     }
 
-    public void setPortfolioAssets(List<PortfolioAsset> newPortfolioAssets) {
-        if (newPortfolioAssets != null) {
-            this.portfolioAssets = newPortfolioAssets;
+    public void setAssets(List<Asset> newAssets) {
+        if (newAssets != null) {
+            this.assets = newAssets;
         }
     }
 

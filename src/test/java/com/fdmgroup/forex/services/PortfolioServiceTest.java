@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Portfolio;
-import com.fdmgroup.forex.models.PortfolioAsset;
+import com.fdmgroup.forex.models.Asset;
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.repos.PortfolioRepo;
 
@@ -31,7 +31,7 @@ public class PortfolioServiceTest {
     private UUID existingId;
     private UUID nonExistingId;
     private Portfolio portfolio;
-    private List<PortfolioAsset> portfolioAssets;
+    private List<Asset> portfolioAssets;
     private User user;
     private User nonExistingUser;
 

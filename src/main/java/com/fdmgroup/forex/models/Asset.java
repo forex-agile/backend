@@ -11,10 +11,10 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fdmgroup.forex.models.PortfolioAsset;
+import com.fdmgroup.forex.models.Asset;
 
 @Entity
-public class PortfolioAsset {
+public class Asset {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -31,9 +31,9 @@ public class PortfolioAsset {
 
     private double balance;
 
-    public PortfolioAsset() {}
+    public Asset() {}
 
-    public PortfolioAsset(Portfolio portfolio, Currency currency, double balance) {
+    public Asset(Portfolio portfolio, Currency currency, double balance) {
         this.portfolio = portfolio;
         this.currency = currency;
         this.balance = balance;

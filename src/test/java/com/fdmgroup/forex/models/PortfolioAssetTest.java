@@ -12,7 +12,7 @@ public class PortfolioAssetTest {
 
     private Currency currency;
     private Portfolio portfolio;
-    private PortfolioAsset portfolioAsset;
+    private Asset Asset;
     private User user;
 
     @BeforeEach
@@ -20,25 +20,25 @@ public class PortfolioAssetTest {
         currency = new Currency("HKD", "Hong Kong Dollars");
         user = new User("Demo User", "demo.user@email.com", "qwerty", currency, "demoaccount");
         portfolio = new Portfolio(user, new ArrayList<>());
-        portfolioAsset = new PortfolioAsset(portfolio, currency, 100.0);
+        Asset = new Asset(portfolio, currency, 100.0);
     }
 
     @Test
     public void testPortfolioAsset_DefaultConstructor() {
-        PortfolioAsset defaultPortfolioAsset = new PortfolioAsset();
-        assertNull(defaultPortfolioAsset.getId(), "PortfolioAsset ID should be null");
-        assertNull(defaultPortfolioAsset.getPortfolio(), "PortfolioAsset portfolio should be null");
-        assertNull(defaultPortfolioAsset.getCurrency(), "PortfolioAsset currency should be null");
-        assertEquals(0.0, defaultPortfolioAsset.getBalance(), "PortfolioAsset balance should be 0.0");
+        Asset defaultPortfolioAsset = new Asset();
+        assertNull(defaultPortfolioAsset.getId(), "Asset ID should be null");
+        assertNull(defaultPortfolioAsset.getPortfolio(), "Asset portfolio should be null");
+        assertNull(defaultPortfolioAsset.getCurrency(), "Asset currency should be null");
+        assertEquals(0.0, defaultPortfolioAsset.getBalance(), "Asset balance should be 0.0");
     }
 
     @Test
     public void testPortfolioAsset_ParameterizedConstructor() {
-        assertNotNull(portfolioAsset.getPortfolio(), "PortfolioAsset portfolio should not be null");
-        assertEquals(portfolio, portfolioAsset.getPortfolio(), "PortfolioAsset portfolio should match");
-        assertNotNull(portfolioAsset.getCurrency(), "PortfolioAsset currency should not be null");
-        assertEquals(currency, portfolioAsset.getCurrency(), "PortfolioAsset currency should match");
-        assertEquals(100.0, portfolioAsset.getBalance(), "PortfolioAsset balance should match");
+        assertNotNull(Asset.getPortfolio(), "Asset portfolio should not be null");
+        assertEquals(portfolio, Asset.getPortfolio(), "Asset portfolio should match");
+        assertNotNull(Asset.getCurrency(), "Asset currency should not be null");
+        assertEquals(currency, Asset.getCurrency(), "Asset currency should match");
+        assertEquals(100.0, Asset.getBalance(), "Asset balance should match");
     }
 
     @Test
@@ -48,25 +48,25 @@ public class PortfolioAssetTest {
         Portfolio newPortfolio = new Portfolio(newUser, new ArrayList<>());
         Currency newCurrency = new Currency("USD", "U.S. Dollars");
         double newBalance = 1000.0;
-        portfolioAsset.setId(newId);
-        portfolioAsset.setPortfolio(newPortfolio);
-        portfolioAsset.setCurrency(newCurrency);
-        portfolioAsset.setBalance(newBalance);
-        assertEquals(newId, portfolioAsset.getId(), "PortfolioAsset ID should match");
-        assertEquals(newPortfolio, portfolioAsset.getPortfolio(), "PortfolioAsset portfolio should match");
-        assertEquals(newCurrency, portfolioAsset.getCurrency(), "PortfolioAsset currency should match");
-        assertEquals(newBalance, portfolioAsset.getBalance(), "PortfolioAsset balance should match");
+        Asset.setId(newId);
+        Asset.setPortfolio(newPortfolio);
+        Asset.setCurrency(newCurrency);
+        Asset.setBalance(newBalance);
+        assertEquals(newId, Asset.getId(), "Asset ID should match");
+        assertEquals(newPortfolio, Asset.getPortfolio(), "Asset portfolio should match");
+        assertEquals(newCurrency, Asset.getCurrency(), "Asset currency should match");
+        assertEquals(newBalance, Asset.getBalance(), "Asset balance should match");
     }
 
     @Test
     public void testSetters_IgnoreNullValues() {
-        portfolioAsset.setId(UUID.randomUUID());
-        portfolioAsset.setId(null);
-        portfolioAsset.setPortfolio(null);
-        portfolioAsset.setCurrency(null);
-        assertNotNull(portfolioAsset.getId(), "PortfolioAsset ID should be unchanged");
-        assertEquals(portfolio, portfolioAsset.getPortfolio(), "PortfolioAsset portfolio should be unchanged");
-        assertEquals(currency, portfolioAsset.getCurrency(), "PortfolioAsset currency should be unchanged");
+        Asset.setId(UUID.randomUUID());
+        Asset.setId(null);
+        Asset.setPortfolio(null);
+        Asset.setCurrency(null);
+        assertNotNull(Asset.getId(), "Asset ID should be unchanged");
+        assertEquals(portfolio, Asset.getPortfolio(), "Asset portfolio should be unchanged");
+        assertEquals(currency, Asset.getCurrency(), "Asset currency should be unchanged");
     }
 
 }

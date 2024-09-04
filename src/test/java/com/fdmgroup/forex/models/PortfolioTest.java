@@ -14,7 +14,7 @@ public class PortfolioTest {
     private Currency currency1;
     private Currency currency2;
     private Portfolio portfolio;
-    private List<PortfolioAsset> portfolioAssets;
+    private List<Asset> assets;
     private User user;
 
     @BeforeEach
@@ -24,12 +24,12 @@ public class PortfolioTest {
         user = new User("Demo User", "demo.user@email.com", "qwerty", currency1, "demoaccount");
         
         portfolio = new Portfolio(user, new ArrayList<>());
-        PortfolioAsset portfolioAsset1 = new PortfolioAsset(portfolio, currency1, 100.0);
-        PortfolioAsset portfolioAsset2 = new PortfolioAsset(portfolio, currency2, 555.0);
-        portfolioAssets = new ArrayList<>();
-        portfolioAssets.add(portfolioAsset1);
-        portfolioAssets.add(portfolioAsset2);
-        portfolio.setPortfolioAssets(portfolioAssets);
+        Asset portfolioAsset1 = new Asset(portfolio, currency1, 100.0);
+        Asset portfolioAsset2 = new Asset(portfolio, currency2, 555.0);
+        assets = new ArrayList<>();
+        assets.add(portfolioAsset1);
+        assets.add(portfolioAsset2);
+        portfolio.setAssets(assets);
     }
 
     @Test
@@ -37,14 +37,14 @@ public class PortfolioTest {
         Portfolio defaultPortfolio = new Portfolio();
         assertNull(defaultPortfolio.getId(), "Portfolio ID should be null");
         assertNull(defaultPortfolio.getUser(), "Portfolio user should be null");
-        assertNull(defaultPortfolio.getPortfolioAssets(), "Portfolio assets should be null");
+        assertNull(defaultPortfolio.getAssets(), "Portfolio assets should be null");
     }
 
     @Test
     public void testPortfolio_ParameterizedConstructor() {
         assertNotNull(portfolio.getUser(), "Portfolio user should not be null");
         assertEquals(user, portfolio.getUser(), "Portfolio user should match");
-        assertEquals(portfolioAssets, portfolio.getPortfolioAssets(), "Portfolio assets should match");
+        assertEquals(assets, portfolio.getAssets(), "Portfolio assets should match");
     }
 
     @Test
@@ -63,10 +63,10 @@ public class PortfolioTest {
         portfolio.setId(validUUID);
         portfolio.setId(null);
         portfolio.setUser(null);
-        portfolio.setPortfolioAssets(null);
+        portfolio.setAssets(null);
         assertEquals(validUUID, portfolio.getId(), "Portfolio ID should be unchanged");
         assertEquals(user, portfolio.getUser(), "Portfolio user should be unchanged");
-        assertEquals(portfolioAssets, portfolio.getPortfolioAssets(), "Portfolio assets should be unchanged");
+        assertEquals(assets, portfolio.getAssets(), "Portfolio assets should be unchanged");
     }
 
 }
