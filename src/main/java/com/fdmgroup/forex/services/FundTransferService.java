@@ -9,7 +9,6 @@ public class FundTransferService {
 	private FundTransferRepo fundTransferRepo;
 
 	public FundTransferService(FundTransferRepo fundTransferRepo) {
-		super();
 		this.fundTransferRepo = fundTransferRepo;
 	}
 	

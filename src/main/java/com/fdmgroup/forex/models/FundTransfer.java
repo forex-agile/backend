@@ -15,18 +15,22 @@ public class FundTransfer {
 	private UUID id; 
 	@ManyToOne()
 	@JoinColumn(name = "FK_Currency_ID")
+	@Column(nullable = false)
 	private Currency currency;
+	@Column(nullable = false)
 	private double amount;
+	@Column(nullable = false)
 	private TransferType transferType;
+	@Column(nullable = false)
 	private Date transferDate;
 	@ManyToOne()
 	@JoinColumn(name = "FK_User_ID")
+	@Column(nullable = false)
 	private User user;
 	
 	public FundTransfer() {}	
 	
 	public FundTransfer(Currency currency, double amount, TransferType transferType, Date transferDate, User user) {
-		super();
 		this.currency = currency;
 		this.amount = amount;
 		this.transferType = transferType;
