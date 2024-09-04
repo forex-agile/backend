@@ -22,7 +22,6 @@ public class CurrencyController {
     private CurrencyService currencyService;
 
     public CurrencyController(CurrencyService currencyService) {
-        super();
         this.currencyService = currencyService;
     }
 
