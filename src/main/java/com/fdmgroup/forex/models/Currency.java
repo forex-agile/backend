@@ -16,7 +16,6 @@ public class Currency {
     public Currency() {}
 
     public Currency(String code, String name) {
-        super();
         setCurrencyCode(code);
         setCurrencyName(name);
     }

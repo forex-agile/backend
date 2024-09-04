@@ -15,7 +15,6 @@ public class CurrencyService {
     private CurrencyRepo currencyRepo;
 
     public CurrencyService(CurrencyRepo currencyRepo) {
-        super();
         this.currencyRepo = currencyRepo;
     }
 
