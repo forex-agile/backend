@@ -24,11 +24,6 @@ public class Role {
 		setRole(role);
 	}
 
-	public Role(Long id, String role) {
-		this(role);
-		setId(id);
-	}
-
 	public Long getId() {
 		return id;
 	}

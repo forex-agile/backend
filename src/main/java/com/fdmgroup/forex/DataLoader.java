@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import com.fdmgroup.forex.models.Role;
 import com.fdmgroup.forex.repos.RoleRepo;
 
+import jakarta.transaction.Transactional;
+
 @Component
 public class DataLoader implements ApplicationRunner {
 
@@ -21,11 +23,10 @@ public class DataLoader implements ApplicationRunner {
 		createRoles();
 	}
 
+	@Transactional
 	private void createRoles() {
-		if (roleRepo.count() != 0)
-			return;
-
-		roleRepo.save(new Role(1L, "USER"));
+		if (roleRepo.findByRole("USER").isEmpty())
+			roleRepo.save(new Role("USER"));
 	}
 
 }
