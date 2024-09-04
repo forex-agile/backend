@@ -40,7 +40,7 @@ public class ExchangeRateController {
     @GetMapping("/currency")
     public ResponseEntity<?> getExchangeRateByCurrency(@RequestBody Currency currency) {
         try {
-            ExchangeRate exchangeRate = exchangeRateService.findByCurrency(currency);
+            ExchangeRate exchangeRate = exchangeRateService.findExchangeRateByCurrency(currency);
             return ResponseEntity.ok(exchangeRate);
         } catch (RecordNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -52,7 +52,7 @@ public class ExchangeRateController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getExchangeRate(@PathVariable UUID id) {
         try {
-            ExchangeRate exchangeRate = exchangeRateService.findById(id);
+            ExchangeRate exchangeRate = exchangeRateService.findExchangeRateById(id);
             return ResponseEntity.ok(exchangeRate);
         } catch (RecordNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

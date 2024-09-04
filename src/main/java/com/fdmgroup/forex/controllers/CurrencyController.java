@@ -37,7 +37,7 @@ public class CurrencyController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getCurrency(@PathVariable String id) {
         try {
-            Currency currency = currencyService.findById(id);
+            Currency currency = currencyService.findCurrencyById(id);
             return ResponseEntity.ok(currency);
         } catch (RecordNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

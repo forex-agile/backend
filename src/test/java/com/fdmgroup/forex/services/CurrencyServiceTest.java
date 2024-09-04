@@ -61,7 +61,7 @@ public class CurrencyServiceTest {
     @Test
     void testFindById_WhenCurrencyExists() {
         when(currencyRepo.findById(validId)).thenReturn(Optional.of(currency));
-        Currency foundCurrency = currencyService.findById(validId);
+        Currency foundCurrency = currencyService.findCurrencyById(validId);
         assertEquals(currency, foundCurrency, "CurrencyService should find a valid currency ID");
     }
 
@@ -69,7 +69,7 @@ public class CurrencyServiceTest {
     void testFindById_WhenCurrencyDoesNotExist() throws RecordNotFoundException {
         when(currencyRepo.findById(invalidId)).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> {
-            currencyService.findById(invalidId);
+            currencyService.findCurrencyById(invalidId);
         }, "CurrencyService should throw exception when searching for an invalid currency ID");
     }
 
