@@ -1,4 +1,4 @@
-package com.fdmgroup.forex.services;
+package com.fdmgroup.forex.security;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.repos.UserRepo;
-import com.fdmgroup.forex.security.AuthUser;
 
 /**
  * AuthUserService
