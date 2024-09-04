@@ -3,7 +3,7 @@ package com.fdmgroup.forex.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fdmgroup.forex.exceptions.InternalServerError;
+import com.fdmgroup.forex.exceptions.InternalServerErrorException;
 import com.fdmgroup.forex.exceptions.ResourceConflictException;
 import com.fdmgroup.forex.models.Role;
 import com.fdmgroup.forex.models.User;
@@ -41,7 +41,7 @@ public class UserService {
 				});
 
 		Role role = roleRepo.findByRole("USER").orElseThrow(
-				() -> new InternalServerError("Internal Server Error: could not assign role"));
+				() -> new InternalServerErrorException("Internal Server Error: could not assign role"));
 
 		user.setPassword(pwdEncoder.encode(user.getPassword()));
 		user.setRole(role);
