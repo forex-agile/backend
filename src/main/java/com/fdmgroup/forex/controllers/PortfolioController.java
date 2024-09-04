@@ -29,7 +29,7 @@ public class PortfolioController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<?> getPortfolioByUserId(@RequestBody User user) {
+    public ResponseEntity<?> getPortfolioByUser(@RequestBody User user) {
         try {
             Portfolio portfolio = portfolioService.findPortfolioByUser(user);
             return ResponseEntity.ok(portfolio);
