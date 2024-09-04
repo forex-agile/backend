@@ -1,5 +1,6 @@
 package com.fdmgroup.forex.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -14,20 +15,17 @@ public class CurrencyService {
     private CurrencyRepo currencyRepo;
 
     public CurrencyService(CurrencyRepo currencyRepo) {
-        super();
         this.currencyRepo = currencyRepo;
+    }
+
+    public List<Currency> findAllCurrencies() {
+        return currencyRepo.findAll();
     }
 
     public Currency findById(String id) throws RecordNotFoundException {
         Optional<Currency> currencyOptional = currencyRepo.findById(id);
         return currencyOptional.orElseThrow(() -> 
             new RecordNotFoundException("Currency with id '" + id + "'' not found"));
-    }
-
-    public Currency findByCurrencyName(String currencyName) throws RecordNotFoundException {
-        Optional<Currency> currencyOptional = currencyRepo.findByCurrencyName(currencyName);
-        return currencyOptional.orElseThrow(() -> 
-            new RecordNotFoundException("Currency with name '" + currencyName + "'' not found"));
     }
 
 }

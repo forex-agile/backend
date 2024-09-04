@@ -3,6 +3,8 @@ package com.fdmgroup.forex.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +28,6 @@ public class CurrencyServiceTest {
     private String validId;
     private String validName;
     private String invalidId;
-    private String invalidName;
     private Currency currency;
 
     @BeforeEach
@@ -35,13 +36,26 @@ public class CurrencyServiceTest {
         validId = "USD";
         validName = "U.S. Dollars";
         invalidId = "ABC";
-        invalidName = "Fake Currency";
         currency = new Currency(validId, validName);
     }
 
     @Test
     void testCurrencyServiceInitialization() {
         verify(currencyRepo, times(0)).save(null);
+    }
+
+    @Test
+    void testFindAllCurrencies() {
+        List<Currency> currencies = Arrays.asList(
+            new Currency("JPY", "Japanese Yen"),
+            new Currency("EUR", "Euros")
+        );
+        when(currencyRepo.findAll()).thenReturn(currencies);
+        List<Currency> foundCurrencies = currencyService.findAllCurrencies();
+
+        assertNotNull(foundCurrencies, "List of currencies should not be empty");
+        assertEquals(2, foundCurrencies.size(), "Number of currencies should match");
+        verify(currencyRepo, times(1)).findAll();
     }
 
     @Test
@@ -59,18 +73,4 @@ public class CurrencyServiceTest {
         }, "CurrencyService should throw exception when searching for an invalid currency ID");
     }
 
-    @Test
-    void testFindByCurrencyName_WhenCurrencyExists() {
-        when(currencyRepo.findByCurrencyName(validName)).thenReturn(Optional.of(currency));
-        Currency foundCurrency = currencyService.findByCurrencyName(validName);
-        assertEquals(currency, foundCurrency, "CurrencyService should find a valid currency name");
-    }
-
-    @Test
-    void testFindByCurrencyName_WhenCurrencyDoesNotExist() throws RecordNotFoundException {
-        when(currencyRepo.findByCurrencyName(invalidName)).thenReturn(Optional.empty());
-        assertThrows(RecordNotFoundException.class, () -> {
-            currencyService.findByCurrencyName(invalidName);
-        }, "CurrencyService should throw exception when searcing for an invalid currency name");
-    }
 }
