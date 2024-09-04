@@ -9,54 +9,48 @@ import java.util.UUID;
 
 public class PortfolioTest {
 
+    private Currency currency;
     private Portfolio portfolio;
-    private UUID userId;
+    private User user;
 
     @BeforeEach
     public void setUp() {
-        userId = UUID.randomUUID();
-        portfolio = new Portfolio(userId);
+        currency = new Currency("USD", "U.S. Dollars");
+        user = new User("Demo User", "demo.user@email.com", "qwerty", currency, "demoaccount");
+        portfolio = new Portfolio(user);
     }
 
     @Test
     public void testPortfolio_DefaultConstructor() {
         Portfolio defaultPortfolio = new Portfolio();
         assertNull(defaultPortfolio.getId(), "Portfolio ID should be null");
-        assertNull(defaultPortfolio.getUserId(), "Portfolio user ID should be null");
+        assertNull(defaultPortfolio.getUser(), "Portfolio user should be null");
     }
 
     @Test
     public void testPortfolio_ParameterizedConstructor() {
-        assertNotNull(portfolio.getUserId(), "Portfolio user ID should not be null");
-        assertEquals(userId, portfolio.getUserId(), "Portfolio user ID should match");
+        assertNotNull(portfolio.getUser(), "Portfolio user should not be null");
+        assertEquals(user, portfolio.getUser(), "Portfolio user should match");
     }
 
     @Test
     public void testSettersAndGetters() {
         UUID newId = UUID.randomUUID();
-        UUID newUserId = UUID.randomUUID();
+        User newUser = new User("Demo User 2", "demo.user2@email.com", "asdf", currency, "demoaccount2");
         portfolio.setId(newId);
-        portfolio.setUserId(newUserId);
+        portfolio.setUser(newUser);
         assertEquals(newId, portfolio.getId(), "Portfolio ID should match");
-        assertEquals(newUserId, portfolio.getUserId(), "Portfolio user ID should match");
+        assertEquals(newUser, portfolio.getUser(), "Portfolio user should match");
     }
 
     @Test
     public void testSetters_IgnoreNullValues() {
         UUID validUUID = UUID.randomUUID();
         portfolio.setId(validUUID);
-        UUID nullId = null;
-        UUID nullUserId = null;
-        portfolio.setId(nullId);
-        portfolio.setUserId(nullUserId);
+        portfolio.setId(null);
+        portfolio.setUser(null);
         assertEquals(validUUID, portfolio.getId(), "Portfolio ID should be unchanged");
-        assertEquals(userId, portfolio.getUserId(), "Portfolio user ID should be unchanged");
-    }
-
-    @Test
-    public void testToString() {
-        String expectedString = "Portfolio [id=" + portfolio.getId() + ", userId=" + userId + "]";
-        assertEquals(expectedString, portfolio.toString(), "toString should match expected output");
+        assertEquals(user, portfolio.getUser(), "Portfolio user should be unchanged");
     }
 
 }

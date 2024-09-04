@@ -17,14 +17,13 @@ public class Portfolio {
     private UUID id;
 
     @OneToOne()
-    @JoinColumn(name = "FK_User_ID")
-    private UUID userId;
+    @JoinColumn(name = "FK_User_ID", nullable = false)
+    private User user;
 
     public Portfolio() {}
 
-    public Portfolio(UUID userId) {
-        super();
-        setUserId(userId);
+    public Portfolio(User user) {
+        setUser(user);
     }
 
     public UUID getId() {
@@ -37,18 +36,18 @@ public class Portfolio {
         }
     }
 
-    public UUID getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(UUID newUserId) {
-        if (newUserId != null) {
-            this.userId = newUserId;
+    public void setUser(User newUser) {
+        if (newUser != null) {
+            this.user = newUser;
         }
     }
 
     public String toString() {
-        return "Portfolio [id=" + id + ", userId=" + userId + "]";
+        return "Portfolio [id=" + id + ", userId=" + user.getId() + "]";
     }
 
 }

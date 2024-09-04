@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fdmgroup.forex.models.Portfolio;
+import com.fdmgroup.forex.models.User;
 
 @Repository
 public interface PortfolioRepo extends JpaRepository<Portfolio, UUID> {
 
-    Optional<Portfolio> findByUserId(UUID userId);
+    Optional<Portfolio> findByUser(User user);
 
 }
