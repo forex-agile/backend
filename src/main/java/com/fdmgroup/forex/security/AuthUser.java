@@ -13,13 +13,11 @@ public class AuthUser implements UserDetails {
 	private User user;
 
 	public AuthUser(User user) {
-		super();
 		this.user = user;
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		System.out.println(new SimpleGrantedAuthority(this.user.getRole().toString()));
 		return Arrays.asList(new SimpleGrantedAuthority(this.user.getRole().toString()));
 	}
 
