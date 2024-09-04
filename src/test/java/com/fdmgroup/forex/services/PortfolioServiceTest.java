@@ -3,6 +3,8 @@ package com.fdmgroup.forex.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,6 +16,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Portfolio;
+import com.fdmgroup.forex.models.PortfolioAsset;
+import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.repos.PortfolioRepo;
 
 public class PortfolioServiceTest {
@@ -27,13 +31,19 @@ public class PortfolioServiceTest {
     private UUID existingId;
     private UUID nonExistingId;
     private Portfolio portfolio;
+    private List<PortfolioAsset> portfolioAssets;
+    private User user;
+    private User nonExistingUser;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         existingId = UUID.randomUUID();
         nonExistingId = UUID.randomUUID();
-        portfolio = new Portfolio(existingId);
+        user = new User();
+        nonExistingUser = new User();
+        portfolioAssets = new ArrayList<>();
+        portfolio = new Portfolio(user, portfolioAssets);
     }
 
     @Test
@@ -44,7 +54,7 @@ public class PortfolioServiceTest {
     @Test
     void testFindById_WhenPortfolioExists() {
         when(portfolioRepo.findById(existingId)).thenReturn(Optional.of(portfolio));
-        Portfolio foundPortfolio = portfolioService.findById(existingId);
+        Portfolio foundPortfolio = portfolioService.findPortfolioById(existingId);
         assertEquals(portfolio, foundPortfolio, "PortfolioService should find a valid ID");
     }
 
@@ -52,22 +62,22 @@ public class PortfolioServiceTest {
     void testFindById_WhenPortfolioDoesNotExist() throws RecordNotFoundException {
         when(portfolioRepo.findById(nonExistingId)).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> {
-            portfolioService.findById(nonExistingId);
+            portfolioService.findPortfolioById(nonExistingId);
         }, "PortfolioService should throw exception for an invalid ID");
     }
 
     @Test
     void testFindByUserId_WhenPortfolioExists() {
-        when(portfolioRepo.findByUserId(existingId)).thenReturn(Optional.of(portfolio));
-        Portfolio foundPortfolio = portfolioService.findByUserId(existingId);
+        when(portfolioRepo.findByUser(user)).thenReturn(Optional.of(portfolio));
+        Portfolio foundPortfolio = portfolioService.findPortfolioByUser(user);
         assertEquals(portfolio, foundPortfolio, "PortfolioService should find a valid user ID");
     }
 
     @Test
     void testFindByUserId_WhenPortfolioDoesNotExist() throws RecordNotFoundException {
-        when(portfolioRepo.findByUserId(nonExistingId)).thenReturn(Optional.empty());
+        when(portfolioRepo.findByUser(nonExistingUser)).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> {
-            portfolioService.findByUserId(nonExistingId);
+            portfolioService.findPortfolioByUser(nonExistingUser);
         }, "PortfolioService should throw exception for an invalid user ID");
     }
 }
