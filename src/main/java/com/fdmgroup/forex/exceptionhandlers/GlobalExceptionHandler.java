@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fdmgroup.forex.exceptions.InternalServerErrorException;
+import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.exceptions.ResourceConflictException;
 import com.fdmgroup.forex.response.ErrorResponse;
 import com.fdmgroup.forex.response.ResourceConflictResponse;
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InternalServerErrorException.class)
 	public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException ex) {
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(RecordNotFoundException.class)
+	public ResponseEntity<String> handleRecordNotFoundException(RecordNotFoundException ex) {
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(ResourceConflictException.class)
