@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class ExchangeRate {
+public class FxRate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,9 +22,9 @@ public class ExchangeRate {
 
     private double rateToUSD;
 
-    public ExchangeRate() {}
+    public FxRate() {}
 
-    public ExchangeRate(Currency currency, double rateToUSD) {
+    public FxRate(Currency currency, double rateToUSD) {
         this.currency = currency;
         this.rateToUSD = rateToUSD;
     }

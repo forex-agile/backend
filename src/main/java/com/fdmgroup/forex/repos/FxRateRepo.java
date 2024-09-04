@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fdmgroup.forex.models.Currency;
-import com.fdmgroup.forex.models.ExchangeRate;
+import com.fdmgroup.forex.models.FxRate;
 
 @Repository
-public interface ExchangeRateRepo extends JpaRepository<ExchangeRate, UUID> {
+public interface FxRateRepo extends JpaRepository<FxRate, UUID> {
 
-    Optional<ExchangeRate> findByCurrency(Currency currency);
+    Optional<FxRate> findByCurrency(Currency currency);
 
 }

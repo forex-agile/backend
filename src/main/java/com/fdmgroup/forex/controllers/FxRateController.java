@@ -14,34 +14,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Currency;
-import com.fdmgroup.forex.models.ExchangeRate;
-import com.fdmgroup.forex.services.ExchangeRateService;
+import com.fdmgroup.forex.models.FxRate;
+import com.fdmgroup.forex.services.FxRateService;
 
 @RestController
-@RequestMapping("api/v1/exchange-rate")
+@RequestMapping("api/v1/fx-rate")
 @CrossOrigin(origins = "*")
-public class ExchangeRateController {
+public class FxRateController {
 
-    private ExchangeRateService exchangeRateService;
+    private FxRateService fxRateService;
 
-    public ExchangeRateController(ExchangeRateService exchangeRateService) {
-        this.exchangeRateService = exchangeRateService;
+    public FxRateController(FxRateService fxRateService) {
+        this.fxRateService = fxRateService;
     }
 
     @GetMapping
-    public ResponseEntity<List<ExchangeRate>> getAllExchangeRates() {
-        List<ExchangeRate> exchangeRates = exchangeRateService.findAllExchangeRates();
-        if (exchangeRates.isEmpty()) {
+    public ResponseEntity<List<FxRate>> getAllFxRates() {
+        List<FxRate> fxRates = fxRateService.findAllFxRates();
+        if (fxRates.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.ok(exchangeRates);
+        return ResponseEntity.ok(fxRates);
     }
 
     @GetMapping("/currency")
-    public ResponseEntity<?> getExchangeRateByCurrency(@RequestBody Currency currency) {
+    public ResponseEntity<?> getFxRateByCurrency(@RequestBody Currency currency) {
         try {
-            ExchangeRate exchangeRate = exchangeRateService.findExchangeRateByCurrency(currency);
-            return ResponseEntity.ok(exchangeRate);
+            FxRate fxRate = fxRateService.findFxRateByCurrency(currency);
+            return ResponseEntity.ok(fxRate);
         } catch (RecordNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -50,10 +50,10 @@ public class ExchangeRateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getExchangeRate(@PathVariable UUID id) {
+    public ResponseEntity<?> getFxRate(@PathVariable UUID id) {
         try {
-            ExchangeRate exchangeRate = exchangeRateService.findExchangeRateById(id);
-            return ResponseEntity.ok(exchangeRate);
+            FxRate fxRate = fxRateService.findFxRateById(id);
+            return ResponseEntity.ok(fxRate);
         } catch (RecordNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
