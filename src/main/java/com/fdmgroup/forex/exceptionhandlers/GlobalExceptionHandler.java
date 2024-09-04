@@ -33,10 +33,11 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(ResourceConflictException.class)
 	public ResponseEntity<ResourceConflictResponse> handleResourceConflictException(ResourceConflictException ex) {
-		ResourceConflictResponse response = new ResourceConflictResponse(HttpStatus.CONFLICT.value(),
-				HttpStatus.CONFLICT.getReasonPhrase(), ex.getMessage(), ex.getField());
+		HttpStatus status = HttpStatus.CONFLICT;
+		ResourceConflictResponse response = new ResourceConflictResponse(status.value(), status.getReasonPhrase(),
+				ex.getMessage(), ex.getField());
 
-		return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		return new ResponseEntity<>(response, status);
 	}
 
 	/**
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler {
 
 		ErrorResponse responseBody = new ErrorResponse(status.value(), status.getReasonPhrase(), errorMessage);
 
-		return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(responseBody, status);
 	}
 
 }
