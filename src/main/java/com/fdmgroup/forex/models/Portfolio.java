@@ -1,5 +1,6 @@
 package com.fdmgroup.forex.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
@@ -20,9 +21,11 @@ public class Portfolio {
     @JoinColumn(name = "FK_User_ID", nullable = false)
     private User user;
 
+    private List<PortfolioAsset> portfolioAssets;
+
     public Portfolio() {}
 
-    public Portfolio(User user) {
+    public Portfolio(User user, List<PortfolioAsset> portfolioAssets) {
         setUser(user);
     }
 
@@ -46,8 +49,14 @@ public class Portfolio {
         }
     }
 
-    public String toString() {
-        return "Portfolio [id=" + id + ", userId=" + user.getId() + "]";
+    public List<PortfolioAsset> getPortfolioAssets() {
+        return portfolioAssets;
+    }
+
+    public void setPortfolioAssets(List<PortfolioAsset> newPortfolioAssets) {
+        if (newPortfolioAssets != null) {
+            this.portfolioAssets = newPortfolioAssets;
+        }
     }
 
 }
