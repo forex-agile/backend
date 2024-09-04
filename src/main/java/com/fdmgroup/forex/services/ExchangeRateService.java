@@ -24,13 +24,13 @@ public class ExchangeRateService {
         return exchangeRateRepo.findAll();
     }
 
-    public ExchangeRate findById(UUID id) throws RecordNotFoundException {
+    public ExchangeRate findExchangeRateById(UUID id) throws RecordNotFoundException {
         Optional<ExchangeRate> exchangeRateOptional = exchangeRateRepo.findById(id);
         return exchangeRateOptional.orElseThrow(() -> 
             new RecordNotFoundException("ExchangeRate with id '" + id + "'' not found"));
     }
 
-    public ExchangeRate findByCurrency(Currency currency) throws RecordNotFoundException {
+    public ExchangeRate findExchangeRateByCurrency(Currency currency) throws RecordNotFoundException {
         Optional<ExchangeRate> exchangeRateOptional = exchangeRateRepo.findByCurrency(currency);
         return exchangeRateOptional.orElseThrow(() -> 
             new RecordNotFoundException("ExchangeRate for currency with code '" + currency.getCurrencyCode() + "'' not found"));

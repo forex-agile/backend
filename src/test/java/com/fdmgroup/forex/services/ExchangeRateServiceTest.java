@@ -57,35 +57,35 @@ public class ExchangeRateServiceTest {
     }
 
     @Test
-    void testFindById_WhenExchangeRateExists() {
+    void testFindExchangeRateById_WhenExchangeRateExists() {
         UUID newId = UUID.randomUUID();
         when(exchangeRateRepo.findById(newId)).thenReturn(Optional.of(exchangeRate));
-        ExchangeRate foundExchangeRate = exchangeRateService.findById(newId);
+        ExchangeRate foundExchangeRate = exchangeRateService.findExchangeRateById(newId);
         assertEquals(exchangeRate, foundExchangeRate, "ExchangeRateService should find a valid exchange rate ID");
     }
 
     @Test
-    void testFindById_WhenExchangeRateDoesNotExist() throws RecordNotFoundException {
+    void testFindExchangeRateById_WhenExchangeRateDoesNotExist() throws RecordNotFoundException {
         UUID newId = UUID.randomUUID();
         when(exchangeRateRepo.findById(newId)).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> {
-            exchangeRateService.findById(newId);
+            exchangeRateService.findExchangeRateById(newId);
         }, "ExchangeRateService should throw exception when searching for an invalid exchange rate ID");
     }
 
     @Test
-    void testFindByCurrency_WhenExchangeRateExists() {
+    void testFindExchangeRateByCurrency_WhenExchangeRateExists() {
         when(exchangeRateRepo.findByCurrency(currency)).thenReturn(Optional.of(exchangeRate));
-        ExchangeRate foundExchangeRate = exchangeRateService.findByCurrency(currency);
+        ExchangeRate foundExchangeRate = exchangeRateService.findExchangeRateByCurrency(currency);
         assertEquals(exchangeRate, foundExchangeRate, "ExchangeRateService should find an exchange rate for a valid currency");
     }
 
     @Test
-    void testFindByCurrency_WhenExchangeRateDoesNotExist() {
+    void testFindExchangeRateByCurrency_WhenExchangeRateDoesNotExist() {
         Currency invalidCurrency = new Currency("ABC", "Fake Currency");
         when(exchangeRateRepo.findByCurrency(invalidCurrency)).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> {
-            exchangeRateService.findByCurrency(invalidCurrency);
+            exchangeRateService.findExchangeRateByCurrency(invalidCurrency);
         }, "ExchangeRateService should throw exception when searching for an exchange rate with an invalid currency");
     }
 
