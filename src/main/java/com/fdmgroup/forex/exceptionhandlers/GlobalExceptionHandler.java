@@ -2,6 +2,7 @@ package com.fdmgroup.forex.exceptionhandlers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,6 +24,18 @@ public class GlobalExceptionHandler {
 				HttpStatus.CONFLICT.getReasonPhrase(), ex.getMessage(), ex.getField());
 
 		return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+	}
+
+	/**
+	 * Throws a 400 Bad Request with empty body if a request body doesn't
+	 * pass @Valid validation
+	 *
+	 * Empty body because message may expose sensitive info about the backend
+	 * architecture
+	 */
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 	}
 
 }
