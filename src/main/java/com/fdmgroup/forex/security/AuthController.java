@@ -23,7 +23,7 @@ public class AuthController {
 	public String token(Authentication authentication) throws BadRequestException {
 		if (authentication == null) {
 			LOG.debug("Token requested for an anonymous user");
-			throw new BadRequestException("Authentication header is missing or invalid");
+			throw new BadRequestException("Authorization header is missing or invalid");
 		}
 
 		LOG.debug("Token requested for user: '{}'", authentication.getName());
