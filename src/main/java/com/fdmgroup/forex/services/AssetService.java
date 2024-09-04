@@ -51,19 +51,14 @@ public class AssetService {
     }
 
     public void withdrawAsset(Portfolio portfolio, Currency currency, double withdrawal) throws InsufficientFundsException, RecordNotFoundException {
-        try {
-            Asset Asset = findAssetByPortfolioAndCurrency(portfolio, currency);
-            double balance = Asset.getBalance();
-            if (withdrawal > balance) {
-                throw new InsufficientFundsException("Withdrawal amount cannot exceed balance: balance=" + balance + ", withdrawal=" + withdrawal);
-            } else {
-                Asset.setBalance(balance - withdrawal);
-            }
-            assetRepo.save(Asset);
-        
-        } catch (RecordNotFoundException e) {
-            throw e;
+        Asset Asset = findAssetByPortfolioAndCurrency(portfolio, currency);
+        double balance = Asset.getBalance();
+        if (withdrawal > balance) {
+            throw new InsufficientFundsException("Withdrawal amount cannot exceed balance: balance=" + balance + ", withdrawal=" + withdrawal);
+        } else {
+            Asset.setBalance(balance - withdrawal);
         }
+        assetRepo.save(Asset);
     }
 
     private Asset findAssetByPortfolioAndCurrency(Portfolio portfolio, Currency currency) throws RecordNotFoundException {
