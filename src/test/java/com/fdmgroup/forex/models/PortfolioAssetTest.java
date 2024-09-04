@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,7 @@ public class PortfolioAssetTest {
     public void setUp() {
         currency = new Currency("HKD", "Hong Kong Dollars");
         user = new User("Demo User", "demo.user@email.com", "qwerty", currency, "demoaccount");
-        portfolio = new Portfolio(user);
+        portfolio = new Portfolio(user, new ArrayList<>());
         portfolioAsset = new PortfolioAsset(portfolio, currency, 100.0);
     }
 
@@ -46,7 +47,7 @@ public class PortfolioAssetTest {
     public void testSettersAndGetters() {
         UUID newId = UUID.randomUUID();
         User newUser = new User("Demo User 2", "demo.user2@email.com", "asdf", currency, "demoaccount2");
-        Portfolio newPortfolio = new Portfolio(newUser);
+        Portfolio newPortfolio = new Portfolio(newUser, new ArrayList<>());
         Currency newCurrency = new Currency("USD", "U.S. Dollars");
         double newBalance = 1000.0;
         portfolioAsset.setId(newId);

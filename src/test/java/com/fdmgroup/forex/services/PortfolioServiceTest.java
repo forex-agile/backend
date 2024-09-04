@@ -3,6 +3,8 @@ package com.fdmgroup.forex.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Portfolio;
+import com.fdmgroup.forex.models.PortfolioAsset;
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.repos.PortfolioRepo;
 
@@ -28,6 +31,7 @@ public class PortfolioServiceTest {
     private UUID existingId;
     private UUID nonExistingId;
     private Portfolio portfolio;
+    private List<PortfolioAsset> portfolioAssets;
     private User user;
     private User nonExistingUser;
 
@@ -38,7 +42,8 @@ public class PortfolioServiceTest {
         nonExistingId = UUID.randomUUID();
         user = new User();
         nonExistingUser = new User();
-        portfolio = new Portfolio(user);
+        portfolioAssets = new ArrayList<>();
+        portfolio = new Portfolio(user, portfolioAssets);
     }
 
     @Test
