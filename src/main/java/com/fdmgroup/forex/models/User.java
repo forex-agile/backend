@@ -15,6 +15,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Model a user account on the Forex platform
@@ -26,12 +29,18 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
+	@NotNull
+	@NotBlank
 	@Column(unique = true, nullable = false)
 	private String username;
 
+	@NotNull
+	@Email
 	@Column(unique = true, nullable = false)
 	private String email;
 
+	@NotNull
+	@NotBlank
 	@Column(nullable = false)
 	private String password;
 
@@ -54,6 +63,9 @@ public class User {
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedDate;
+
+	public User() {
+	}
 
 	public User(UUID id, String username, String email, String password, Currency preferredCurrency,
 			String bankAccount, Role role) {
