@@ -1,5 +1,8 @@
 package com.fdmgroup.forex.services;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,10 @@ public class UserService {
 		this.userRepo = userRepo;
 		this.roleRepo = roleRepo;
 		this.pwdEncoder = pwdEncoder;
+	}
+
+	public Optional<User> findUserById(UUID id) {
+		return userRepo.findById(id);
 	}
 
 	@Transactional

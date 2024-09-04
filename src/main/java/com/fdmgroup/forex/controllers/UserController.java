@@ -1,17 +1,22 @@
 package com.fdmgroup.forex.controllers;
 
 import java.net.URI;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.models.dto.UserDetailsDTO;
+import com.fdmgroup.forex.models.dto.UserPublicInfoDTO;
 import com.fdmgroup.forex.services.UserService;
 
 import jakarta.validation.Valid;
@@ -25,6 +30,12 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@GetMapping("/user/{id}")
+	public UserPublicInfoDTO getUserPublicInfo(@PathVariable UUID id) {
+		User user = userService.findUserById(id).orElseThrow(() -> new RecordNotFoundException("User not found."));
+		return new UserPublicInfoDTO(user);
+	}
 
 	@PostMapping("/register")
 	public ResponseEntity<UserDetailsDTO> register(@Valid @RequestBody User user) {
