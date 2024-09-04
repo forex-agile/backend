@@ -3,6 +3,7 @@ package com.fdmgroup.forex.exceptionhandlers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -62,6 +63,11 @@ public class GlobalExceptionHandler {
 		ErrorResponse responseBody = new ErrorResponse(status.value(), status.getReasonPhrase(), errorMessage);
 
 		return new ResponseEntity<>(responseBody, status);
+	}
+
+	@ExceptionHandler(BadRequestException.class)
+	public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
 }

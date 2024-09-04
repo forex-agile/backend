@@ -63,7 +63,7 @@ public class SecurityConfig {
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authz -> authz
-						.requestMatchers("/api/v1/register").permitAll()
+						.requestMatchers("/api/v1/register", "/api/v1/login").permitAll()
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(server -> server.jwt(Customizer.withDefaults()))
 				.sessionManagement(session -> session
