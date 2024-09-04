@@ -29,7 +29,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public User createUser(User user) throws InternalServerError {
+	public User createUser(User user) {
 		userRepo.findByUsername(user.getUsername())
 				.ifPresent((u) -> {
 					throw new ResourceConflictException("Username already exists.", "username");
@@ -41,7 +41,7 @@ public class UserService {
 				});
 
 		Role role = roleRepo.findByRole("USER").orElseThrow(
-				() -> new InternalServerErrorException("Internal Server Error: could not assign role"));
+				() -> new InternalServerErrorException("Could not assign role to new user"));
 
 		user.setPassword(pwdEncoder.encode(user.getPassword()));
 		user.setRole(role);
