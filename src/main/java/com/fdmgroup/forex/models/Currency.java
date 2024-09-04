@@ -1,5 +1,6 @@
 package com.fdmgroup.forex.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -8,6 +9,8 @@ public class Currency {
 
     @Id
     private String currencyCode;
+
+    @Column(unique = true, nullable = false)
     private String currencyName;
 
     public Currency() {}
