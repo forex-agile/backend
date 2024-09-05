@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import com.fdmgroup.forex.exceptions.InternalServerErrorException;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.exceptions.ResourceConflictException;
+import com.fdmgroup.forex.models.Portfolio;
 import com.fdmgroup.forex.models.Role;
 import com.fdmgroup.forex.models.User;
+import com.fdmgroup.forex.repos.PortfolioRepo;
 import com.fdmgroup.forex.repos.RoleRepo;
 import com.fdmgroup.forex.repos.UserRepo;
 
@@ -23,11 +25,13 @@ public class UserService {
 
 	private UserRepo userRepo;
 	private RoleRepo roleRepo;
+	private PortfolioRepo portfolioRepo;
 	private PasswordEncoder pwdEncoder;
 
-	public UserService(UserRepo userRepo, RoleRepo roleRepo, PasswordEncoder pwdEncoder) {
+	public UserService(UserRepo userRepo, RoleRepo roleRepo, PortfolioRepo portfolioRepo, PasswordEncoder pwdEncoder) {
 		this.userRepo = userRepo;
 		this.roleRepo = roleRepo;
+		this.portfolioRepo = portfolioRepo;
 		this.pwdEncoder = pwdEncoder;
 	}
 
@@ -53,7 +57,13 @@ public class UserService {
 		user.setPassword(pwdEncoder.encode(user.getPassword()));
 		user.setRole(role);
 
-		return userRepo.save(user);
+		user =  userRepo.save(user);
+
+		Portfolio portfolio = new Portfolio(user);
+		portfolioRepo.save(portfolio);
+
+		return user;
+
 	}
 
 }
