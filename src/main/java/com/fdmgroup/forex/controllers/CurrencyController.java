@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.services.CurrencyService;
 
@@ -35,14 +34,8 @@ public class CurrencyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCurrency(@PathVariable String id) {
-        try {
-            Currency currency = currencyService.findCurrencyById(id);
-            return ResponseEntity.ok(currency);
-        } catch (RecordNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            throw e;
-        }
+    public ResponseEntity<Currency> getCurrency(@PathVariable String id) {
+        Currency currency = currencyService.findCurrencyById(id);
+        return ResponseEntity.ok(currency);
     }
 }

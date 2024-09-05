@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.FxRate;
 import com.fdmgroup.forex.services.FxRateService;
@@ -38,27 +37,15 @@ public class FxRateController {
     }
 
     @GetMapping("/currency")
-    public ResponseEntity<?> getFxRateByCurrency(@RequestBody Currency currency) {
-        try {
-            FxRate fxRate = fxRateService.findFxRateByCurrency(currency);
-            return ResponseEntity.ok(fxRate);
-        } catch (RecordNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            throw e;
-        }
+    public ResponseEntity<FxRate> getFxRateByCurrency(@RequestBody Currency currency) {
+        FxRate fxRate = fxRateService.findFxRateByCurrency(currency);
+        return ResponseEntity.ok(fxRate);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getFxRate(@PathVariable UUID id) {
-        try {
-            FxRate fxRate = fxRateService.findFxRateById(id);
-            return ResponseEntity.ok(fxRate);
-        } catch (RecordNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            throw e;
-        }
+    public ResponseEntity<FxRate> getFxRate(@PathVariable UUID id) {
+        FxRate fxRate = fxRateService.findFxRateById(id);
+        return ResponseEntity.ok(fxRate);
     }
 
 }
