@@ -3,11 +3,13 @@ package com.fdmgroup.forex.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 public class Currency {
 
     @Id
+    @Pattern(regexp = "[A-Za-z]{3}", message = "Currency codes must have exactly 3 letters")
     private String currencyCode;
 
     @Column(unique = true, nullable = false)
