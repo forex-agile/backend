@@ -9,5 +9,5 @@ import com.fdmgroup.forex.models.*;
 
 @Repository
 public interface FundTransferRepo extends JpaRepository<FundTransfer, UUID> {
-	List<FundTransfer> findAllTransfersByPortfolio(Portfolio portfolio);
+	List<FundTransfer> findByPortfolio(Portfolio portfolio);
 }
