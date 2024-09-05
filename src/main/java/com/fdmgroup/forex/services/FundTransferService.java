@@ -45,7 +45,7 @@ public class FundTransferService {
 		assetService.depositAsset(fundTransfer.getPortfolio(),fundTransfer.getCurrency(),fundTransfer.getAmount());
 	}
 	
-	private void withdrawal(FundTransfer fundTransfer) throws RecordNotFoundException, InsufficientFundsException {
+	private void withdrawal(FundTransfer fundTransfer) {
 		assetService.withdrawAsset(fundTransfer.getPortfolio(),fundTransfer.getCurrency(),fundTransfer.getAmount());
 	}
 

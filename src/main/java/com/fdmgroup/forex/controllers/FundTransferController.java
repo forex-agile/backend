@@ -2,6 +2,7 @@ package com.fdmgroup.forex.controllers;
 
 import java.util.*;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,9 @@ public class FundTransferController {
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<FundTransfer> createFundTransfer(FundTransfer fundTransfer) {
-		FundTransfer savedFundTransfer = fundTransferService.transferFund(fundTransfer);
-		return ResponseEntity.ok(savedFundTransfer);
+	public ResponseEntity<FundTransfer> createFundTransfer(@RequestBody FundTransfer fundTransfer) {
+	    FundTransfer savedFundTransfer = fundTransferService.transferFund(fundTransfer);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(savedFundTransfer);
 	}
 	
 	@GetMapping("/{portfolioId}")
