@@ -1,7 +1,8 @@
 package com.fdmgroup.forex.models;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.fdmgroup.forex.enums.TransferType;
 
@@ -14,17 +15,24 @@ public class FundTransfer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id; 
+	
 	@ManyToOne()
 	@JoinColumn(name = "FK_Currency_ID")
 	@Column(nullable = false)
 	private Currency currency;
+	
 	@Column(nullable = false)
 	@Positive(message = "Amount must be positive")
 	private double amount;
+	
 	@Column(nullable = false)
 	private TransferType transferType;
-	@Column(nullable = false)
+	
+	@Column(nullable = false, updatable = false)
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date transferDate;
+	
 	@ManyToOne()
 	@JoinColumn(name = "FK_Portfolio_ID")
 	@Column(nullable = false)
