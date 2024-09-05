@@ -51,7 +51,7 @@ public class User {
 	private String bankAccount;
 
 	@ManyToOne
-	@JoinColumn(name = "role_id")
+	@JoinColumn(name = "FK_Role_Id")
 	private Role role;
 
 	@Column(nullable = false, updatable = false)
