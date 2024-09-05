@@ -41,15 +41,10 @@ public class UserService {
 
 	@Transactional
 	public User createUser(User user) {
-		userRepo.findByUsername(user.getUsername())
-				.ifPresent((u) -> {
-					throw new ResourceConflictException("Username already exists.", "username");
-				});
-
-		userRepo.findByEmail(user.getEmail())
-				.ifPresent((u) -> {
-					throw new ResourceConflictException("Email already exists.", "email");
-				});
+		if (hasConflictUsername(user.getUsername()))
+			throw new ResourceConflictException("Username already exists.", "username");
+		if (hasConflictEmail(user.getEmail()))
+			throw new ResourceConflictException("Email already exists.", "email");
 
 		Role role = roleRepo.findByRole("USER").orElseThrow(
 				() -> new InternalServerErrorException("Could not assign role to new user"));
@@ -63,7 +58,14 @@ public class UserService {
 		portfolioRepo.save(portfolio);
 
 		return user;
+	}
 
+	private boolean hasConflictUsername(String username) {
+		return userRepo.findByUsername(username).isPresent();
+	}
+
+	private boolean hasConflictEmail(String email) {
+		return userRepo.findByEmail(email).isPresent();
 	}
 
 }
