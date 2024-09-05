@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.fdmgroup.forex.exceptions.InsufficientFundsException;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Portfolio;
@@ -11,6 +13,7 @@ import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.Asset;
 import com.fdmgroup.forex.repos.AssetRepo;
 
+@Service
 public class AssetService {
 
     private AssetRepo assetRepo;
