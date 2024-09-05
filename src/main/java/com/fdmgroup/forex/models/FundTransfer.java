@@ -60,10 +60,10 @@ public class FundTransfer {
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
 	}
-	public float getAmount() {
+	public double getAmount() {
 		return amount;
 	}
-	public void setAmount(float amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 	public TransferType getTransferType() {
