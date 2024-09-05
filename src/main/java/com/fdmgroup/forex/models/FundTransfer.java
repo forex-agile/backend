@@ -17,8 +17,7 @@ public class FundTransfer {
 	private UUID id; 
 	
 	@ManyToOne()
-	@JoinColumn(name = "FK_Currency_ID")
-	@Column(nullable = false)
+	@JoinColumn(name = "FK_Currency_ID", nullable = false)
 	private Currency currency;
 	
 	@Column(nullable = false)
@@ -34,8 +33,7 @@ public class FundTransfer {
 	private Date transferDate;
 	
 	@ManyToOne()
-	@JoinColumn(name = "FK_Portfolio_ID")
-	@Column(nullable = false)
+	@JoinColumn(name = "FK_Portfolio_ID", nullable = false)
 	private Portfolio portfolio;
 	
 	public FundTransfer() {}	
