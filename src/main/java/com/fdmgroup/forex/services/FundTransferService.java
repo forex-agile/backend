@@ -1,13 +1,15 @@
 package com.fdmgroup.forex.services;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.forex.enums.TransferType;
-import com.fdmgroup.forex.models.FundTransfer;
+import com.fdmgroup.forex.models.*;
 import com.fdmgroup.forex.repos.FundTransferRepo;
+import com.fdmgroup.forex.services.*;
 
 @Service
 public class FundTransferService {
@@ -23,8 +25,12 @@ public class FundTransferService {
 		this.assetService = assetService;
 	}
 	
+    public List<FundTransfer> findAllTransfersByPortfolioId(UUID portfolioId) {
+        return fundTransferRepo.findAllTransfersByPortfolio(portfolioService.findPortfolioById(portfolioId));
+    }
+	
 	public FundTransfer transferFund(FundTransfer fundTransfer) {
-		getManagedAttributes(fundTransfer);
+		validateAttributes(fundTransfer);
 		fundTransfer.setTransferDate(new Date());
 		if (fundTransfer.getTransferType().equals(TransferType.DEPOSIT)) {
 			deposit(fundTransfer);
@@ -43,17 +49,17 @@ public class FundTransferService {
 	}
 
 
-	public void getManagedAttributes(FundTransfer fundTransfer) {
-		getManagedCurrency(fundTransfer);
-		getManagedPortfolio(fundTransfer);
+	public void validateAttributes(FundTransfer fundTransfer) {
+		validateCurrency(fundTransfer);
+		validatePortfolio(fundTransfer);
 	}
 
-	private void getManagedCurrency(FundTransfer fundTransfer) {
+	private void validateCurrency(FundTransfer fundTransfer) {
 		String currencyId = fundTransfer.getCurrency().getCurrencyCode();
 		fundTransfer.setCurrency(currencyService.findCurrencyById(currencyId));
 	}
 	
-	private void getManagedPortfolio(FundTransfer fundTransfer) {
+	private void validatePortfolio(FundTransfer fundTransfer) {
 		UUID portfolioId = fundTransfer.getPortfolio().getId();
 		fundTransfer.setPortfolio(portfolioService.findPortfolioById(portfolioId));
 	}

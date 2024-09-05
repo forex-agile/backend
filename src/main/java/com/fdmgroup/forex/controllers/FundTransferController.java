@@ -1,5 +1,8 @@
 package com.fdmgroup.forex.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +23,12 @@ public class FundTransferController {
 	public ResponseEntity<FundTransfer> createFundTransfer(FundTransfer fundTransfer) {
 		FundTransfer savedFundTransfer = fundTransferService.transferFund(fundTransfer);
 		return ResponseEntity.ok(savedFundTransfer);
+	}
+	
+	@GetMapping("/{portfolioId}")
+	public ResponseEntity<List<FundTransfer>> getAllFundTransfersByPortfolioId(@PathVariable UUID portfolioId ) {
+		List<FundTransfer> fundTransfers = fundTransferService.findAllTransfersByPortfolioId(portfolioId);
+		return ResponseEntity.ok(fundTransfers);
 	}
 	
 }
