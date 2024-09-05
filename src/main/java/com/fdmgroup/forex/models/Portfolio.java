@@ -29,8 +29,13 @@ public class Portfolio {
         assets = List.of();
 	}
 
+	public Portfolio(User user) {
+		this();
+		setUser(user);
+	}
+
     public Portfolio(User user, List<Asset> assets) {
-        setUser(user);
+		this(user);
         setAssets(assets);
     }
 
