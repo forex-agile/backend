@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.models.dto.UserDetailsDTO;
 import com.fdmgroup.forex.models.dto.UserPublicInfoDTO;
@@ -28,7 +27,7 @@ public class UserController {
 
 	@GetMapping("/user/{id}")
 	public UserPublicInfoDTO getUserPublicInfo(@PathVariable UUID id) {
-		User user = userService.findUserById(id).orElseThrow(() -> new RecordNotFoundException("User not found."));
+		User user = userService.findUserById(id);
 		return new UserPublicInfoDTO(user);
 	}
 
