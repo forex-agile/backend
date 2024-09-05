@@ -69,12 +69,13 @@ public class User {
 
 	public User(UUID id, String username, String email, String password, Currency preferredCurrency,
 			String bankAccount, Role role) {
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.preferredCurrency = preferredCurrency;
-		this.bankAccount = bankAccount;
+		setId(id);
+		setUsername(username);
+		setEmail(email);
+		setPassword(password);
+		setPreferredCurrency(preferredCurrency);
+		setBankAccount(bankAccount);
+		setRole(role);
 	}
 
 	public UUID getId() {
