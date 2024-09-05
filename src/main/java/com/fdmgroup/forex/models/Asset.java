@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,7 +24,7 @@ public class Asset {
     @JoinColumn(name = "FK_Portfolio_ID", nullable = false)
     private Portfolio portfolio;
 
-    @ManyToMany()
+    @ManyToOne()
     @JoinColumn(name = "FK_Currency_Code", nullable = false)
     private Currency currency;
 
