@@ -25,10 +25,13 @@ public class Portfolio {
 	@OneToMany(mappedBy = "portfolio")
     private List<Asset> assets;
 
-    public Portfolio() {}
+    public Portfolio() {
+        assets = List.of();
+	}
 
     public Portfolio(User user, List<Asset> assets) {
         setUser(user);
+        setAssets(assets);
     }
 
     public UUID getId() {
