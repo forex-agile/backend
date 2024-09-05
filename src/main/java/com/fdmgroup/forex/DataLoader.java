@@ -1,5 +1,6 @@
 package com.fdmgroup.forex;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,9 @@ import jakarta.transaction.Transactional;
 
 @Component
 public class DataLoader implements ApplicationRunner {
+
+	@Value("${forex.default.role}")
+	private String defaultRole;
 
 	private RoleRepo roleRepo;
 
@@ -25,8 +29,8 @@ public class DataLoader implements ApplicationRunner {
 
 	@Transactional
 	private void createRoles() {
-		if (roleRepo.findByRole("USER").isEmpty())
-			roleRepo.save(new Role("USER"));
+		if (roleRepo.findByRole(defaultRole).isEmpty())
+			roleRepo.save(new Role(defaultRole));
 	}
 
 }

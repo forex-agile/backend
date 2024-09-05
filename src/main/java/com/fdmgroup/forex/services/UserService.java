@@ -2,6 +2,7 @@ package com.fdmgroup.forex.services;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ import jakarta.transaction.Transactional;
  */
 @Service
 public class UserService {
+
+	@Value("${forex.default.role}")
+	private String defaultRole;
 
 	private UserRepo userRepo;
 	private RoleRepo roleRepo;
@@ -46,13 +50,13 @@ public class UserService {
 		if (hasConflictEmail(user.getEmail()))
 			throw new ResourceConflictException("Email already exists.", "email");
 
-		Role role = roleRepo.findByRole("USER").orElseThrow(
+		Role role = roleRepo.findByRole(defaultRole).orElseThrow(
 				() -> new InternalServerErrorException("Could not assign role to new user"));
 
 		user.setPassword(pwdEncoder.encode(user.getPassword()));
 		user.setRole(role);
 
-		user =  userRepo.save(user);
+		user = userRepo.save(user);
 
 		Portfolio portfolio = new Portfolio(user);
 		portfolioRepo.save(portfolio);
