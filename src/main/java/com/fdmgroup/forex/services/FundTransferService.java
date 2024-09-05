@@ -26,7 +26,7 @@ public class FundTransferService {
 	}
 	
     public List<FundTransfer> findAllTransfersByPortfolioId(UUID portfolioId) {
-        return fundTransferRepo.findAllTransfersByPortfolio(portfolioService.findPortfolioById(portfolioId));
+        return fundTransferRepo.findByPortfolio(portfolioService.findPortfolioById(portfolioId));
     }
 	
     @Transactional
