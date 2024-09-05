@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -21,6 +22,7 @@ public class Portfolio {
     @JoinColumn(name = "FK_User_ID", nullable = false)
     private User user;
 
+	@OneToMany(mappedBy = "portfolio")
     private List<Asset> assets;
 
     public Portfolio() {}
