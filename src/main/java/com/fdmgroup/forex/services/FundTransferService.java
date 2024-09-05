@@ -11,6 +11,8 @@ import com.fdmgroup.forex.models.*;
 import com.fdmgroup.forex.repos.FundTransferRepo;
 import com.fdmgroup.forex.services.*;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class FundTransferService {
 	private FundTransferRepo fundTransferRepo;
@@ -29,6 +31,7 @@ public class FundTransferService {
         return fundTransferRepo.findAllTransfersByPortfolio(portfolioService.findPortfolioById(portfolioId));
     }
 	
+    @Transactional
 	public FundTransfer transferFund(FundTransfer fundTransfer) {
 		validateAttributes(fundTransfer);
 		fundTransfer.setTransferDate(new Date());
