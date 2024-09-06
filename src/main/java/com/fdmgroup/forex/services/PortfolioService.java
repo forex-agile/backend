@@ -12,23 +12,22 @@ import com.fdmgroup.forex.repos.PortfolioRepo;
 @Service
 public class PortfolioService {
 
-    private PortfolioRepo portfolioRepo;
+	private PortfolioRepo portfolioRepo;
 
-    public PortfolioService(PortfolioRepo portfolioRepo) {
-        super();
-        this.portfolioRepo = portfolioRepo;
-    }
+	public PortfolioService(PortfolioRepo portfolioRepo) {
+		this.portfolioRepo = portfolioRepo;
+	}
 
-    public Portfolio findPortfolioById(UUID id) throws RecordNotFoundException {
-        Optional<Portfolio> portfolioOptional = portfolioRepo.findById(id);
-        return portfolioOptional.orElseThrow(() -> 
-            new RecordNotFoundException("Portfolio with ID '" + id + "'' not found"));
-    }
+	public Portfolio findPortfolioById(UUID id) throws RecordNotFoundException {
+		Optional<Portfolio> portfolioOptional = portfolioRepo.findById(id);
+		return portfolioOptional
+				.orElseThrow(() -> new RecordNotFoundException("Portfolio with ID '" + id + "'' not found"));
+	}
 
-    public Portfolio findPortfolioByUserId(UUID id) throws RecordNotFoundException {
-        Optional<Portfolio> portfolioOptional = portfolioRepo.findByUser_Id(id);
-        return portfolioOptional.orElseThrow(() -> 
-            new RecordNotFoundException("Portfolio with user ID '" + id + "'' not found"));
-    }
+	public Portfolio findPortfolioByUserId(UUID id) throws RecordNotFoundException {
+		Optional<Portfolio> portfolioOptional = portfolioRepo.findByUser_Id(id);
+		return portfolioOptional
+				.orElseThrow(() -> new RecordNotFoundException("Portfolio with user ID '" + id + "'' not found"));
+	}
 
 }

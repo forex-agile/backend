@@ -1,6 +1,12 @@
 package com.fdmgroup.forex.models;
 
+import java.util.Date;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +15,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /**
  * Model a user account on the Forex platform
@@ -24,27 +32,50 @@ public class User {
 	private String username;
 
 	@Column(unique = true, nullable = false)
+	@JsonIgnore
 	private String email;
 
 	@Column(nullable = false)
+	@JsonIgnore
 	private String password;
 
 	@ManyToOne
-	@JoinColumn(name = "preferred_currency_code")
+	@JoinColumn(name = "FK_Preferred_Currency_Code")
+	@JsonIgnore
 	private Currency preferredCurrency;
 
+	@JsonIgnore
 	private String bankAccount;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_Role_Id")
+	@JsonIgnore
+	private Role role;
+
+	@Column(nullable = false, updatable = false)
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
+	private Date createdDate;
+
+	@Column(nullable = false, updatable = false)
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
+	private Date modifiedDate;
 
 	public User() {
 	}
 
-	public User(String username, String email, String password, Currency preferredCurrency,
-			String bankAccount) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.preferredCurrency = preferredCurrency;
-		this.bankAccount = bankAccount;
+	public User(UUID id, String username, String email, String password, Currency preferredCurrency,
+			String bankAccount, Role role) {
+		setId(id);
+		setUsername(username);
+		setEmail(email);
+		setPassword(password);
+		setPreferredCurrency(preferredCurrency);
+		setBankAccount(bankAccount);
+		setRole(role);
 	}
 
 	public UUID getId() {
@@ -93,6 +124,30 @@ public class User {
 
 	public void setBankAccount(String bankAccount) {
 		this.bankAccount = bankAccount;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 
 }

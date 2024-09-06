@@ -23,7 +23,12 @@
    dependencies for a particular profile. The `-P <profile>` specifies the Maven
    profile you use.
 
-3. Run the project:
+3. Create your own RSA public and private keys and save them a
+   `/src/main/resources/certs` as `public.pem` and `private.pem` respectively.
+   The repo comes with two sample keys for the convenience of local testing, but
+   you should replace them with your own generated keys for production.
+
+4. Run the project:
 
    - Eclipse: Right click `ForexApplication.java` -> `Run As` ->
      `Java Application`

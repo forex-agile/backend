@@ -17,23 +17,23 @@ import com.fdmgroup.forex.services.PortfolioService;
 @CrossOrigin(origins = "*")
 public class PortfolioController {
 
-    private PortfolioService portfolioService;
+	private PortfolioService portfolioService;
 
-    public PortfolioController(PortfolioService portfolioService) {
-        super();
-        this.portfolioService = portfolioService;
-    }
+	public PortfolioController(PortfolioService portfolioService) {
+		super();
+		this.portfolioService = portfolioService;
+	}
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<Portfolio> getPortfolioByUserId(@PathVariable UUID id) {
-        Portfolio portfolio = portfolioService.findPortfolioByUserId(id);
-        return ResponseEntity.ok(portfolio);
-    }
+	@GetMapping("/user/{id}")
+	public ResponseEntity<Portfolio> getPortfolioByUserId(@PathVariable UUID id) {
+		Portfolio portfolio = portfolioService.findPortfolioByUserId(id);
+		return ResponseEntity.ok(portfolio);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Portfolio> getPortfolio(@PathVariable UUID id) {
-            Portfolio portfolio = portfolioService.findPortfolioById(id);
-            return ResponseEntity.ok(portfolio);
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<Portfolio> getPortfolio(@PathVariable UUID id) {
+		Portfolio portfolio = portfolioService.findPortfolioById(id);
+		return ResponseEntity.ok(portfolio);
+	}
 
 }
