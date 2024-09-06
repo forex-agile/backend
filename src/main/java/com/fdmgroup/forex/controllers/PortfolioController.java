@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fdmgroup.forex.models.Portfolio;
-import com.fdmgroup.forex.models.dto.GetPortfolioDTO;
 import com.fdmgroup.forex.services.PortfolioService;
 
 @RestController
@@ -26,15 +25,15 @@ public class PortfolioController {
 	}
 
 	@GetMapping("/username/{username}")
-	public ResponseEntity<GetPortfolioDTO> getPortfolioByUsername(@PathVariable String username) {
+	public ResponseEntity<Portfolio> getPortfolioByUsername(@PathVariable String username) {
 		Portfolio portfolio = portfolioService.findPortfolioByUsername(username);
-		return ResponseEntity.ok(new GetPortfolioDTO(portfolio));
+		return ResponseEntity.ok(portfolio);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<GetPortfolioDTO> getPortfolio(@PathVariable UUID id) {
+	public ResponseEntity<Portfolio> getPortfolio(@PathVariable UUID id) {
 		Portfolio portfolio = portfolioService.findPortfolioById(id);
-		return ResponseEntity.ok(new GetPortfolioDTO(portfolio));
+		return ResponseEntity.ok(portfolio);
 	}
 
 }

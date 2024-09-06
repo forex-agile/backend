@@ -10,7 +10,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.models.dto.UserDetailsDTO;
-import com.fdmgroup.forex.models.dto.UserPublicInfoDTO;
 import com.fdmgroup.forex.services.UserService;
 
 import jakarta.validation.Valid;
@@ -26,9 +25,8 @@ public class UserController {
 	private UserService userService;
 
 	@GetMapping("/user/{id}")
-	public UserPublicInfoDTO getUserPublicInfo(@PathVariable UUID id) {
-		User user = userService.findUserById(id);
-		return new UserPublicInfoDTO(user);
+	public User getUserPublicInfo(@PathVariable UUID id) {
+		return userService.findUserById(id);
 	}
 
 	@PostMapping("/register")

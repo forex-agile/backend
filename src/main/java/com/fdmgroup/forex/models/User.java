@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,31 +39,38 @@ public class User {
 	@NotNull(message = "Email must be present.")
 	@Email(message = "Email must be a valid email address.")
 	@Column(unique = true, nullable = false)
+	@JsonIgnore
 	private String email;
 
 	@NotNull(message = "Password must be present.")
 	@NotBlank(message = "Password cannot be blank or contain only whitespace characters.")
 	@Column(nullable = false)
+	@JsonIgnore
 	private String password;
 
 	@ManyToOne
 	@JoinColumn(name = "FK_Preferred_Currency_Code")
+	@JsonIgnore
 	private Currency preferredCurrency;
 
+	@JsonIgnore
 	private String bankAccount;
 
 	@ManyToOne
 	@JoinColumn(name = "FK_Role_Id")
+	@JsonIgnore
 	private Role role;
 
 	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date createdDate;
 
 	@Column(nullable = false, updatable = false)
 	@UpdateTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date modifiedDate;
 
 	public User() {
