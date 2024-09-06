@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PortfolioAssetTest {
+public class AssetTest {
 
     private Currency currency;
     private Portfolio portfolio;

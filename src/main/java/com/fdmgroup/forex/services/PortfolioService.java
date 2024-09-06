@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Portfolio;
-import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.repos.PortfolioRepo;
 
 @Service
@@ -26,10 +25,10 @@ public class PortfolioService {
             new RecordNotFoundException("Portfolio with ID '" + id + "'' not found"));
     }
 
-    public Portfolio findPortfolioByUser(User user) throws RecordNotFoundException {
-        Optional<Portfolio> portfolioOptional = portfolioRepo.findByUser(user);
+    public Portfolio findPortfolioByUserId(UUID id) throws RecordNotFoundException {
+        Optional<Portfolio> portfolioOptional = portfolioRepo.findByUser_Id(id);
         return portfolioOptional.orElseThrow(() -> 
-            new RecordNotFoundException("Portfolio with user ID '" + user.getId() + "'' not found"));
+            new RecordNotFoundException("Portfolio with user ID '" + id + "'' not found"));
     }
 
 }

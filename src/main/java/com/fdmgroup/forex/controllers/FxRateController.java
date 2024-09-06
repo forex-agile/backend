@@ -8,11 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.FxRate;
 import com.fdmgroup.forex.services.FxRateService;
 
@@ -36,9 +34,9 @@ public class FxRateController {
         return ResponseEntity.ok(fxRates);
     }
 
-    @GetMapping("/currency")
-    public ResponseEntity<FxRate> getFxRateByCurrency(@RequestBody Currency currency) {
-        FxRate fxRate = fxRateService.findFxRateByCurrency(currency);
+    @GetMapping("/currency/{id}")
+    public ResponseEntity<FxRate> getFxRateByCurrencyId(@PathVariable String id) {
+        FxRate fxRate = fxRateService.findFxRateByCurrencyId(id);
         return ResponseEntity.ok(fxRate);
     }
 
