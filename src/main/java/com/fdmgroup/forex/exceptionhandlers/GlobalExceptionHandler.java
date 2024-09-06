@@ -1,5 +1,6 @@
 package com.fdmgroup.forex.exceptionhandlers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,7 +74,20 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+
+		Class<?> requiredType = ex.getRequiredType();
+		if (requiredType.isEnum()) {
+			String validValues = Arrays.stream(requiredType.getEnumConstants())
+					.map(Object::toString)
+					.collect(Collectors.joining(", "));
+			String message = "Invalid value for '" + ex.getName() + "'. Valid values are: " + validValues;
+
+			return new ResponseEntity<>(message, status);
+		} else {
+
+			return new ResponseEntity<>("Invalid value for " + ex.getName(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }
