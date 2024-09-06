@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
-import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.FxRate;
 import com.fdmgroup.forex.repos.FxRateRepo;
 
@@ -30,10 +29,10 @@ public class FxRateService {
             new RecordNotFoundException("FxRate with id '" + id + "'' not found"));
     }
 
-    public FxRate findFxRateByCurrency(Currency currency) throws RecordNotFoundException {
-        Optional<FxRate> fxRateOptional = fxRateRepo.findByCurrency(currency);
+    public FxRate findFxRateByCurrencyId(String id) throws RecordNotFoundException {
+        Optional<FxRate> fxRateOptional = fxRateRepo.findByCurrency_CurrencyCode(id);
         return fxRateOptional.orElseThrow(() -> 
-            new RecordNotFoundException("FxRate for currency with code '" + currency.getCurrencyCode() + "'' not found"));
+            new RecordNotFoundException("FxRate for currency with code '" + id + "'' not found"));
     }
 
 }

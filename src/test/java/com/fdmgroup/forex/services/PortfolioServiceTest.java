@@ -68,16 +68,16 @@ public class PortfolioServiceTest {
 
     @Test
     void testFindByUserId_WhenPortfolioExists() {
-        when(portfolioRepo.findByUser(user)).thenReturn(Optional.of(portfolio));
-        Portfolio foundPortfolio = portfolioService.findPortfolioByUser(user);
+        when(portfolioRepo.findByUser_Id(user.getId())).thenReturn(Optional.of(portfolio));
+        Portfolio foundPortfolio = portfolioService.findPortfolioByUserId(user.getId());
         assertEquals(portfolio, foundPortfolio, "PortfolioService should find a valid user ID");
     }
 
     @Test
     void testFindByUserId_WhenPortfolioDoesNotExist() throws RecordNotFoundException {
-        when(portfolioRepo.findByUser(nonExistingUser)).thenReturn(Optional.empty());
+        when(portfolioRepo.findByUser_Id(nonExistingUser.getId())).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> {
-            portfolioService.findPortfolioByUser(nonExistingUser);
+            portfolioService.findPortfolioByUserId(nonExistingUser.getId());
         }, "PortfolioService should throw exception for an invalid user ID");
     }
 }
