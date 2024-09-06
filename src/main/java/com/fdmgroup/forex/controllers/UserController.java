@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fdmgroup.forex.models.User;
+import com.fdmgroup.forex.models.dto.RegisterUserDTO;
 import com.fdmgroup.forex.models.dto.UserDetailsDTO;
 import com.fdmgroup.forex.services.UserService;
 
@@ -30,8 +31,8 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<UserDetailsDTO> register(@Valid @RequestBody User user) {
-		user = userService.createUser(user);
+	public ResponseEntity<UserDetailsDTO> register(@Valid @RequestBody RegisterUserDTO registerUserDTO) {
+		User user = userService.createUser(registerUserDTO);
 		UserDetailsDTO userDetailsDTO = new UserDetailsDTO(user);
 		URI location = ServletUriComponentsBuilder
 				.fromCurrentRequest()

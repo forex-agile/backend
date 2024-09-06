@@ -17,9 +17,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * Model a user account on the Forex platform
@@ -31,19 +28,13 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	@NotNull(message = "Username must be present.")
-	@NotBlank(message = "Username cannot be blank or contain only whitespace characters.")
 	@Column(unique = true, nullable = false)
 	private String username;
 
-	@NotNull(message = "Email must be present.")
-	@Email(message = "Email must be a valid email address.")
 	@Column(unique = true, nullable = false)
 	@JsonIgnore
 	private String email;
 
-	@NotNull(message = "Password must be present.")
-	@NotBlank(message = "Password cannot be blank or contain only whitespace characters.")
 	@Column(nullable = false)
 	@JsonIgnore
 	private String password;

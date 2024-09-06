@@ -12,6 +12,7 @@ import com.fdmgroup.forex.exceptions.ResourceConflictException;
 import com.fdmgroup.forex.models.Portfolio;
 import com.fdmgroup.forex.models.Role;
 import com.fdmgroup.forex.models.User;
+import com.fdmgroup.forex.models.dto.RegisterUserDTO;
 import com.fdmgroup.forex.repos.PortfolioRepo;
 import com.fdmgroup.forex.repos.RoleRepo;
 import com.fdmgroup.forex.repos.UserRepo;
@@ -44,16 +45,19 @@ public class UserService {
 	}
 
 	@Transactional
-	public User createUser(User user) {
-		if (hasConflictUsername(user.getUsername()))
+	public User createUser(RegisterUserDTO registerUserDTO) {
+		if (hasConflictUsername(registerUserDTO.getUsername()))
 			throw new ResourceConflictException("Username already exists.", "username");
-		if (hasConflictEmail(user.getEmail()))
+		if (hasConflictEmail(registerUserDTO.getEmail()))
 			throw new ResourceConflictException("Email already exists.", "email");
 
 		Role role = roleRepo.findByRole(defaultRole).orElseThrow(
 				() -> new InternalServerErrorException("Could not assign role to new user"));
 
-		user.setPassword(pwdEncoder.encode(user.getPassword()));
+		User user = new User();
+		user.setUsername(registerUserDTO.getUsername());
+		user.setEmail(registerUserDTO.getEmail());
+		user.setPassword(pwdEncoder.encode(registerUserDTO.getPassword()));
 		user.setRole(role);
 
 		user = userRepo.save(user);
