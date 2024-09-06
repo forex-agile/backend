@@ -10,7 +10,6 @@ import com.fdmgroup.forex.enums.OrderSide;
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
-import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.Order;
 import com.fdmgroup.forex.repos.OrderRepo;
 
@@ -49,17 +48,38 @@ public class OrderService {
     }
 
     public List<Order> findOrdersByOrderStatusAndOrderType(OrderStatus orderStatus, OrderType orderType) {
-        List<Order> orders = orderRepo.findByOrderType(orderType);
+        List<Order> orders = orderRepo.findByOrderStatusAndOrderType(orderStatus, orderType);
         return orders;
     }
 
-    public List<Order> findOrdersByBaseFx(Currency baseFx) {
-        List<Order> orders = orderRepo.findByBaseFx(baseFx);
+    public List<Order> findOrdersByBaseFx(String baseFxCurrencyCode) {
+        List<Order> orders = orderRepo.findByBaseFx_CurrencyCode(baseFxCurrencyCode);
         return orders;
     }
 
-    public List<Order> findOrdersByQuoteFx(Currency quoteFx) {
-        List<Order> orders = orderRepo.findByQuoteFx(quoteFx);
+    public List<Order> findOrdersByQuoteFx(String quoteFxCurrencyCode) {
+        List<Order> orders = orderRepo.findByQuoteFx_CurrencyCode(quoteFxCurrencyCode);
+        return orders;
+    }
+
+
+    public List<Order> findOrdersByOrderSideAndUserId(OrderSide orderSide, UUID userId) {
+        List<Order> orders = orderRepo.findByOrderSideAndUser_Id(orderSide, userId);
+        return orders;
+    }
+
+    public List<Order> findOrdersByOrderStatusAndUserId(OrderStatus orderStatus, UUID userId) {
+        List<Order> orders = orderRepo.findByOrderStatusAndUser_Id(orderStatus, userId);
+        return orders;
+    }
+
+    public List<Order> findOrdersByOrderTypeAndUserId(OrderType orderType, UUID userId) {
+        List<Order> orders = orderRepo.findByOrderTypeAndUser_Id(orderType, userId);
+        return orders;
+    }
+
+    public List<Order> findOrdersByOrderStatusAndOrderTypeAndUserId(OrderStatus orderStatus, OrderType orderType, UUID userId) {
+        List<Order> orders = orderRepo.findByOrderStatusAndOrderTypeAndUser_Id(orderStatus, orderType, userId);
         return orders;
     }
 
