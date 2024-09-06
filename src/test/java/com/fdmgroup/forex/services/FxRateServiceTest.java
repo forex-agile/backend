@@ -75,17 +75,17 @@ public class FxRateServiceTest {
 
     @Test
     void testFindFxRateByCurrency_WhenFxRateExists() {
-        when(fxRateRepo.findByCurrency(currency)).thenReturn(Optional.of(fxRate));
-        FxRate foundFxRate = fxRateService.findFxRateByCurrency(currency);
+        when(fxRateRepo.findByCurrency_CurrencyCode(currency.getCurrencyCode())).thenReturn(Optional.of(fxRate));
+        FxRate foundFxRate = fxRateService.findFxRateByCurrencyId(currency.getCurrencyCode());
         assertEquals(fxRate, foundFxRate, "FxRateService should find an exchange rate for a valid currency");
     }
 
     @Test
     void testFindFxRateByCurrency_WhenFxRateDoesNotExist() {
         Currency invalidCurrency = new Currency("ABC", "Fake Currency");
-        when(fxRateRepo.findByCurrency(invalidCurrency)).thenReturn(Optional.empty());
+        when(fxRateRepo.findByCurrency_CurrencyCode(invalidCurrency.getCurrencyCode())).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> {
-            fxRateService.findFxRateByCurrency(invalidCurrency);
+            fxRateService.findFxRateByCurrencyId(invalidCurrency.getCurrencyCode());
         }, "FxRateService should throw exception when searching for an exchange rate with an invalid currency");
     }
 

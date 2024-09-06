@@ -24,9 +24,9 @@ public class PortfolioController {
 		this.portfolioService = portfolioService;
 	}
 
-	@GetMapping("/user/{userId}")
-	public ResponseEntity<Portfolio> getPortfolioByUserId(@PathVariable UUID userId) {
-		Portfolio portfolio = portfolioService.findPortfolioByUserId(userId);
+	@GetMapping("/user/{id}")
+	public ResponseEntity<Portfolio> getPortfolioByUserId(@PathVariable UUID id) {
+		Portfolio portfolio = portfolioService.findPortfolioByUserId(id);
 		return ResponseEntity.ok(portfolio);
 	}
 
