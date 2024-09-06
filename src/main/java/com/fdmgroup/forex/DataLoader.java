@@ -67,7 +67,7 @@ public class DataLoader implements ApplicationRunner {
 	private void createSampleData() {
 		Role role = roleRepo.findByRole(defaultRole).get();
 
-		Currency hkd = currencyRepo.findById(usdCode).orElseGet(() -> {
+		Currency hkd = currencyRepo.findById(hkdCode).orElseGet(() -> {
 			return currencyRepo.save(new Currency(hkdCode, "Hong Kong Dollar"));
 		});
 		Currency usd = currencyRepo.findById(usdCode).orElseGet(() -> {
