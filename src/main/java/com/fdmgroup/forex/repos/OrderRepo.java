@@ -14,6 +14,9 @@ import com.fdmgroup.forex.models.Order;
 @Repository
 public interface OrderRepo extends JpaRepository<Order, UUID> {
 
+    List<Order> findByUser_Id(UUID id);
+    List<Order> findByUser_IdAndOrderStatus(UUID userId, OrderStatus orderStatus);
+
     List<Order> findByOrderSide(OrderSide orderSide);
     List<Order> findByOrderStatus(OrderStatus orderStatus);
     List<Order> findByOrderType(OrderType orderType);
@@ -23,11 +26,7 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
     List<Order> findByQuoteFx_CurrencyCode(String quoteFxCurrencyCode);
     List<Order> findByBaseFx_CurrencyCodeAndQuoteFx_CurrencyCode(String baseFxCurrencyCode, String quoteFxCurrencyCode);
 
-    List<Order> findByOrderSideAndUser_Id(OrderSide orderSide, UUID userId);
-    List<Order> findByOrderStatusAndUser_Id(OrderStatus orderStatus, UUID userId);
     List<Order> findByOrderTypeAndUser_Id(OrderType orderType, UUID userId);
-    List<Order> findByOrderStatusAndOrderTypeAndUser_Id(OrderStatus orderStatus, OrderType orderType, UUID userId);
-
     List<Order> findByBaseFx_CurrencyCodeAndUser_Id(String baseFxCurrencyCode, UUID userId);
     List<Order> findByQuoteFx_CurrencyCodeAndUser_Id(String quoteFxCurrencyCode, UUID userId);
     List<Order> findByBaseFx_CurrencyCodeAndQuoteFx_CurrencyCodeAndUser_Id(String baseFxCurrencyCode, String quoteFxCurrencyCode, UUID userId);
