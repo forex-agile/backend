@@ -63,7 +63,7 @@ public class Order {
     @PositiveOrZero
     private double residual;
 
-    @Column(nullable = true, updatable = false)
+    @Column(name = "order_limit", nullable = true, updatable = false)
     @Positive
     private double limit;
 
