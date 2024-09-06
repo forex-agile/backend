@@ -6,12 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fdmgroup.forex.models.Portfolio;
-import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.models.dto.GetPortfolioDTO;
 import com.fdmgroup.forex.services.PortfolioService;
 
@@ -27,9 +25,9 @@ public class PortfolioController {
 		this.portfolioService = portfolioService;
 	}
 
-	@GetMapping("/user")
-	public ResponseEntity<GetPortfolioDTO> getPortfolioByUser(@RequestBody User user) {
-		Portfolio portfolio = portfolioService.findPortfolioByUser(user);
+	@GetMapping("/username/{username}")
+	public ResponseEntity<GetPortfolioDTO> getPortfolioByUsername(@PathVariable String username) {
+		Portfolio portfolio = portfolioService.findPortfolioByUsername(username);
 		return ResponseEntity.ok(new GetPortfolioDTO(portfolio));
 	}
 
