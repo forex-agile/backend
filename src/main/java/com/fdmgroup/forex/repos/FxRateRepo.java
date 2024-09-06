@@ -11,6 +11,6 @@ import com.fdmgroup.forex.models.FxRate;
 @Repository
 public interface FxRateRepo extends JpaRepository<FxRate, UUID> {
 
-    Optional<FxRate> findByCurrency_CurrencyId(String id);
+    Optional<FxRate> findByCurrency_CurrencyCode(String id);
 
 }

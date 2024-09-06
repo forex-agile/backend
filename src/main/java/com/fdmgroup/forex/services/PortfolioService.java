@@ -26,7 +26,7 @@ public class PortfolioService {
     }
 
     public Portfolio findPortfolioByUserId(UUID id) throws RecordNotFoundException {
-        Optional<Portfolio> portfolioOptional = portfolioRepo.findByUser_UserId(id);
+        Optional<Portfolio> portfolioOptional = portfolioRepo.findByUser_Id(id);
         return portfolioOptional.orElseThrow(() -> 
             new RecordNotFoundException("Portfolio with user ID '" + id + "'' not found"));
     }

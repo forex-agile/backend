@@ -30,7 +30,7 @@ public class FxRateService {
     }
 
     public FxRate findFxRateByCurrencyId(String id) throws RecordNotFoundException {
-        Optional<FxRate> fxRateOptional = fxRateRepo.findByCurrency_CurrencyId(id);
+        Optional<FxRate> fxRateOptional = fxRateRepo.findByCurrency_CurrencyCode(id);
         return fxRateOptional.orElseThrow(() -> 
             new RecordNotFoundException("FxRate for currency with code '" + id + "'' not found"));
     }

@@ -11,6 +11,6 @@ import com.fdmgroup.forex.models.Portfolio;
 @Repository
 public interface PortfolioRepo extends JpaRepository<Portfolio, UUID> {
 
-    Optional<Portfolio> findByUser_UserId(UUID id);
+    Optional<Portfolio> findByUser_Id(UUID id);
 
 }
