@@ -88,15 +88,7 @@ public class Order {
         User user, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate, 
         Currency baseFx, Currency quoteFx, double total, double residual, double limit
     ) {
-        this.user = user;
-        this.orderType = orderType;
-        this.orderSide = orderSide;
-        this.orderStatus = orderStatus;
-        this.expiryDate = expiryDate;
-        this.baseFx = baseFx;
-        this.quoteFx = quoteFx;
-        setTotal(total);
-        setResidual(residual);
+		this(user, orderType, orderSide, orderStatus, expiryDate, baseFx, quoteFx, total, residual);
         setLimit(limit);
     }
 
