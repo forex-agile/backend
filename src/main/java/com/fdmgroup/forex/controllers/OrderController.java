@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.fdmgroup.forex.enums.OrderSide;
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 import com.fdmgroup.forex.models.Order;
@@ -33,15 +32,6 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/side/{orderSide}")
-    public ResponseEntity<List<Order>> getOrdersByOrderSide(@PathVariable OrderSide orderSide) {
-        List<Order> orders = orderService.findOrdersByOrderSide(orderSide);
-        if (orders.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.ok(orders);
-    }
-
     @GetMapping("/status/{orderStatus}")
     public ResponseEntity<List<Order>> getOrdersByOrderStatus(@PathVariable OrderStatus orderStatus) {
         List<Order> orders = orderService.findOrdersByOrderStatus(orderStatus);
@@ -51,7 +41,7 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/status/{orderType}")
+    @GetMapping("/type/{orderType}")
     public ResponseEntity<List<Order>> getOrdersByOrderType(@PathVariable OrderType orderType) {
         List<Order> orders = orderService.findOrdersByOrderType(orderType);
         if (orders.isEmpty()) {
@@ -63,14 +53,13 @@ public class OrderController {
     @GetMapping("/user/{id}")
     public ResponseEntity<List<Order>> getOrdersByUserIdAndOptionalOrderStatus(
         @PathVariable UUID id, 
-        @RequestParam OrderStatus status
+        @RequestParam OrderStatus orderStatus
     ) {
         List<Order> orders;
-
-        if (status == null) {
+        if (orderStatus == null) {
             orders = orderService.findOrdersByUserId(id);
         } else {
-            orders = orderService.findOrdersByUserIdAndOrderStatus(id, status);
+            orders = orderService.findOrdersByUserIdAndOrderStatus(id, orderStatus);
         }
         if (orders.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

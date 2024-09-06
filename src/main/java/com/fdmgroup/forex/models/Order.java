@@ -62,8 +62,7 @@ public class Order {
     @Column(nullable = true, updatable = false)
     private double limit;
 
-    protected Order() {
-    }
+    public Order() {}
 
     public Order(
         User user, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate, 
