@@ -10,6 +10,8 @@ import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -54,12 +56,15 @@ public class Order {
     private Currency quoteFx;
 
     @Column(nullable = false, updatable = false)
+    @Positive
     private double total;
 
     @Column(nullable = false)
+    @PositiveOrZero
     private double residual;
 
     @Column(nullable = true, updatable = false)
+    @Positive
     private double limit;
 
     public Order() {}
@@ -75,8 +80,8 @@ public class Order {
         this.expiryDate = expiryDate;
         this.baseFx = baseFx;
         this.quoteFx = quoteFx;
-        this.total = total;
-        this.residual = residual;
+        setTotal(total);
+        setResidual(residual);
     }
 
     public Order(
@@ -90,9 +95,9 @@ public class Order {
         this.expiryDate = expiryDate;
         this.baseFx = baseFx;
         this.quoteFx = quoteFx;
-        this.total = total;
-        this.residual = residual;
-        this.limit = limit;
+        setTotal(total);
+        setResidual(residual);
+        setLimit(limit);
     }
 
     public UUID getId() {
@@ -184,7 +189,13 @@ public class Order {
     }
 
     public void setTotal(double total) {
-        this.total = total;
+        if (total <= 0) {
+            throw new IllegalArgumentException("Total must be greater than zero: [total=" + total + "]");
+        } else if (total < residual) {
+            throw new IllegalArgumentException("Total must exceed residual: [residual=" + residual + ", total=" + total + "]");
+        } else {
+            this.total = total;
+        }
     }
 
     public double getResidual() {
@@ -192,7 +203,13 @@ public class Order {
     }
 
     public void setResidual(double residual) {
-        this.residual = residual;
+        if (residual < 0) {
+            throw new IllegalArgumentException("Residual cannot be negative: [residual=" + residual + "]");
+        } else if (residual > total) {
+            throw new IllegalArgumentException("Residual cannot exceed total: [residual=" + residual + ", total=" + total + "]");
+        } else {
+            this.residual = residual;
+        }
     }
 
     public double getLimit() {
@@ -200,7 +217,11 @@ public class Order {
     }
 
     public void setLimit(double limit) {
-        this.limit = limit;
+        if (limit > 0) {
+            this.limit = limit;
+        } else {
+            throw new IllegalArgumentException("Limit cannot be negative: [limit=" + limit + "]");
+        }
     }
 
 }
