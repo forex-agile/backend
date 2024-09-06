@@ -1,13 +1,14 @@
 package com.fdmgroup.forex.models;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fdmgroup.forex.enums.OrderSide;
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class OrderTest {
     
     @BeforeEach
     public void setUp() {
-        user = new User("Demo User", "demo.user@email.com", "qwerty", baseFx, "demoaccount");
+        user = mock(User.class);
         baseFx = new Currency("USD", "U.S. Dollars");
         quoteFx = new Currency("EUR", "Euros");
         expiryDate = new Date();
@@ -56,7 +57,7 @@ public class OrderTest {
     public void testSettersAndGetters() {
         Order order = new Order();
         UUID newId = UUID.randomUUID();
-        User newUser = new User("Demo User 2", "demo.user2@email.com", "asdf", baseFx, "demoaccount2");
+        User newUser = mock(User.class);
         Currency newBaseFx = new Currency("GBP", "British Pound");
         Currency newQuoteFx = new Currency("JPY", "Japanese Yen");
 
