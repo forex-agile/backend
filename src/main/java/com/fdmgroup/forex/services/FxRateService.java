@@ -9,14 +9,17 @@ import org.springframework.stereotype.Service;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.FxRate;
+import com.fdmgroup.forex.repos.CurrencyRepo;
 import com.fdmgroup.forex.repos.FxRateRepo;
 
 @Service
 public class FxRateService {
 
+    private CurrencyRepo currencyRepo;
     private FxRateRepo fxRateRepo;
 
-    public FxRateService(FxRateRepo fxRateRepo) {
+    public FxRateService(CurrencyRepo currencyRepo, FxRateRepo fxRateRepo) {
+        this.currencyRepo = currencyRepo;
         this.fxRateRepo = fxRateRepo;
     }
 
@@ -30,10 +33,12 @@ public class FxRateService {
             new RecordNotFoundException("FxRate with id '" + id + "'' not found"));
     }
 
-    public FxRate findFxRateByCurrency(Currency currency) throws RecordNotFoundException {
+    public FxRate findFxRateByCurrencyCode(String currencyCode) throws RecordNotFoundException {
+        Currency currency = currencyRepo.findById(currencyCode).orElseThrow(() -> 
+                    new RecordNotFoundException("Currency with code '" + currencyCode + "'' not found"));
         Optional<FxRate> fxRateOptional = fxRateRepo.findByCurrency(currency);
         return fxRateOptional.orElseThrow(() -> 
-            new RecordNotFoundException("FxRate for currency with code '" + currency.getCurrencyCode() + "'' not found"));
+            new RecordNotFoundException("FxRate for currency with code '" + currencyCode + "' not found"));
     }
 
 }
