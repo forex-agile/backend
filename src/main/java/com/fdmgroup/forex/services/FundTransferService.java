@@ -2,6 +2,10 @@ package com.fdmgroup.forex.services;
 
 import java.util.*;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.forex.enums.TransferType;
@@ -31,6 +35,7 @@ public class FundTransferService {
     @Transactional
 	public FundTransfer transferFund(FundTransfer fundTransfer) {
 		validateAttributes(fundTransfer);
+		authenticateUser(fundTransfer);
 		fundTransfer.setTransferDate(new Date());
 		if (fundTransfer.getTransferType().equals(TransferType.DEPOSIT)) {
 			deposit(fundTransfer);
@@ -63,4 +68,16 @@ public class FundTransferService {
 		UUID portfolioId = fundTransfer.getPortfolio().getId();
 		fundTransfer.setPortfolio(portfolioService.findPortfolioById(portfolioId));
 	}
+
+	private void authenticateUser(FundTransfer fundTransfer) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userId = ((Jwt) authentication.getPrincipal()).getClaims().get("userId").toString();
+
+		if (!fundTransfer.getPortfolio().getUser().getId()
+				.equals(UUID.fromString(userId))) {
+			throw new AccessDeniedException(
+					"Cannot perform fund transfer because authenticated user does not own the portfolio.");
+		}
+	}
+
 }
