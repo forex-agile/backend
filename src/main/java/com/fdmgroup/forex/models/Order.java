@@ -126,7 +126,7 @@ public class Order {
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {
-        if (this.orderStatus == null && orderStatus != null) {
+        if (orderStatus != null) {
             this.orderStatus = orderStatus;
         }
     }
