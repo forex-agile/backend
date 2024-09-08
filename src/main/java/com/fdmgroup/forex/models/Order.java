@@ -23,7 +23,7 @@ public class Order {
     private UUID id;
 
     @ManyToOne()
-    @JoinColumn(name = "FK_User_ID", nullable = false)
+    @JoinColumn(name = "FK_User_ID", nullable = false, updatable = false)
     private User user;
 
     @Enumerated(EnumType.STRING)
