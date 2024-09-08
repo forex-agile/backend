@@ -29,7 +29,16 @@ public class FundTransferService {
 	}
 	
     public List<FundTransfer> findAllTransfersByPortfolioId(UUID portfolioId) {
-        return fundTransferRepo.findByPortfolio(portfolioService.findPortfolioById(portfolioId));
+		Portfolio portfolio = portfolioService.findPortfolioById(portfolioId);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userId = ((Jwt) authentication.getPrincipal()).getClaims().get("userId").toString();
+
+		if (!portfolio.getUser().getId().equals(UUID.fromString(userId))) {
+			throw new AccessDeniedException(
+					"Cannot view fund transfers because authenticated user does not own the portfolio.");
+		}
+
+		return fundTransferRepo.findByPortfolio(portfolio);
     }
 	
     @Transactional
