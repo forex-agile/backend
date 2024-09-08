@@ -211,7 +211,7 @@ public class Order {
         if (limit > 0) {
             this.limit = limit;
         } else {
-            throw new IllegalArgumentException("Limit cannot be negative: [limit=" + limit + "]");
+            throw new IllegalArgumentException("Limit must be positive: [limit=" + limit + "]");
         }
     }
 
