@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
 			return new ResponseEntity<>(message, status);
 		} else {
 
-			return new ResponseEntity<>("Invalid value for " + ex.getName(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Invalid value for " + ex.getName(), status);
 		}
 	}
 
