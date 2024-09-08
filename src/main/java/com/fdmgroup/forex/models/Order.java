@@ -14,7 +14,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "orders")
 public class Order {
 
