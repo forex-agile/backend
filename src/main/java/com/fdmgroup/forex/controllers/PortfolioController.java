@@ -34,7 +34,7 @@ public class PortfolioController {
 	}
 
 	@GetMapping("/{id}")
-	@PostAuthorize("returnObject.getBody().user.id == authentication.principal.claims['userId']")
+	@PostAuthorize("returnObject.getBody().getUser().getId().toString() == authentication.principal.claims['userId']")
 	public ResponseEntity<Portfolio> getPortfolio(@PathVariable UUID id) {
 		Portfolio portfolio = portfolioService.findPortfolioById(id);
 		return ResponseEntity.ok(portfolio);
