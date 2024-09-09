@@ -82,14 +82,17 @@ public class DataLoader implements ApplicationRunner {
 					pwdEncoder.encode("sampleuserpassword"), hkd, "sample_bank_account", role));
 		});
 
-		Portfolio portfolio = portfolioRepo.save(new Portfolio(user));
+		Portfolio portfolio = portfolioRepo.findByUser_Id(user.getId()).orElseGet(() -> {
+			return portfolioRepo.save(new Portfolio(user));
+		});
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.WEEK_OF_YEAR, 1);
 		Date oneWeekFromNow = calendar.getTime();
-		if (orderRepo.findByUser_Id(user.getId()).size() == 0) {
-			orderRepo.save(new Order(portfolio, OrderType.LIMIT, OrderSide.BUY, OrderStatus.ACTIVE, oneWeekFromNow, hkd, usd,
-					7800, 7800, 1000));
+		if (orderRepo.findByPortfolio_User_Id(user.getId()).size() == 0) {
+			orderRepo.save(
+					new Order(portfolio, OrderType.LIMIT, OrderSide.BUY, OrderStatus.ACTIVE, oneWeekFromNow, hkd, usd,
+							7800, 7800, 1000));
 		}
 	}
 
