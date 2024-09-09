@@ -1,6 +1,5 @@
 package com.fdmgroup.forex.security;
 
-import org.apache.coyote.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -8,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fdmgroup.forex.exceptions.BadRequestException;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.models.dto.LoginResponseDTO;
@@ -27,7 +27,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public LoginResponseDTO token(Authentication authentication) throws BadRequestException {
+	public LoginResponseDTO token(Authentication authentication) {
 		if (authentication == null) {
 			LOG.debug("Token requested for an anonymous user");
 			throw new BadRequestException("Authorization header is missing or invalid");
