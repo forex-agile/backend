@@ -15,6 +15,7 @@ import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.Order;
+import com.fdmgroup.forex.models.Portfolio;
 import com.fdmgroup.forex.models.Role;
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.repos.*;
@@ -40,14 +41,16 @@ public class DataLoader implements ApplicationRunner {
 	private UserRepo userRepo;
 	private OrderRepo orderRepo;
 	private CurrencyRepo currencyRepo;
+	private PortfolioRepo portfolioRepo;
 
 	public DataLoader(PasswordEncoder pwdEncoder, RoleRepo roleRepo, UserRepo userRepo, OrderRepo orderRepo,
-			CurrencyRepo currencyRepo) {
+			CurrencyRepo currencyRepo, PortfolioRepo portfolioRepo) {
 		this.pwdEncoder = pwdEncoder;
 		this.roleRepo = roleRepo;
 		this.userRepo = userRepo;
 		this.orderRepo = orderRepo;
 		this.currencyRepo = currencyRepo;
+		this.portfolioRepo = portfolioRepo;
 	}
 
 	@Override
@@ -79,12 +82,17 @@ public class DataLoader implements ApplicationRunner {
 					pwdEncoder.encode("sampleuserpassword"), hkd, "sample_bank_account", role));
 		});
 
+		Portfolio portfolio = portfolioRepo.findByUser_Id(user.getId()).orElseGet(() -> {
+			return portfolioRepo.save(new Portfolio(user));
+		});
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.WEEK_OF_YEAR, 1);
 		Date oneWeekFromNow = calendar.getTime();
-		if (orderRepo.findByUser_Id(user.getId()).size() == 0) {
-			orderRepo.save(new Order(user, OrderType.LIMIT, OrderSide.BUY, OrderStatus.ACTIVE, oneWeekFromNow, hkd, usd,
-					7800, 7800, 1000));
+		if (orderRepo.findByPortfolio_User_Id(user.getId()).size() == 0) {
+			orderRepo.save(
+					new Order(portfolio, OrderType.LIMIT, OrderSide.BUY, OrderStatus.ACTIVE, oneWeekFromNow, hkd, usd,
+							7800, 7800, 1000));
 		}
 	}
 

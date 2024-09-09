@@ -13,8 +13,8 @@ import com.fdmgroup.forex.models.Order;
 @Repository
 public interface OrderRepo extends JpaRepository<Order, UUID> {
 
-    List<Order> findByUser_Id(UUID id);
-    List<Order> findByUser_IdAndOrderStatus(UUID userId, OrderStatus orderStatus);
+    List<Order> findByPortfolio_User_Id(UUID id);
+    List<Order> findByPortfolio_User_IdAndOrderStatus(UUID userId, OrderStatus orderStatus);
     List<Order> findByOrderStatus(OrderStatus orderStatus);
     List<Order> findByOrderType(OrderType orderType);
 
