@@ -75,7 +75,6 @@ public class DataLoader implements ApplicationRunner {
 		});
 
 		User user = userRepo.findByUsername(username).orElseGet(() -> {
-			System.out.println("Should not run this");
 			return userRepo.save(new User(UUID.randomUUID(), username, "sampleuser@example.com",
 					pwdEncoder.encode("sampleuserpassword"), hkd, "sample_bank_account", role));
 		});

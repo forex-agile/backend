@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -88,6 +89,11 @@ public class GlobalExceptionHandler {
 
 			return new ResponseEntity<>("Invalid value for " + ex.getName(), status);
 		}
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
 	}
 
 }
