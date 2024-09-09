@@ -10,6 +10,7 @@ import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -27,6 +28,7 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
+	@NotNull
 	private OrderSide orderSide;
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +37,7 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
+	@NotNull
 	private OrderType orderType;
 
     @Column(nullable = false, updatable = false)
@@ -44,17 +47,21 @@ public class Order {
 
     @Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@NotNull
 	private Date expiryDate;
 
     @ManyToOne()
     @JoinColumn(name = "FK_Base_Currency_Code", nullable = false, updatable = false)
+	@NotNull
     private Currency baseFx;
 
     @ManyToOne()
     @JoinColumn(name = "FK_Quote_Currency_Code", nullable = false, updatable = false)
+	@NotNull
     private Currency quoteFx;
 
     @Column(nullable = false, updatable = false)
+	@NotNull
     @Positive
     private double total;
 
