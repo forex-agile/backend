@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public class PortfolioTest {
 		Portfolio defaultPortfolio = new Portfolio();
 		assertNull(defaultPortfolio.getId(), "Portfolio ID should be null");
 		assertNull(defaultPortfolio.getUser(), "Portfolio user should be null");
-		assertNull(defaultPortfolio.getAssets(), "Portfolio assets should be null");
+		assertEquals(Collections.emptyList(), defaultPortfolio.getAssets(), "Portfolio assets should be null");
 	}
 
 	@Test

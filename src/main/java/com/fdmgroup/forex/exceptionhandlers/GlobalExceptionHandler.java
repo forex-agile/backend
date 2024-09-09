@@ -1,5 +1,6 @@
 package com.fdmgroup.forex.exceptionhandlers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.fdmgroup.forex.exceptions.InternalServerErrorException;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
@@ -68,6 +70,24 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(BadRequestException.class)
 	public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+
+		Class<?> requiredType = ex.getRequiredType();
+		if (requiredType.isEnum()) {
+			String validValues = Arrays.stream(requiredType.getEnumConstants())
+					.map(Object::toString)
+					.collect(Collectors.joining(", "));
+			String message = "Invalid value for '" + ex.getName() + "'. Valid values are: " + validValues;
+
+			return new ResponseEntity<>(message, status);
+		} else {
+
+			return new ResponseEntity<>("Invalid value for " + ex.getName(), status);
+		}
 	}
 
 }
