@@ -1,5 +1,6 @@
 package com.fdmgroup.forex.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -8,17 +9,33 @@ import org.springframework.stereotype.Service;
 
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
+import com.fdmgroup.forex.exceptions.BadRequestException;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
+import com.fdmgroup.forex.exceptions.order.NoMatchingOrderException;
+import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.Order;
+import com.fdmgroup.forex.models.Portfolio;
+import com.fdmgroup.forex.models.User;
+import com.fdmgroup.forex.models.dto.SubmitSpotOrderDTO;
+import com.fdmgroup.forex.repos.CurrencyRepo;
 import com.fdmgroup.forex.repos.OrderRepo;
+import com.fdmgroup.forex.repos.PortfolioRepo;
+import com.fdmgroup.forex.security.AuthUserService;
 
 @Service
 public class OrderService {
 
     private OrderRepo orderRepo;
+    private PortfolioRepo portfolioRepo;
+    private CurrencyRepo currencyRepo;
+    private AuthUserService authUserService;
 
-    public OrderService(OrderRepo orderRepo) {
+    public OrderService(OrderRepo orderRepo, PortfolioRepo portfolioRepo, CurrencyRepo currencyRepo,
+            AuthUserService authUserService) {
         this.orderRepo = orderRepo;
+        this.portfolioRepo = portfolioRepo;
+        this.currencyRepo = currencyRepo;
+        this.authUserService = authUserService;
     }
 
     public List<Order> findAllOrders() {
@@ -27,8 +44,7 @@ public class OrderService {
 
     public Order findOrderById(UUID id) {
         Optional<Order> orderOptional = orderRepo.findById(id);
-        return orderOptional.orElseThrow(() -> 
-            new RecordNotFoundException("Order with id '" + id + "'' not found"));
+        return orderOptional.orElseThrow(() -> new RecordNotFoundException("Order with id '" + id + "'' not found"));
     }
 
     public List<Order> findOrdersByUserId(UUID userId) {
@@ -49,6 +65,73 @@ public class OrderService {
     public List<Order> findOrdersByOrderType(OrderType orderType) {
         List<Order> orders = orderRepo.findByOrderType(orderType);
         return orders;
+    }
+
+    public Order submitSpotOrder(SubmitSpotOrderDTO dto) {
+        Date now = new Date();
+        validateSpotOrderSubmission(dto, now);
+
+        Order order = buildSpotOrder(dto);
+
+        // TODO: check if portfolio has enough balance
+
+        order = mockOrderMatching(order);
+        return orderRepo.save(order);
+    }
+
+    public void validateSpotOrderSubmission(SubmitSpotOrderDTO dto, Date now) {
+        if (dto.getExpiryDate().before(now)) {
+            throw new BadRequestException("Expiry date must be in the future.");
+        }
+
+        if (dto.getBaseFx() == dto.getQuoteFx()) {
+            throw new BadRequestException("Base currency and quote currency must be different.");
+        }
+
+        if (dto.getOrderType() == OrderType.LIMIT && dto.getLimit() == null) {
+            throw new BadRequestException("Limit is required for a limit order.");
+        }
+
+        if (dto.getOrderType() == OrderType.MARKET && dto.getLimit() != null) {
+            throw new BadRequestException("Limit should be absent for a market order.");
+        }
+    }
+
+    public Order buildSpotOrder(SubmitSpotOrderDTO dto) {
+        User authUser = authUserService.getAuthenticatedUser();
+        Portfolio portfolio = portfolioRepo.findByUser_Id(authUser.getId()).orElseThrow(
+                () -> new BadRequestException(
+                        "Couldn't find portfolio for user. Please try to logout and login again. If problem persists, contact support."));
+
+        Currency baseFx = currencyRepo.findById(dto.getBaseFx()).orElseThrow(
+                () -> new BadRequestException("Base currency is not valid."));
+        Currency quoteFx = currencyRepo.findById(dto.getQuoteFx()).orElseThrow(
+                () -> new BadRequestException("Base currency is not valid."));
+
+        Order order;
+
+        switch (dto.getOrderType()) {
+            case LIMIT:
+                order = new Order(portfolio, dto.getOrderType(), dto.getOrderSide(), OrderStatus.ACTIVE,
+                        dto.getExpiryDate(), baseFx, quoteFx, dto.getTotal(), dto.getTotal(), dto.getLimit());
+                break;
+            case MARKET:
+                order = new Order(portfolio, dto.getOrderType(), dto.getOrderSide(), OrderStatus.ACTIVE,
+                        dto.getExpiryDate(), baseFx, quoteFx, dto.getTotal(), dto.getTotal());
+                break;
+            default:
+                throw new BadRequestException("Invalid order type");
+        }
+
+        return order;
+    }
+
+    // TODO: this is just a mock for now until real order matching is implemented
+    public Order mockOrderMatching(Order order) {
+        if (order.getOrderType() == OrderType.MARKET) {
+            throw new NoMatchingOrderException("No matching order found currently. Please try again later");
+        }
+        return order;
     }
 
 }
