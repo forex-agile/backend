@@ -38,7 +38,7 @@ public class FxRateService {
             Map<String,Double> usdRates = parseFxRatesResponse(response);
             return updateFxRatesFromUSDRates(usdRates);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Error updating exchange rates via external API");
+            throw new InternalServerErrorException("Error updating exchange rates via external API: " + e.getMessage());
         }
     }
 
@@ -64,21 +64,46 @@ public class FxRateService {
 
     private Map<String,Double> parseFxRatesResponse(String response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> data = mapper.readValue(response, new TypeReference<Map<String, Object>>() {
-        });
+        Map<String, Object> data = mapper.readValue(response, new TypeReference<Map<String, Object>>() {});
 
-        @SuppressWarnings("unchecked")  // API response structure is known
-        Map<String,Double> rates = (Map<String,Double>) data.get("rates");
+        Object ratesObject = data.get("rates");
+        if (!(ratesObject instanceof Map<?, ?>)) {
+            throw new IllegalArgumentException("Expected 'rates' to be a Map, but got: " + ratesObject.getClass());
+        }
+    
+        Map<?, ?> rawRates = (Map<?, ?>) ratesObject;
+        Map<String, Double> rates = new HashMap<>();
+    
+        for (Map.Entry<?, ?> entry : rawRates.entrySet()) {
+            if (!(entry.getKey() instanceof String)) {
+                throw new IllegalArgumentException("Expected rate key to be a String, but got: " + entry.getKey().getClass());
+            }
+            String key = (String) entry.getKey();
+            Object value = entry.getValue();
+    
+            if (value instanceof Integer intValue) {
+                rates.put(key, intValue.doubleValue());
+            } else if (value instanceof Double doubleValue) {
+                rates.put(key, doubleValue);
+            } else if (value instanceof Number numberValue) {
+                rates.put(key, numberValue.doubleValue());
+            } else {
+                throw new IllegalArgumentException("Unexpected value type in rates map: " + value.getClass());
+            }
+        }
         return rates;
     }
 
     private List<FxRate> updateFxRatesFromUSDRates(Map<String,Double> rates) {
         List<FxRate> fxRates = new ArrayList<>();
         for (String code : rates.keySet()) {
-            double rate = rates.get(code);
-            
-            FxRate fxRate = createOrUpdateFxRate(code, rate);
-            fxRates.add(fxRate);
+            double rate = Double.valueOf(rates.get(code));
+            try {
+                FxRate fxRate = createOrUpdateFxRate(code, rate);
+                fxRates.add(fxRate);
+            } catch (RecordNotFoundException e) {
+
+            }
         }
         return fxRates;
     }
@@ -86,11 +111,11 @@ public class FxRateService {
     private FxRate createOrUpdateFxRate(String code, double rate) {
         try {
             FxRate fxRate = findFxRateByCurrencyId(code);
-            fxRate.setRateToUSD(1 / rate);
+            fxRate.setRateToUSD(1.0 / rate);
             return fxRateRepo.save(fxRate);
         } catch (RecordNotFoundException e) {
             Currency currency = currencyService.findCurrencyById(code);
-            FxRate fxRate = new FxRate(currency, 1 / rate);
+            FxRate fxRate = new FxRate(currency, 1.0 / rate);
             return fxRateRepo.save(fxRate);
         }
     }
