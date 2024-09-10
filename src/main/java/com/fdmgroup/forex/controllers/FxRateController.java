@@ -41,15 +41,6 @@ public class FxRateController {
         return ResponseEntity.ok(fxRate);
     }
 
-    @PostMapping
-    private ResponseEntity<List<FxRate>> createFxRates() {
-        List<FxRate> fxRates = fxRateService.fetchAndCreateFxRates();
-        if (fxRates.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.ok(fxRates);
-    }
-
     @PutMapping
     private ResponseEntity<List<FxRate>> updateFxRates() {
         List<FxRate> fxRates = fxRateService.fetchAndUpdateFxRates();
