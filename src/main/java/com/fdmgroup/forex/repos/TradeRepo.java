@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fdmgroup.forex.models.Trade;
+import com.fdmgroup.forex.models.composites.TradeId;
 
 @Repository
-public interface TradeRepo extends JpaRepository<Trade, UUID> {
+public interface TradeRepo extends JpaRepository<Trade, TradeId> {
 
     List<Trade> findByOrder_Id(UUID id);
     

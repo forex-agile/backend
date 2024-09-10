@@ -19,7 +19,7 @@ public class TradeTest {
         order = mock(Order.class);
         baseUSD = 100;
         quoteHKD = 780;
-        trade = new Trade(order, baseUSD, quoteHKD);
+        trade = new Trade(UUID.randomUUID(), order, baseUSD, quoteHKD);
         
     }
 
@@ -64,13 +64,9 @@ public class TradeTest {
 
     @Test
     public void testSetters_IgnoreNullValues() {
-        UUID validUUID = UUID.randomUUID();
-        trade.setId(validUUID);
-        trade.setId(null);
         trade.setBaseFxAmount(0);
         trade.setQuoteFxAmount(0);
 
-        assertEquals(validUUID, trade.getId());
         assertEquals(baseUSD, trade.getBaseFxAmount());
         assertEquals(quoteHKD, trade.getQuoteFxAmount());
     }

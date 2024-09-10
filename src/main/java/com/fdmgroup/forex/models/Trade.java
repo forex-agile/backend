@@ -5,16 +5,19 @@ import java.util.*;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fdmgroup.forex.models.composites.TradeId;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "trades")
+@IdClass(TradeId.class)
 public class Trade {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Id
     @ManyToOne()
     @JoinColumn(name = "FK_Order_ID", nullable = false, updatable = false)
     private Order order;
@@ -29,7 +32,8 @@ public class Trade {
 
     public Trade() {}
 
-    public Trade(Order order, double baseFxAmount, double quoteFxAmount) {
+    public Trade(UUID id, Order order, double baseFxAmount, double quoteFxAmount) {
+        this.id = id;
         this.order = order;
         this.baseFxAmount = baseFxAmount;
         this.quoteFxAmount = quoteFxAmount;
@@ -40,9 +44,7 @@ public class Trade {
     }
 
     public void setId(UUID id) {
-        if (id != null) {
-            this.id = id;
-        }
+        this.id = id;
     }
 
     public Order getOrder() {
@@ -50,9 +52,7 @@ public class Trade {
     }
 
     public void setOrder(Order order) {
-        if (order != null) {
-            this.order = order;
-        }
+        this.order = order;
     }
 
     public Date getExecutionDate() {
