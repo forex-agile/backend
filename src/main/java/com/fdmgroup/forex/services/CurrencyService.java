@@ -61,7 +61,10 @@ public class CurrencyService {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> data = mapper.readValue(response, new TypeReference<Map<String, Object>>() {
         });
-        return (List<List<String>>) data.get("supported_codes");
+
+        @SuppressWarnings("unchecked")  // API response structure is known
+        List<List<String>> supportedCodes = (List<List<String>>) data.get("supported_codes");
+        return supportedCodes;
     }
 
     private List<Currency> createCurrenciesFromCodes(List<List<String>> supportedCodes) {
