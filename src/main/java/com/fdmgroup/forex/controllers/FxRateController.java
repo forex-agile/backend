@@ -31,7 +31,7 @@ public class FxRateController {
 
     @GetMapping("/currency/{id}")
     public ResponseEntity<FxRate> getFxRateByCurrencyId(@PathVariable String id) {
-        FxRate fxRate = fxRateService.findFxRateByCurrencyId(id);
+        FxRate fxRate = fxRateService.findFxRateByCurrencyId(id.toUpperCase());
         return ResponseEntity.ok(fxRate);
     }
 
