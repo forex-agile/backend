@@ -6,16 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fdmgroup.forex.exceptions.InternalServerErrorException;
-import com.fdmgroup.forex.exceptions.RecordNotFoundException;
-import com.fdmgroup.forex.exceptions.ResourceConflictException;
-import com.fdmgroup.forex.models.Portfolio;
-import com.fdmgroup.forex.models.Role;
-import com.fdmgroup.forex.models.User;
+import com.fdmgroup.forex.exceptions.*;
+import com.fdmgroup.forex.models.*;
 import com.fdmgroup.forex.models.dto.RegisterUserDTO;
-import com.fdmgroup.forex.repos.PortfolioRepo;
-import com.fdmgroup.forex.repos.RoleRepo;
-import com.fdmgroup.forex.repos.UserRepo;
+import com.fdmgroup.forex.models.dto.UserDetailsDTO;
+import com.fdmgroup.forex.repos.*;
 
 import jakarta.transaction.Transactional;
 
@@ -45,7 +40,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public User createUser(RegisterUserDTO registerUserDTO) {
+	public UserDetailsDTO createUser(RegisterUserDTO registerUserDTO) {
 		if (hasConflictUsername(registerUserDTO.getUsername()))
 			throw new ResourceConflictException("Username already exists.", "username");
 		if (hasConflictEmail(registerUserDTO.getEmail()))
@@ -65,7 +60,7 @@ public class UserService {
 		Portfolio portfolio = new Portfolio(user);
 		portfolioRepo.save(portfolio);
 
-		return user;
+		return new UserDetailsDTO(user, portfolio.getId().toString());
 	}
 
 	private boolean hasConflictUsername(String username) {

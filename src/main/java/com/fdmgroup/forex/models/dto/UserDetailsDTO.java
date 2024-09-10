@@ -12,6 +12,7 @@ public class UserDetailsDTO {
 	private String id;
 	private String username;
 	private String email;
+	private String portfolioId;
 	private String preferredCurrencyCode;
 	private String bankAccountId;
 	private String role;
@@ -21,7 +22,7 @@ public class UserDetailsDTO {
 	public UserDetailsDTO() {
 	}
 
-	public UserDetailsDTO(User user) {
+	public UserDetailsDTO(User user, String portfolioId) {
 		this.id = user.getId().toString();
 		this.username = user.getUsername();
 		this.email = user.getEmail();
@@ -31,6 +32,7 @@ public class UserDetailsDTO {
 		this.role = user.getRole() == null ? null : user.getRole().getRole();
 		this.createdDate = user.getCreatedDate();
 		this.modifiedDate = user.getModifiedDate();
+		this.portfolioId = portfolioId;
 	}
 
 	public String getId() {
@@ -55,6 +57,14 @@ public class UserDetailsDTO {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPortfolioId() {
+		return portfolioId;
+	}
+
+	public void setPortfolioId(String portfolioId) {
+		this.portfolioId = portfolioId;
 	}
 
 	public String getPreferredCurrencyCode() {
