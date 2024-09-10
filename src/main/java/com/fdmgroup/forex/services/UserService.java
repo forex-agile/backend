@@ -23,16 +23,22 @@ public class UserService {
 	@Value("${forex.default.role}")
 	private String defaultRole;
 
+	@Value("${forex.default.currency.code}")
+	private String defaultCurrencyCode;
+
 	private UserRepo userRepo;
 	private RoleRepo roleRepo;
 	private PortfolioRepo portfolioRepo;
 	private PasswordEncoder pwdEncoder;
+	private CurrencyRepo currencyRepo;
 
-	public UserService(UserRepo userRepo, RoleRepo roleRepo, PortfolioRepo portfolioRepo, PasswordEncoder pwdEncoder) {
+	public UserService(UserRepo userRepo, RoleRepo roleRepo, PortfolioRepo portfolioRepo, PasswordEncoder pwdEncoder,
+			CurrencyRepo currencyRepo) {
 		this.userRepo = userRepo;
 		this.roleRepo = roleRepo;
 		this.portfolioRepo = portfolioRepo;
 		this.pwdEncoder = pwdEncoder;
+		this.currencyRepo = currencyRepo;
 	}
 
 	public User findUserById(UUID id) {
@@ -47,13 +53,15 @@ public class UserService {
 			throw new ResourceConflictException("Email already exists.", "email");
 
 		Role role = roleRepo.findByRole(defaultRole).orElseThrow(
-				() -> new InternalServerErrorException("Could not assign role to new user"));
+				() -> new InternalServerErrorException("Could not assign default role to new user"));
 
 		User user = new User();
 		user.setUsername(registerUserDTO.getUsername());
 		user.setEmail(registerUserDTO.getEmail());
 		user.setPassword(pwdEncoder.encode(registerUserDTO.getPassword()));
 		user.setRole(role);
+		user.setPreferredCurrency(currencyRepo.findById(defaultCurrencyCode).orElseThrow(
+				() -> new InternalServerErrorException("Could not assign default preferred currency to new user.")));
 
 		user = userRepo.save(user);
 
