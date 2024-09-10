@@ -1,12 +1,12 @@
 package com.fdmgroup.forex.controllers;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.fdmgroup.forex.models.FxRate;
+import com.fdmgroup.forex.models.FxRateUpdateTime;
 import com.fdmgroup.forex.services.FxRateService;
 
 @RestController
@@ -22,7 +22,7 @@ public class FxRateController {
 
     @GetMapping
     public ResponseEntity<List<FxRate>> getAllFxRates() {
-        List<FxRate> fxRates = fxRateService.findAllFxRates();
+        List<FxRate> fxRates = fxRateService.getUpdatedFxRates();
         if (fxRates.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -33,6 +33,12 @@ public class FxRateController {
     public ResponseEntity<FxRate> getFxRateByCurrencyId(@PathVariable String id) {
         FxRate fxRate = fxRateService.findFxRateByCurrencyId(id.toUpperCase());
         return ResponseEntity.ok(fxRate);
+    }
+
+    @GetMapping("/last-update")
+    public ResponseEntity<FxRateUpdateTime> getFxRateUpdateTime() {
+        FxRateUpdateTime fxRateUpdateTime = fxRateService.findFxRateUpdateTime();
+        return ResponseEntity.ok(fxRateUpdateTime);
     }
 
     @GetMapping("/{id}")
