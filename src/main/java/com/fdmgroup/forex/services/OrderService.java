@@ -7,11 +7,12 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.fdmgroup.forex.enums.OrderStatus;
-import com.fdmgroup.forex.enums.OrderType;
+import com.fdmgroup.forex.enums.*;
 import com.fdmgroup.forex.exceptions.BadRequestException;
+import com.fdmgroup.forex.exceptions.InsufficientFundsException;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
-import com.fdmgroup.forex.exceptions.order.NoMatchingOrderException;
+import com.fdmgroup.forex.facades.Matching;
+import com.fdmgroup.forex.models.Asset;
 import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.Order;
 import com.fdmgroup.forex.models.Portfolio;
@@ -29,15 +30,19 @@ public class OrderService {
     private PortfolioRepo portfolioRepo;
     private CurrencyRepo currencyRepo;
     private AuthUserService authUserService;
+    private Matching matching;
+    private AssetService assetService;
 
     public OrderService(OrderRepo orderRepo, PortfolioRepo portfolioRepo, CurrencyRepo currencyRepo,
-            AuthUserService authUserService) {
-        this.orderRepo = orderRepo;
-        this.portfolioRepo = portfolioRepo;
-        this.currencyRepo = currencyRepo;
-        this.authUserService = authUserService;
-    }
-
+			AuthUserService authUserService, Matching matching, AssetService assetService) {
+		this.orderRepo = orderRepo;
+		this.portfolioRepo = portfolioRepo;
+		this.currencyRepo = currencyRepo;
+		this.authUserService = authUserService;
+		this.matching = matching;
+		this.assetService = assetService;
+	}
+    
     public List<Order> findAllOrders() {
         return orderRepo.findAll();
     }
@@ -70,16 +75,29 @@ public class OrderService {
     public Order submitSpotOrder(SubmitSpotOrderDTO dto) {
         Date now = new Date();
         validateSpotOrderSubmission(dto, now);
-
+        
         Order order = buildSpotOrder(dto);
+        
+        validateSpotOrderBaseFxBalance(order);
 
-        // TODO: check if portfolio has enough balance
-
-        order = mockOrderMatching(order);
-        return orderRepo.save(order);
+        return matching.matchOrders(orderRepo.save(order));
     }
 
-    public void validateSpotOrderSubmission(SubmitSpotOrderDTO dto, Date now) {
+    private void validateSpotOrderBaseFxBalance(Order order) {
+		double amountToCheck;			
+		if (order.getOrderType().equals(OrderType.MARKET)) amountToCheck = 0;
+		else if (order.getOrderSide().equals(OrderSide.BUY)) amountToCheck = order.getLimit();
+		else amountToCheck = order.getTotal();
+		
+		Asset asset = assetService.findAssetByPortfolioAndCurrency(order.getPortfolio(), order.getBaseFx());
+		if (order.getOrderType().equals(OrderType.MARKET) && asset.getBalance() <= amountToCheck)
+			throw new InsufficientFundsException("order is not created due to insufficient balance: balance=" + asset.getBalance());
+		else if (order.getOrderType().equals(OrderType.LIMIT) && asset.getBalance() < amountToCheck)
+			throw new InsufficientFundsException("order amount cannot exceed balance: balance=" + asset.getBalance() + ", amount=" + amountToCheck);
+			
+	}
+
+	public void validateSpotOrderSubmission(SubmitSpotOrderDTO dto, Date now) {
         if (dto.getExpiryDate().before(now)) {
             throw new BadRequestException("Expiry date must be in the future.");
         }
@@ -123,14 +141,6 @@ public class OrderService {
                 throw new BadRequestException("Invalid order type");
         }
 
-        return order;
-    }
-
-    // TODO: this is just a mock for now until real order matching is implemented
-    public Order mockOrderMatching(Order order) {
-        if (order.getOrderType() == OrderType.MARKET) {
-            throw new NoMatchingOrderException("No matching order found currently. Please try again later");
-        }
         return order;
     }
 
