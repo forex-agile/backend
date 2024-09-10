@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 import com.fdmgroup.forex.models.Order;
+import com.fdmgroup.forex.models.dto.SubmitSpotOrderDTO;
 import com.fdmgroup.forex.services.OrderService;
 
 @RestController
@@ -72,5 +73,11 @@ public class OrderController {
         Order order = orderService.findOrderById(id);
         return ResponseEntity.ok(order);
     }
+
+	@PostMapping("/spot")
+	public ResponseEntity<Order> submitSpotOrder(@RequestBody SubmitSpotOrderDTO submitSpotOrderDTO) {
+		Order order = orderService.submitSpotOrder(submitSpotOrderDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(order);
+	}
 
 }
