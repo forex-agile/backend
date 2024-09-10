@@ -17,8 +17,11 @@ import com.fdmgroup.forex.repos.CurrencyRepo;
 @Service
 public class CurrencyService {
 
+    @Value("${fxrates.api.base.url}")
+    private String fxAPIBaseURL;
+
     @Value("${fxrates.api.key}")
-    private String apiKey;
+    private String fxAPIKey;
 
     private CurrencyRepo currencyRepo;
     private List<String> obsoleteCurrencyCodes;
@@ -41,7 +44,7 @@ public class CurrencyService {
     }
 
     private String fetchCurrencyCodesFromAPI() throws IOException {
-        String url = "https://v6.exchangerate-api.com/v6/" + apiKey + "/codes";
+        String url = fxAPIBaseURL + fxAPIKey + "/codes";
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
