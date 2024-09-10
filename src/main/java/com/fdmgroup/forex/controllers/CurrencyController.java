@@ -30,7 +30,7 @@ public class CurrencyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Currency> getCurrency(@PathVariable String id) {
-        Currency currency = currencyService.findCurrencyById(id);
+        Currency currency = currencyService.findCurrencyById(id.toUpperCase());
         return ResponseEntity.ok(currency);
     }
 
