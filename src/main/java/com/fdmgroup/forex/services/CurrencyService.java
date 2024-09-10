@@ -21,9 +21,13 @@ public class CurrencyService {
     private String apiKey;
 
     private CurrencyRepo currencyRepo;
+    private List<String> obsoleteCurrencyCodes;
 
     public CurrencyService(CurrencyRepo currencyRepo) {
         this.currencyRepo = currencyRepo;
+        List<String> obsoleteCurrencyCodes = new ArrayList<>();
+        obsoleteCurrencyCodes.add("SLL");
+        this.obsoleteCurrencyCodes = obsoleteCurrencyCodes;
     }
 
     public List<Currency> fetchAndCreateCurrencies() throws InternalServerErrorException {
@@ -72,6 +76,11 @@ public class CurrencyService {
         for (List<String> codeNamePair : supportedCodes) {
             String code = codeNamePair.get(0);
             String name = codeNamePair.get(1);
+            
+            if (obsoleteCurrencyCodes.contains(code)) {
+                continue;
+            }
+            
             Currency currency = createCurrency(code, name);
             currencies.add(currency);
         }
