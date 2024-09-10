@@ -28,40 +28,40 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-	@NotNull
-	private OrderSide orderSide;
+    @NotNull
+    private OrderSide orderSide;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-	private OrderStatus orderStatus;
+    private OrderStatus orderStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-	@NotNull
-	private OrderType orderType;
+    @NotNull
+    private OrderType orderType;
 
     @Column(nullable = false, updatable = false)
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date creationDate;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate;
 
     @Column(nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull
-	private Date expiryDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    private Date expiryDate;
 
     @ManyToOne()
     @JoinColumn(name = "FK_Base_Currency_Code", nullable = false, updatable = false)
-	@NotNull
+    @NotNull
     private Currency baseFx;
 
     @ManyToOne()
     @JoinColumn(name = "FK_Quote_Currency_Code", nullable = false, updatable = false)
-	@NotNull
+    @NotNull
     private Currency quoteFx;
 
     @Column(nullable = false, updatable = false)
-	@NotNull
+    @NotNull
     @Positive
     private double total;
 
@@ -94,7 +94,7 @@ public class Order {
         Portfolio portfolio, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate,
         Currency baseFx, Currency quoteFx, double total, double residual, double limit
     ) {
-		this(portfolio, orderType, orderSide, orderStatus, expiryDate, baseFx, quoteFx, total, residual);
+        this(portfolio, orderType, orderSide, orderStatus, expiryDate, baseFx, quoteFx, total, residual);
         setLimit(limit);
     }
 
