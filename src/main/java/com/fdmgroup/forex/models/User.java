@@ -33,7 +33,7 @@ public class User {
 	private String password;
 
 	@ManyToOne
-	@JoinColumn(name = "FK_Preferred_Currency_Code")
+	@JoinColumn(name = "FK_Preferred_Currency_Code", nullable = false)
 	@JsonIgnore
 	private Currency preferredCurrency;
 
@@ -41,7 +41,7 @@ public class User {
 	private String bankAccount;
 
 	@ManyToOne
-	@JoinColumn(name = "FK_Role_Id")
+	@JoinColumn(name = "FK_Role_Id", nullable = false)
 	@JsonIgnore
 	private Role role;
 
