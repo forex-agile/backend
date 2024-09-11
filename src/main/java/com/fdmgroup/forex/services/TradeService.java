@@ -17,8 +17,21 @@ public class TradeService {
     }
 
     public Trade createTrade(UUID id, Order order, double baseFxAmount, double quoteFxAmount) {
+        validateArgs(id, order, baseFxAmount, quoteFxAmount);
         Trade trade = new Trade(id, order, baseFxAmount, quoteFxAmount);
         return tradeRepo.save(trade);
+    }
+
+    private void validateArgs(UUID id, Order order, double baseFxAmount, double quoteFxAmount) throws IllegalArgumentException {
+        if (!(id instanceof UUID)) {
+            throw new IllegalArgumentException("Trade ID must be a valid UUID: id=" + id);
+        }
+        if (order == null) {
+            throw new IllegalArgumentException("Trade must derive from a valid order");
+        }
+        if (baseFxAmount <= 0 || quoteFxAmount <= 0) {
+            throw new IllegalArgumentException("Trade amounts must be positive: base=" + baseFxAmount + ", quote=" + quoteFxAmount);
+        }
     }
 
     public List<Trade> findTradesByPortfolioId(UUID id) {
