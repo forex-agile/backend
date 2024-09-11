@@ -1,7 +1,6 @@
 package com.fdmgroup.forex.services;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -24,10 +23,13 @@ public class CurrencyService {
     private String fxAPIKey;
 
     private CurrencyRepo currencyRepo;
+    private APIService apiService;
     private List<String> obsoleteCurrencyCodes;
 
-    public CurrencyService(CurrencyRepo currencyRepo) {
+    public CurrencyService(CurrencyRepo currencyRepo, APIService apiService) {
         this.currencyRepo = currencyRepo;
+        this.apiService = apiService;
+
         List<String> obsoleteCurrencyCodes = new ArrayList<>();
         obsoleteCurrencyCodes.add("SLL");
         this.obsoleteCurrencyCodes = obsoleteCurrencyCodes;
@@ -35,32 +37,12 @@ public class CurrencyService {
 
     public List<Currency> fetchAndCreateCurrencies() throws InternalServerErrorException {
         try {
-            String response = fetchCurrencyCodesFromAPI();
+            String response = apiService.getCurrencyCodes();
             List<List<String>> supportedCodes = parseCurrencyCodesResponse(response);
+
             return createCurrenciesFromCodes(supportedCodes);
         } catch (Exception e) {
             throw new InternalServerErrorException("Error fetching from external currency API");
-        }
-    }
-
-    private String fetchCurrencyCodesFromAPI() throws IOException {
-        String url = fxAPIBaseURL + fxAPIKey + "/codes";
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        int responseCode = con.getResponseCode();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader input = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-            while ((inputLine = input.readLine()) != null) {
-                response.append(inputLine);
-            }
-            input.close();
-            return response.toString();
-        } else {
-            throw new IOException("Failed to fetch currency codes from API");
         }
     }
 

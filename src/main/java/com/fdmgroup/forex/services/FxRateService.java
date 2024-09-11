@@ -2,7 +2,6 @@ package com.fdmgroup.forex.services;
 
 import java.io.*;
 import java.math.*;
-import java.net.*;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -22,10 +21,12 @@ public class FxRateService {
     private String fxApiUsdUrl;
 
     private FxRateRepo fxRateRepo;
+    private APIService apiService;
     private CurrencyService currencyService;
 
-    public FxRateService(FxRateRepo fxRateRepo, CurrencyService currencyService) {
+    public FxRateService(FxRateRepo fxRateRepo, APIService apiService, CurrencyService currencyService) {
         this.fxRateRepo = fxRateRepo;
+        this.apiService = apiService;
         this.currencyService = currencyService;
     }
 
@@ -35,31 +36,12 @@ public class FxRateService {
 
     public List<FxRate> fetchAndUpdateFxRates() throws InternalServerErrorException {
         try {
-            String response = fetchFxRatesFromAPI();
+            String response = apiService.getFxRates();
             Map<String,Double> usdRates = parseFxRatesResponse(response);
             return updateFxRatesFromUSDRates(usdRates);
+
         } catch (Exception e) {
             throw new InternalServerErrorException("Error updating exchange rates via external API: " + e.getMessage());
-        }
-    }
-
-    private String fetchFxRatesFromAPI() throws IOException {
-        URL obj = new URL(fxApiUsdUrl);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        int responseCode = con.getResponseCode();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader input = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-            while ((inputLine = input.readLine()) != null) {
-                response.append(inputLine);
-            }
-            input.close();
-            return response.toString();
-        } else {
-            throw new IOException("Failed to fetch exchange rates from API");
         }
     }
 
