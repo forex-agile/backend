@@ -1,9 +1,11 @@
 package com.fdmgroup.forex.services;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.math.*;
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.fdmgroup.forex.exceptions.*;
 import com.fdmgroup.forex.models.*;
 import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.repos.FxRateRepo;
+import com.fdmgroup.forex.repos.FxRateUpdateTimeRepo;
 
 @Service
 public class FxRateService {
@@ -24,10 +27,38 @@ public class FxRateService {
     private APIService apiService;
     private CurrencyService currencyService;
 
-    public FxRateService(FxRateRepo fxRateRepo, APIService apiService, CurrencyService currencyService) {
+    @Autowired
+    private FxRateUpdateTimeRepo fxRateUpdateTimeRepo;
+
+    public FxRateService(FxRateRepo fxRateRepo, FxRateUpdateTimeRepo fxRateUpdateTimeRepo, APIService apiService, CurrencyService currencyService) {
+        this.fxRateRepo = fxRateRepo;
         this.fxRateRepo = fxRateRepo;
         this.apiService = apiService;
         this.currencyService = currencyService;
+    }
+
+    public List<FxRate> getUpdatedFxRates() {
+        FxRateUpdateTime updateTime = findFxRateUpdateTime();
+
+        if (needsUpdate(updateTime.getLastUpdateTime())) {
+            List<FxRate> updatedRates = fetchAndUpdateFxRates();
+            updateTime.setLastUpdateTime(LocalDateTime.now());
+            fxRateUpdateTimeRepo.save(updateTime);
+            return updatedRates;
+        } else {
+            return findAllFxRates();
+        }
+    }
+
+    public FxRateUpdateTime findFxRateUpdateTime() {
+        FxRateUpdateTime updateTime = fxRateUpdateTimeRepo.findById(1)
+            .orElse(new FxRateUpdateTime());
+        fxRateUpdateTimeRepo.save(updateTime);
+        return updateTime;
+    }
+
+    private boolean needsUpdate(LocalDateTime lastUpdateTime) {
+        return lastUpdateTime.isBefore(LocalDateTime.now().minusHours(24));
     }
 
     public List<FxRate> findAllFxRates() {
