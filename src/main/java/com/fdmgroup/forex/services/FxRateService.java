@@ -1,8 +1,8 @@
 package com.fdmgroup.forex.services;
 
 import java.io.*;
-import java.net.*;
 import java.time.LocalDateTime;
+import java.math.*;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +24,16 @@ public class FxRateService {
     private String fxApiUsdUrl;
 
     private FxRateRepo fxRateRepo;
+    private APIService apiService;
     private CurrencyService currencyService;
 
     @Autowired
     private FxRateUpdateTimeRepo fxRateUpdateTimeRepo;
 
-    public FxRateService(FxRateRepo fxRateRepo, FxRateUpdateTimeRepo fxRateUpdateTimeRepo, CurrencyService currencyService) {
+    public FxRateService(FxRateRepo fxRateRepo, FxRateUpdateTimeRepo fxRateUpdateTimeRepo, APIService apiService, CurrencyService currencyService) {
         this.fxRateRepo = fxRateRepo;
-        this.fxRateUpdateTimeRepo = fxRateUpdateTimeRepo;
+        this.fxRateRepo = fxRateRepo;
+        this.apiService = apiService;
         this.currencyService = currencyService;
     }
 
@@ -65,31 +67,12 @@ public class FxRateService {
 
     public List<FxRate> fetchAndUpdateFxRates() throws InternalServerErrorException {
         try {
-            String response = fetchFxRatesFromAPI();
+            String response = apiService.getFxRates();
             Map<String,Double> usdRates = parseFxRatesResponse(response);
             return updateFxRatesFromUSDRates(usdRates);
+
         } catch (Exception e) {
             throw new InternalServerErrorException("Error updating exchange rates via external API: " + e.getMessage());
-        }
-    }
-
-    private String fetchFxRatesFromAPI() throws IOException {
-        URL obj = new URL(fxApiUsdUrl);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        int responseCode = con.getResponseCode();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader input = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-            while ((inputLine = input.readLine()) != null) {
-                response.append(inputLine);
-            }
-            input.close();
-            return response.toString();
-        } else {
-            throw new IOException("Failed to fetch exchange rates from API");
         }
     }
 
@@ -140,13 +123,15 @@ public class FxRateService {
     }
 
     private FxRate createOrUpdateFxRate(String code, double rate) {
+        BigDecimal bdRate = BigDecimal.valueOf(rate);
+        double inverseRate = BigDecimal.ONE.divide(bdRate, 10, RoundingMode.HALF_UP).doubleValue();
         try {
             FxRate fxRate = findFxRateByCurrencyId(code);
-            fxRate.setRateToUSD(1.0 / rate);
+            fxRate.setRateToUSD(inverseRate);
             return fxRateRepo.save(fxRate);
         } catch (RecordNotFoundException e) {
             Currency currency = currencyService.findCurrencyById(code);
-            FxRate fxRate = new FxRate(currency, 1.0 / rate);
+            FxRate fxRate = new FxRate(currency, inverseRate);
             return fxRateRepo.save(fxRate);
         }
     }
