@@ -1,6 +1,8 @@
 package com.fdmgroup.forex.services;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.*;
 import java.util.*;
 
@@ -109,13 +111,15 @@ public class FxRateService {
     }
 
     private FxRate createOrUpdateFxRate(String code, double rate) {
+        BigDecimal bdRate = BigDecimal.valueOf(rate);
+        double inverseRate = BigDecimal.ONE.divide(bdRate, 10, RoundingMode.HALF_UP).doubleValue();
         try {
             FxRate fxRate = findFxRateByCurrencyId(code);
-            fxRate.setRateToUSD(1.0 / rate);
+            fxRate.setRateToUSD(inverseRate);
             return fxRateRepo.save(fxRate);
         } catch (RecordNotFoundException e) {
             Currency currency = currencyService.findCurrencyById(code);
-            FxRate fxRate = new FxRate(currency, 1.0 / rate);
+            FxRate fxRate = new FxRate(currency, inverseRate);
             return fxRateRepo.save(fxRate);
         }
     }
