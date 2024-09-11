@@ -28,7 +28,7 @@ public class OrderService {
     public Order findOrderById(UUID id) {
         Optional<Order> orderOptional = orderRepo.findById(id);
         return orderOptional.orElseThrow(() -> 
-            new RecordNotFoundException("Order with id '" + id + "'' not found"));
+            new RecordNotFoundException("Order with id '" + id + "' not found"));
     }
 
     public List<Order> findOrdersByUserId(UUID userId) {

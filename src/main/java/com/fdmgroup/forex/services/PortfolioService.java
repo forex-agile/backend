@@ -21,13 +21,13 @@ public class PortfolioService {
 	public Portfolio findPortfolioById(UUID id) throws RecordNotFoundException {
 		Optional<Portfolio> portfolioOptional = portfolioRepo.findById(id);
 		return portfolioOptional
-				.orElseThrow(() -> new RecordNotFoundException("Portfolio with ID '" + id + "'' not found"));
+				.orElseThrow(() -> new RecordNotFoundException("Portfolio with ID '" + id + "' not found"));
 	}
 
 	public Portfolio findPortfolioByUserId(UUID id) throws RecordNotFoundException {
 		Optional<Portfolio> portfolioOptional = portfolioRepo.findByUser_Id(id);
 		return portfolioOptional
-				.orElseThrow(() -> new RecordNotFoundException("Portfolio with user ID '" + id + "'' not found"));
+				.orElseThrow(() -> new RecordNotFoundException("Portfolio with user ID '" + id + "' not found"));
 	}
 
 }

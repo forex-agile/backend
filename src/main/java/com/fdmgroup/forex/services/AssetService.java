@@ -34,7 +34,7 @@ public class AssetService {
     public Asset findAssetById(UUID id) throws RecordNotFoundException {
         Optional<Asset> assetOptional = assetRepo.findById(id);
         return assetOptional.orElseThrow(() -> 
-            new RecordNotFoundException("Portfolio asset with ID '" + id + "'' not found"));
+            new RecordNotFoundException("Portfolio asset with ID '" + id + "' not found"));
     }
 
     public List<Asset> findAssetByPortfolioId(UUID id) throws RecordNotFoundException {
