@@ -32,6 +32,23 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
+    @GetMapping("/portfolio/{id}")
+    public ResponseEntity<List<Order>> getOrdersByPortfolioIdAndOptionalOrderStatus(
+        @PathVariable UUID id, 
+        @RequestParam(required = false) OrderStatus orderStatus
+    ) {
+        List<Order> orders;
+        if (orderStatus == null) {
+            orders = orderService.findOrdersByPortfolioId(id);
+        } else {
+            orders = orderService.findOrdersByPortfolioIdAndOrderStatus(id, orderStatus);
+        }
+        if (orders.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(orders);
+    }
+
     @GetMapping("/status/{orderStatus}")
     public ResponseEntity<List<Order>> getOrdersByOrderStatus(@PathVariable OrderStatus orderStatus) {
         List<Order> orders = orderService.findOrdersByOrderStatus(orderStatus);

@@ -5,9 +5,11 @@ import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fdmgroup.forex.enums.OrderSide;
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
+import com.fdmgroup.forex.models.serializers.OrderSerializer;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
@@ -15,6 +17,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "orders")
+@JsonSerialize(using = OrderSerializer.class)
 public class Order {
 
     @Id
