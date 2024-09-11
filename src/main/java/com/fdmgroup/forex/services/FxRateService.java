@@ -1,8 +1,7 @@
 package com.fdmgroup.forex.services;
 
 import java.io.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.math.*;
 import java.net.*;
 import java.util.*;
 
