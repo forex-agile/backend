@@ -80,7 +80,7 @@ public class OrderService {
         
         validateSpotOrderBaseFxBalance(order);
 
-        return matching.matchOrders(orderRepo.save(order));
+        return matching.matchOrders(order);
     }
 
     private void validateSpotOrderBaseFxBalance(Order order) {

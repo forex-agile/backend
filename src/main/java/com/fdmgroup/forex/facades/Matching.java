@@ -30,7 +30,7 @@ public class Matching {
 	
 	@Transactional
 	public synchronized Order matchOrders(Order newOrder) {
-		System.out.println(newOrder.getId());
+		newOrder = orderRepo.save(newOrder);
 		List<Order> filteredAndSortedOrders = filterAndSortOrders(newOrder);
 		System.out.println("filteredAndSortedOrders:" +filteredAndSortedOrders.size());
 	    // if empty filtered list for market order, throw no matching order exception (keep it ACTIVE for limit order)
@@ -53,10 +53,10 @@ public class Matching {
 	// keeping the System out for later BE integration testing
     private void handleMatchedOrder(Order newOrder, Order outstandingOrder) {
     	// rate=base/quote of new order
-    	System.out.println("Side,Base,Quote:"+newOrder.getOrderSide()+newOrder.getBaseFx()+","+newOrder.getQuoteFx());
         BigDecimal rateOfNewOrderAsset = getRateForMatchedOrders(newOrder, outstandingOrder);
         // rate=base/quote of ourstanding order: 1/rate because base and quote fx is reverse
         BigDecimal rateOfOutstandingOrderAsset = BigDecimal.ONE.divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP);
+		System.out.println("Side,Base,Quote:"+newOrder.getOrderSide()+newOrder.getBaseFx()+","+newOrder.getQuoteFx());
     	System.out.println("rateOfNewOrderAsset:"+ rateOfNewOrderAsset);
     	System.out.println("rateOfOutstandingOrderAsset:"+ rateOfOutstandingOrderAsset);
     	// get residual based on baseFx of new order asset, given that buy order base asset is in opposite currency
@@ -123,12 +123,20 @@ public class Matching {
         newOrderBaseAsset = assetRepo.save(newOrderBaseAsset);        
         outstandingOrderBaseAsset = assetRepo.save(outstandingOrderBaseAsset);
         
+        System.out.println("newOrderResidual--------------->"+(newOrder.getResidual()));
+        System.out.println("outstandingOrderResidual--------------->"+(outstandingOrder.getResidual()));
         System.out.println("newOrderBaseAsset--------------->balance:"+newOrderBaseAsset.getBalance());
         System.out.println("outstandingOrderBaseAsset--------------->balance:"+outstandingOrderBaseAsset.getBalance());
 
         // Update quoteFx Asset too
         assetService.depositAsset(newOrder.getPortfolio(), newOrder.getQuoteFx(), newOrderSettledAmountInBaseFx.divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP).doubleValue());
         assetService.depositAsset(outstandingOrder.getPortfolio(), outstandingOrder.getQuoteFx(), newOrderSettledAmountInBaseFx.doubleValue());
+        // create trade records
+        // TODO: uncomment after PR of trade entity
+        // UUID tradeId = UUID.randomUUID();
+        // tradeRepo.save(new Trade(tradeId,newOrder,newOrderSettledAmountInBaseFx.doubleValue(),newOrderSettledAmountInBaseFx.divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP).doubleValue());
+        // tradeRepo.save(new Trade(tradeId,outstandingOrder,newOrderSettledAmountInBaseFx.divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP).doubleValue(),newOrderSettledAmountInBaseFx.doubleValue());
+        
     }
     
 	private void updateOrderStatus(Order newOrder, Order outstandingOrder, Asset newOrderBaseAsset,
@@ -179,10 +187,9 @@ public class Matching {
     
 	private List<Order> filterAndSortOrders(Order newOrder) {
         // find active order with opposite currency in the DB
-		List<Order> filteredOrders = orderRepo.findActiveOrdersByFx(newOrder.getQuoteFx(), newOrder.getBaseFx(), OrderStatus.ACTIVE);
-		System.out.println("filteredOrders:" + filteredOrders.size());
-        List<Order> filteredLimitOrders = filteredOrders.stream()
-            .filter(order -> order.getOrderType() == OrderType.LIMIT)
+		List<Order> filteredLimitOrders = orderRepo.findActiveOrdersByFx(newOrder.getQuoteFx(), newOrder.getBaseFx(), OrderStatus.ACTIVE, OrderType.LIMIT);
+		System.out.println("filteredLimitOrders:" + filteredLimitOrders.size());
+        List<Order> filteredLimitOrdersWithRate = filteredLimitOrders.stream()
             .filter(outStandingOrder -> {
             	if (newOrder.getOrderType()==OrderType.MARKET) return true;
                 double outStandingOrderRate = getRateByOrderSide(newOrder, outStandingOrder);
@@ -193,12 +200,16 @@ public class Matching {
             })
             .collect(Collectors.toList());
 
-        List<Order> filteredAndSortedOrders = filteredLimitOrders.stream()
+        List<Order> filteredAndSortedOrders = filteredLimitOrdersWithRate.stream()
             .sorted((a, b) -> {
                 double rateA = getRateByOrderSide(newOrder,a);
                 double rateB = getRateByOrderSide(newOrder,b);
                 int rateComparison = Double.compare(rateA, rateB);
                 
+                // For buy orders, sort by descending rate
+                // For sell orders, sort by ascending rate
+                if (newOrder.getOrderSide() == OrderSide.BUY) 
+                    rateComparison = -rateComparison;
                 if (rateComparison != 0) return rateComparison;
                 return a.getCreationDate().compareTo(b.getCreationDate());
             })

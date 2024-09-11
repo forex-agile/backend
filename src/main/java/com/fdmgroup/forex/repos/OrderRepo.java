@@ -20,8 +20,9 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
     List<Order> findByPortfolio_User_IdAndOrderStatus(UUID userId, OrderStatus orderStatus);
     List<Order> findByOrderStatus(OrderStatus orderStatus);
     List<Order> findByOrderType(OrderType orderType);
-    @Query("SELECT o FROM Order o WHERE o.baseFx = :quoteFx AND o.quoteFx = :baseFx AND o.orderStatus = :status")
+    @Query("SELECT o FROM Order o WHERE o.baseFx = :quoteFx AND o.quoteFx = :baseFx AND o.orderStatus = :status AND o.orderType = :type AND o.expiryDate >= CURRENT_TIMESTAMP")
     List<Order> findActiveOrdersByFx(@Param("quoteFx") Currency quoteFx, 
                                      @Param("baseFx") Currency baseFx, 
-                                     @Param("status") OrderStatus status);
+                                     @Param("status") OrderStatus status,
+    								 @Param("type") OrderType type);
 }
