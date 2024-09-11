@@ -4,12 +4,14 @@ package com.fdmgroup.forex.models;
 import java.util.*;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.Immutable;
 
 import com.fdmgroup.forex.models.composites.TradeId;
 
 import jakarta.persistence.*;
 
 @Entity
+@Immutable
 @Table(name = "trades")
 @IdClass(TradeId.class)
 public class Trade {
@@ -19,10 +21,10 @@ public class Trade {
 
     @Id
     @ManyToOne()
-    @JoinColumn(name = "FK_Order_ID", nullable = false, updatable = false)
+    @JoinColumn(name = "FK_Order_ID", nullable = false)
     private Order order;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date executionDate;
