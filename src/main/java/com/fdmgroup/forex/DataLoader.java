@@ -32,6 +32,12 @@ public class DataLoader implements ApplicationRunner {
 	@Value("${forex.default.role}")
 	private String defaultRole;
 
+	@Value("${forex.default.currency.code}")
+	private String defaultCurrencyCode;
+
+	@Value("${forex.default.currency.name}")
+	private String defaultCurrencyName;
+
 	@Value("${forex.create.sample.data}")
 	private boolean doCreateSampleData;
 
@@ -55,15 +61,17 @@ public class DataLoader implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		createRoles();
+		createDefaultRecordsIfNotExist();
 		if (doCreateSampleData)
 			createSampleData();
 	}
 
 	@Transactional
-	private void createRoles() {
+	private void createDefaultRecordsIfNotExist() {
 		if (roleRepo.findByRole(defaultRole).isEmpty())
 			roleRepo.save(new Role(defaultRole));
+		if (currencyRepo.findById(defaultCurrencyCode).isEmpty())
+			currencyRepo.save(new Currency(defaultCurrencyCode, defaultCurrencyName));
 	}
 
 	@Transactional

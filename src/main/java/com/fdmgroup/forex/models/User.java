@@ -8,20 +8,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 
 /**
  * Model a user account on the Forex platform
  */
 @Entity
+@Table(name = "users")
 public class User {
 
 	@Id
@@ -40,7 +33,7 @@ public class User {
 	private String password;
 
 	@ManyToOne
-	@JoinColumn(name = "FK_Preferred_Currency_Code")
+	@JoinColumn(name = "FK_Preferred_Currency_Code", nullable = false)
 	@JsonIgnore
 	private Currency preferredCurrency;
 
@@ -48,7 +41,7 @@ public class User {
 	private String bankAccount;
 
 	@ManyToOne
-	@JoinColumn(name = "FK_Role_Id")
+	@JoinColumn(name = "FK_Role_Id", nullable = false)
 	@JsonIgnore
 	private Role role;
 
