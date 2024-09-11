@@ -123,13 +123,13 @@ public class FxRateService {
     public FxRate findFxRateById(UUID id) throws RecordNotFoundException {
         Optional<FxRate> fxRateOptional = fxRateRepo.findById(id);
         return fxRateOptional.orElseThrow(() -> 
-            new RecordNotFoundException("FxRate with id '" + id + "'' not found"));
+            new RecordNotFoundException("FxRate with id '" + id + "' not found"));
     }
 
     public FxRate findFxRateByCurrencyId(String id) throws RecordNotFoundException {
         Optional<FxRate> fxRateOptional = fxRateRepo.findByCurrency_CurrencyCode(id);
         return fxRateOptional.orElseThrow(() -> 
-            new RecordNotFoundException("FxRate for currency with code '" + id + "'' not found"));
+            new RecordNotFoundException("FxRate for currency with code '" + id + "' not found"));
     }
 
 }
