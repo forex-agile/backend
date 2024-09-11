@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class OrderTest {
 
-    private User user;
+    private Portfolio portfolio;
     private Currency baseFx;
     private Currency quoteFx;
     private Order order;
@@ -23,18 +23,18 @@ public class OrderTest {
     
     @BeforeEach
     public void setUp() {
-        user = mock(User.class);
+        portfolio = mock(Portfolio.class);
         baseFx = new Currency("USD", "U.S. Dollars");
         quoteFx = new Currency("EUR", "Euros");
         expiryDate = new Date();
-        order = new Order(user, OrderType.LIMIT, OrderSide.BUY, OrderStatus.ACTIVE, expiryDate, baseFx, quoteFx, 1000, 500);
+        order = new Order(portfolio, OrderType.LIMIT, OrderSide.BUY, OrderStatus.ACTIVE, expiryDate, baseFx, quoteFx, 1000, 500);
     }
 
     @Test
     public void testOrder_DefaultConstructor() {
         Order defaultOrder = new Order();
         assertNull(defaultOrder.getId(), "Order ID should be null");
-        assertNull(defaultOrder.getUser(), "Order user should be null");
+        assertNull(defaultOrder.getPortfolio(), "Order portfolio should be null");
         assertNull(defaultOrder.getBaseFx(), "Order base currency should be null");
         assertNull(defaultOrder.getQuoteFx(), "Order quote currency should be null");
         assertNull(defaultOrder.getCreationDate(), "Order creation date should be null");
@@ -42,8 +42,8 @@ public class OrderTest {
 
     @Test
     public void testOrder_ParameterizedConstructor() {
-        assertNotNull(order.getUser(), "Order user should not be null");
-        assertEquals(user, order.getUser(), "Order user should match");
+        assertNotNull(order.getPortfolio(), "Order portfolio should not be null");
+        assertEquals(portfolio, order.getPortfolio(), "Order portfolio should match");
         assertEquals(OrderType.LIMIT, order.getOrderType(), "Order type should be LIMIT");
         assertEquals(OrderSide.BUY, order.getOrderSide(), "Order side should be BUY");
         assertEquals(OrderStatus.ACTIVE, order.getOrderStatus(), "Order status should be ACTIVE");
@@ -57,12 +57,12 @@ public class OrderTest {
     public void testSettersAndGetters() {
         Order order = new Order();
         UUID newId = UUID.randomUUID();
-        User newUser = mock(User.class);
+        Portfolio newPortfolio = mock(Portfolio.class);
         Currency newBaseFx = new Currency("GBP", "British Pound");
         Currency newQuoteFx = new Currency("JPY", "Japanese Yen");
 
         order.setId(newId);
-        order.setUser(newUser);
+        order.setPortfolio(newPortfolio);
         order.setBaseFx(newBaseFx);
         order.setQuoteFx(newQuoteFx);
         order.setTotal(2000);
@@ -70,7 +70,7 @@ public class OrderTest {
         order.setLimit(1.25);
 
         assertEquals(newId, order.getId(), "Order ID should match");
-        assertEquals(newUser, order.getUser(), "Order user should match");
+        assertEquals(newPortfolio, order.getPortfolio(), "Order portfolio should match");
         assertEquals(newBaseFx, order.getBaseFx(), "Order base currency should match");
         assertEquals(newQuoteFx, order.getQuoteFx(), "Order quote currency should match");
         assertEquals(2000, order.getTotal(), "Order total should match");
@@ -83,12 +83,12 @@ public class OrderTest {
         UUID validUUID = UUID.randomUUID();
         order.setId(validUUID);
         order.setId(null);
-        order.setUser(null);
+        order.setPortfolio(null);
         order.setBaseFx(null);
         order.setQuoteFx(null);
 
         assertEquals(validUUID, order.getId(), "Order ID should be unchanged");
-        assertEquals(user, order.getUser(), "Order user should be unchanged");
+        assertEquals(portfolio, order.getPortfolio(), "Order portfolio should be unchanged");
         assertEquals(baseFx, order.getBaseFx(), "Order base currency should be unchanged");
         assertEquals(quoteFx, order.getQuoteFx(), "Order quote currency should be unchanged");
     }

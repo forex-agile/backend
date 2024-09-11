@@ -22,8 +22,8 @@ public class Order {
     private UUID id;
 
     @ManyToOne()
-    @JoinColumn(name = "FK_User_ID", nullable = false, updatable = false)
-    private User user;
+    @JoinColumn(name = "FK_Portfolio_ID", nullable = false, updatable = false)
+    private Portfolio portfolio;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
@@ -69,10 +69,10 @@ public class Order {
     public Order() {}
 
     public Order(
-        User user, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate, 
+        Portfolio portfolio, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate,
         Currency baseFx, Currency quoteFx, double total, double residual
     ) {
-        this.user = user;
+        this.portfolio = portfolio;
         this.orderType = orderType;
         this.orderSide = orderSide;
         this.orderStatus = orderStatus;
@@ -84,10 +84,10 @@ public class Order {
     }
 
     public Order(
-        User user, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate, 
+        Portfolio portfolio, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate,
         Currency baseFx, Currency quoteFx, double total, double residual, double limit
     ) {
-		this(user, orderType, orderSide, orderStatus, expiryDate, baseFx, quoteFx, total, residual);
+		this(portfolio, orderType, orderSide, orderStatus, expiryDate, baseFx, quoteFx, total, residual);
         setLimit(limit);
     }
 
@@ -101,13 +101,13 @@ public class Order {
         }
     }
 
-    public User getUser() {
-        return user;
+    public Portfolio getPortfolio() {
+        return portfolio;
     }
 
-    public void setUser(User user) {
-        if (user != null) {
-            this.user = user;
+    public void setPortfolio(Portfolio portfolio) {
+        if (portfolio != null) {
+            this.portfolio = portfolio;
         }
     }
 

@@ -32,12 +32,12 @@ public class OrderService {
     }
 
     public List<Order> findOrdersByUserId(UUID userId) {
-        List<Order> orders = orderRepo.findByUser_Id(userId);
+        List<Order> orders = orderRepo.findByPortfolio_User_Id(userId);
         return orders;
     }
 
     public List<Order> findOrdersByUserIdAndOrderStatus(UUID userId, OrderStatus orderStatus) {
-        List<Order> orders = orderRepo.findByUser_IdAndOrderStatus(userId, orderStatus);
+        List<Order> orders = orderRepo.findByPortfolio_User_IdAndOrderStatus(userId, orderStatus);
         return orders;
     }
 

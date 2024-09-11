@@ -79,36 +79,36 @@ public class OrderServiceTest {
 
     @Test
     void testFindOrdersByUserId_WhenOrdersExist() {
-        when(orderRepo.findByUser_Id(userId)).thenReturn(orders);
+        when(orderRepo.findByPortfolio_User_Id(userId)).thenReturn(orders);
         List<Order> foundOrders = orderService.findOrdersByUserId(userId);
         assertEquals(orders, foundOrders, "OrderService should find orders by a valid user ID");
-        verify(orderRepo, times(1)).findByUser_Id(userId);
+        verify(orderRepo, times(1)).findByPortfolio_User_Id(userId);
     }
 
     @Test
     void testFindOrdersByUserId_WhenNoOrdersExist() {
-        when(orderRepo.findByUser_Id(userId)).thenReturn(new ArrayList<>());
+        when(orderRepo.findByPortfolio_User_Id(userId)).thenReturn(new ArrayList<>());
         List<Order> foundOrders = orderService.findOrdersByUserId(userId);
         assertTrue(foundOrders.isEmpty(), "OrderService should return an empty list if no orders exist for a user");
-        verify(orderRepo, times(1)).findByUser_Id(userId);
+        verify(orderRepo, times(1)).findByPortfolio_User_Id(userId);
     }
 
     @Test
     void testFindOrdersByUserIdAndOrderStatus_WhenOrdersExist() {
         OrderStatus status = OrderStatus.ACTIVE;
-        when(orderRepo.findByUser_IdAndOrderStatus(userId, status)).thenReturn(orders);
+        when(orderRepo.findByPortfolio_User_IdAndOrderStatus(userId, status)).thenReturn(orders);
         List<Order> foundOrders = orderService.findOrdersByUserIdAndOrderStatus(userId, status);
         assertEquals(orders, foundOrders, "OrderService should find orders by user ID and order status");
-        verify(orderRepo, times(1)).findByUser_IdAndOrderStatus(userId, status);
+        verify(orderRepo, times(1)).findByPortfolio_User_IdAndOrderStatus(userId, status);
     }
 
     @Test
     void testFindOrdersByUserIdAndOrderStatus_WhenNoOrdersExist() {
         OrderStatus status = OrderStatus.ACTIVE;
-        when(orderRepo.findByUser_IdAndOrderStatus(userId, status)).thenReturn(new ArrayList<>());
+        when(orderRepo.findByPortfolio_User_IdAndOrderStatus(userId, status)).thenReturn(new ArrayList<>());
         List<Order> foundOrders = orderService.findOrdersByUserIdAndOrderStatus(userId, status);
         assertTrue(foundOrders.isEmpty(), "OrderService should return an empty list if no orders match the user ID and order status");
-        verify(orderRepo, times(1)).findByUser_IdAndOrderStatus(userId, status);
+        verify(orderRepo, times(1)).findByPortfolio_User_IdAndOrderStatus(userId, status);
     }
 
     @Test
