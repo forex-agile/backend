@@ -17,5 +17,7 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
     List<Order> findByPortfolio_User_IdAndOrderStatus(UUID userId, OrderStatus orderStatus);
     List<Order> findByOrderStatus(OrderStatus orderStatus);
     List<Order> findByOrderType(OrderType orderType);
+    List<Order> findByPortfolio_IdAndOrderStatus(UUID id, OrderStatus orderStatus);
+    List<Order> findByPortfolio_Id(UUID id);
 
 }
