@@ -84,7 +84,7 @@ public class CurrencyService {
     public Currency findCurrencyById(String id) throws RecordNotFoundException {
         Optional<Currency> currencyOptional = currencyRepo.findById(id);
         return currencyOptional
-                .orElseThrow(() -> new RecordNotFoundException("Currency with id '" + id + "'' not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Currency with id '" + id + "' not found"));
     }
 
 }
