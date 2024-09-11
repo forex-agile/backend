@@ -1,5 +1,7 @@
 package com.fdmgroup.forex.facades;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,13 +30,16 @@ public class Matching {
 	
 	@Transactional
 	public synchronized Order matchOrders(Order newOrder) {
+		System.out.println(newOrder.getId());
 		List<Order> filteredAndSortedOrders = filterAndSortOrders(newOrder);
-		
+		System.out.println("filteredAndSortedOrders:" +filteredAndSortedOrders.size());
 	    // if empty filtered list for market order, throw no matching order exception (keep it ACTIVE for limit order)
 	    if (newOrder.getOrderType() == OrderType.MARKET && filteredAndSortedOrders.isEmpty()) {
 	    	newOrder.setOrderStatus(OrderStatus.CANCELLED);
+	    	orderRepo.save(newOrder);
 	    	throw new NoMatchingOrderException("No matching limit order found currently. Please try again later");
 	    }
+
 	    // loop through filtered list
 	    for (Order outstandingOrder : filteredAndSortedOrders) {
 	    	// if new order is CANCELLED, CLOSED, CLEARED, break the for loop and return the status
@@ -47,31 +52,47 @@ public class Matching {
 	
 	// keeping the System out for later BE integration testing
     private void handleMatchedOrder(Order newOrder, Order outstandingOrder) {
-    	
-    	double rateOfNewOrderAsset = getRateForMatchedOrders(newOrder,outstandingOrder);
-    	// if same order side, the rate will be limit/total for outstanding order
-    	double rateOfOutstandingOrderAsset = newOrder.getOrderSide() == outstandingOrder.getOrderSide() ? 1/rateOfNewOrderAsset : rateOfNewOrderAsset;
-    	
-    	// get residual and assets(for balance)
-        double newOrderResidual = newOrder.getResidual();
-        double outstandingOrderResidual = outstandingOrder.getResidual();
+    	// rate=base/quote of new order
+    	System.out.println("Side,Base,Quote:"+newOrder.getOrderSide()+newOrder.getBaseFx()+","+newOrder.getQuoteFx());
+        BigDecimal rateOfNewOrderAsset = getRateForMatchedOrders(newOrder, outstandingOrder);
+        // rate=base/quote of ourstanding order: 1/rate because base and quote fx is reverse
+        BigDecimal rateOfOutstandingOrderAsset = BigDecimal.ONE.divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP);
+    	System.out.println("rateOfNewOrderAsset:"+ rateOfNewOrderAsset);
+    	System.out.println("rateOfOutstandingOrderAsset:"+ rateOfOutstandingOrderAsset);
+    	// get residual based on baseFx of new order asset, given that buy order base asset is in opposite currency
+        BigDecimal newOrderResidual = newOrder.getOrderSide() == OrderSide.BUY
+            ? BigDecimal.valueOf(newOrder.getResidual()).multiply(rateOfNewOrderAsset) 
+            : BigDecimal.valueOf(newOrder.getResidual());
+        // get residual in the quoteFx --> baseFx of new order
+        BigDecimal outstandingOrderResidual = outstandingOrder.getOrderSide() == OrderSide.BUY
+            ? BigDecimal.valueOf(outstandingOrder.getResidual()) 
+            : BigDecimal.valueOf(outstandingOrder.getResidual()).divide(rateOfOutstandingOrderAsset, 20, RoundingMode.HALF_UP);
+        
+        // get base assets(to check balance)
         Asset newOrderBaseAsset = findAssetByOrderAndCurrency(newOrder, newOrder.getBaseFx());
         Asset outstandingOrderBaseAsset = findAssetByOrderAndCurrency(outstandingOrder, outstandingOrder.getBaseFx());
-        System.out.println("newOrderResidual:"+ newOrderResidual);
-        System.out.println("outstandingOrderResidual:" + outstandingOrderResidual);
-        System.out.println("newOrderBaseAsset:" + newOrderBaseAsset.getCurrency().getCurrencyCode() + " Balance: " + newOrderBaseAsset.getBalance());
-        System.out.println("outstandingOrderBaseAsset:" + outstandingOrderBaseAsset.getCurrency().getCurrencyCode() + " Balance: " + outstandingOrderBaseAsset.getBalance());
-             
-        // find the minimum amount among orders or user balance
-        double newOrderSettledAmount = Math.min(
-        		newOrderResidual,
-                Math.min(outstandingOrderResidual * rateOfNewOrderAsset, 
-                         Math.min(newOrderBaseAsset.getBalance(), outstandingOrderBaseAsset.getBalance() * rateOfNewOrderAsset))
-            );
-        System.out.println("newOrderSettledAmount(minimum out of the four):"+newOrderSettledAmount);
         
+        System.out.println("newOrderResidual:"+ newOrderResidual + newOrderBaseAsset.getCurrency().getCurrencyCode());
+        System.out.println("outstandingOrderResidual:" + outstandingOrderResidual + newOrderBaseAsset.getCurrency().getCurrencyCode());
+        System.out.println("newOrderBaseAsset:" + newOrderBaseAsset.getCurrency().getCurrencyCode() + " Balance: " + newOrderBaseAsset.getBalance());
+        System.out.println("outstandingOrderBaseAsset:" + newOrderBaseAsset.getCurrency().getCurrencyCode() +" Balance: " + BigDecimal.valueOf(outstandingOrderBaseAsset.getBalance()).divide(rateOfOutstandingOrderAsset, 20, RoundingMode.HALF_UP));
+             
+        // Find the minimum amount among orders or user balance
+        // first three are in new order baseFx, last one base asset=newOrderquoteFx
+        BigDecimal newOrderSettledAmountInBaseFx = newOrderResidual.min(
+            outstandingOrderResidual.min(
+                BigDecimal.valueOf(newOrderBaseAsset.getBalance()).min(
+                         BigDecimal.valueOf(outstandingOrderBaseAsset.getBalance()).divide(rateOfOutstandingOrderAsset, 20, RoundingMode.HALF_UP)))
+        );
+        
+        
+        // Calculate settled amount based on residual Fx
+        BigDecimal newOrderSettledAmount = newOrder.getOrderSide() == OrderSide.BUY
+        		? newOrderSettledAmountInBaseFx.divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP)
+        		: newOrderSettledAmountInBaseFx;
+        System.out.println("newOrderSettledAmount(based on residual Fx):"+newOrderSettledAmount);
         // if account balance is 0, order will be cancelled        
-        if (newOrderSettledAmount == 0) {
+        if (newOrderSettledAmount.compareTo(BigDecimal.ZERO) == 0) {
             if (newOrderBaseAsset.getBalance() == 0) {
                 newOrder.setOrderStatus(OrderStatus.CANCELLED);
             } else {
@@ -80,27 +101,34 @@ public class Matching {
             return;
         }
         
-        // calculate outstanding order settled amount
-        double outstandingOrderSettledAmount = newOrderSettledAmount / rateOfNewOrderAsset;
+        // Calculate outstanding order settled amount based on residual fx
+        BigDecimal outstandingOrderSettledAmount = outstandingOrder.getOrderSide() == OrderSide.SELL
+        		? newOrderSettledAmountInBaseFx.multiply(rateOfOutstandingOrderAsset)
+        		: newOrderSettledAmountInBaseFx;
+
         System.out.println("outstandingOrderSettledAmount:"+outstandingOrderSettledAmount);
         // Update residual amounts and balances
-        newOrder.setResidual(newOrder.getResidual() - newOrderSettledAmount);
-        outstandingOrder.setResidual(outstandingOrder.getResidual() - outstandingOrderSettledAmount);
-        newOrderBaseAsset.setBalance(newOrderBaseAsset.getBalance() - newOrderSettledAmount);
-        outstandingOrderBaseAsset.setBalance(outstandingOrderBaseAsset.getBalance() - outstandingOrderSettledAmount);
+        newOrder.setResidual(newOrder.getResidual() - newOrderSettledAmount.doubleValue());
+        outstandingOrder.setResidual(outstandingOrder.getResidual() - outstandingOrderSettledAmount.doubleValue());
+        newOrderBaseAsset.setBalance(newOrderBaseAsset.getBalance() - newOrderSettledAmountInBaseFx.doubleValue());
+        outstandingOrderBaseAsset.setBalance(outstandingOrderBaseAsset.getBalance() - newOrderSettledAmountInBaseFx.multiply(rateOfOutstandingOrderAsset).doubleValue());    
         
         // handle updating order status
         updateOrderStatus(newOrder, outstandingOrder, newOrderBaseAsset, outstandingOrderBaseAsset);
         
         // Save the updated orders
-        orderRepo.save(newOrder);
-        orderRepo.save(outstandingOrder);
+        newOrder = orderRepo.save(newOrder);
+        outstandingOrder = orderRepo.save(outstandingOrder);
         // update baseFx Asset
-        assetRepo.save(newOrderBaseAsset);
-        assetRepo.save(outstandingOrderBaseAsset);
-        // update quoteFx Asset too (with deposit method because a case of no existing quote asset)
-        assetService.depositAsset(newOrder.getPortfolio(), newOrder.getQuoteFx(), newOrderSettledAmount * rateOfNewOrderAsset);
-        assetService.depositAsset(outstandingOrder.getPortfolio(), outstandingOrder.getQuoteFx(), outstandingOrderSettledAmount * rateOfOutstandingOrderAsset);
+        newOrderBaseAsset = assetRepo.save(newOrderBaseAsset);        
+        outstandingOrderBaseAsset = assetRepo.save(outstandingOrderBaseAsset);
+        
+        System.out.println("newOrderBaseAsset--------------->balance:"+newOrderBaseAsset.getBalance());
+        System.out.println("outstandingOrderBaseAsset--------------->balance:"+outstandingOrderBaseAsset.getBalance());
+
+        // Update quoteFx Asset too
+        assetService.depositAsset(newOrder.getPortfolio(), newOrder.getQuoteFx(), newOrderSettledAmountInBaseFx.divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP).doubleValue());
+        assetService.depositAsset(outstandingOrder.getPortfolio(), outstandingOrder.getQuoteFx(), newOrderSettledAmountInBaseFx.doubleValue());
     }
     
 	private void updateOrderStatus(Order newOrder, Order outstandingOrder, Asset newOrderBaseAsset,
@@ -113,19 +141,37 @@ public class Matching {
 		if (outstandingOrder.getResidual() == 0) outstandingOrder.setOrderStatus(OrderStatus.CLEARED);
 	}
 
-	private double getRateForMatchedOrders(Order newOrder, Order outstandingOrder) {
+	private BigDecimal getRateForMatchedOrders(Order newOrder, Order outstandingOrder) {
 		// if one of them is market order, get rate of counter order
 		if (newOrder.getOrderType() == OrderType.MARKET) 
-            return getRateByOrderSide(newOrder, outstandingOrder);
+            return getRateByBaseQuote(outstandingOrder, newOrder, outstandingOrder);
         else if (outstandingOrder.getOrderType() == OrderType.MARKET) 
-        	return getRateByOrderSide(outstandingOrder, newOrder);
+        	return getRateByBaseQuote(newOrder, newOrder, outstandingOrder);
         
 		// get rate of newer order
 		if (newOrder.getCreationDate().after(outstandingOrder.getCreationDate())) 
-			return getRateByOrderSide(outstandingOrder, newOrder);
-		else return getRateByOrderSide(newOrder, outstandingOrder);
+			return getRateByBaseQuote(newOrder, newOrder, outstandingOrder);
+		else return getRateByBaseQuote(outstandingOrder, newOrder, outstandingOrder);
 	}
 	
+	private BigDecimal getRateByBaseQuote(Order order, Order newOrder, Order outstandingOrder) {
+	    BigDecimal limit = BigDecimal.valueOf(order.getLimit());
+	    BigDecimal total = BigDecimal.valueOf(order.getTotal());
+	    BigDecimal rate;
+
+	    if (order.getOrderSide() == OrderSide.BUY) {
+	        rate = limit.divide(total, 20, RoundingMode.HALF_UP);
+	    } else {
+	        rate = total.divide(limit, 20, RoundingMode.HALF_UP);
+	    }
+
+	    if (outstandingOrder.getOrderSide() == newOrder.getOrderSide()) {
+	        rate = BigDecimal.ONE.divide(rate, 20, RoundingMode.HALF_UP);
+	    }
+
+	    return rate;
+	}
+
 	private Asset findAssetByOrderAndCurrency(Order order, Currency fx) {
 		Portfolio portfolio = order.getPortfolio();
 		return assetService.findAssetByPortfolioAndCurrency(portfolio, fx);
@@ -133,11 +179,12 @@ public class Matching {
     
 	private List<Order> filterAndSortOrders(Order newOrder) {
         // find active order with opposite currency in the DB
-		List<Order> filteredOrders = orderRepo.findActiveOrdersByFx(newOrder.getQuoteFx().getCurrencyCode(), newOrder.getBaseFx().getCurrencyCode(), OrderStatus.ACTIVE);
-		
+		List<Order> filteredOrders = orderRepo.findActiveOrdersByFx(newOrder.getQuoteFx(), newOrder.getBaseFx(), OrderStatus.ACTIVE);
+		System.out.println("filteredOrders:" + filteredOrders.size());
         List<Order> filteredLimitOrders = filteredOrders.stream()
             .filter(order -> order.getOrderType() == OrderType.LIMIT)
             .filter(outStandingOrder -> {
+            	if (newOrder.getOrderType()==OrderType.MARKET) return true;
                 double outStandingOrderRate = getRateByOrderSide(newOrder, outStandingOrder);
                 double newOrderRate = newOrder.getTotal() / newOrder.getLimit();
                 // buy order: outstanding rate > me, sell order is reverse

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
+import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.models.Order;
 
 @Repository
@@ -20,7 +21,7 @@ public interface OrderRepo extends JpaRepository<Order, UUID> {
     List<Order> findByOrderStatus(OrderStatus orderStatus);
     List<Order> findByOrderType(OrderType orderType);
     @Query("SELECT o FROM Order o WHERE o.baseFx = :quoteFx AND o.quoteFx = :baseFx AND o.orderStatus = :status")
-    List<Order> findActiveOrdersByFx(@Param("quoteFx") String quoteFx, 
-                                     @Param("baseFx") String baseFx, 
+    List<Order> findActiveOrdersByFx(@Param("quoteFx") Currency quoteFx, 
+                                     @Param("baseFx") Currency baseFx, 
                                      @Param("status") OrderStatus status);
 }
