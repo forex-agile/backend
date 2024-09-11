@@ -42,10 +42,10 @@ public class TradeServiceTest {
         Trade actualTrade = tradeService.createTrade(tradeId, order, baseFxAmount, quoteFxAmount);
 
         assertNotNull(actualTrade);
-        assertEquals(tradeId, actualTrade.getId());
-        assertEquals(order, actualTrade.getOrder());
-        assertEquals(baseFxAmount, actualTrade.getBaseFxAmount());
-        assertEquals(quoteFxAmount, actualTrade.getQuoteFxAmount());
+        assertEquals(tradeId, actualTrade.getId(), "Trade ID should match");
+        assertEquals(order, actualTrade.getOrder(), "Trade order should match");
+        assertEquals(baseFxAmount, actualTrade.getBaseFxAmount(), "Trade baseFx amounts should match");
+        assertEquals(quoteFxAmount, actualTrade.getQuoteFxAmount(), "Trade quoteFx amounts should match");
         verify(tradeRepo).save(any(Trade.class));
     }
 
@@ -55,7 +55,7 @@ public class TradeServiceTest {
         double quoteFxAmount = 200.0;
 
         assertThrows(IllegalArgumentException.class, () -> 
-            tradeService.createTrade(null, order, baseFxAmount, quoteFxAmount));
+            tradeService.createTrade(null, order, baseFxAmount, quoteFxAmount), "Null ID should throw IllegalArgumentException");
         verify(tradeRepo, never()).save(any(Trade.class));
     }
 
@@ -65,7 +65,7 @@ public class TradeServiceTest {
         double quoteFxAmount = 200.0;
 
         assertThrows(IllegalArgumentException.class, () -> 
-            tradeService.createTrade(tradeId, order, baseFxAmount, quoteFxAmount));
+            tradeService.createTrade(tradeId, order, baseFxAmount, quoteFxAmount), "Negative baseFx amount should throw IllegalArgumentException");
         verify(tradeRepo, never()).save(any(Trade.class));
     }
 
@@ -75,7 +75,7 @@ public class TradeServiceTest {
         double quoteFxAmount = -200.0;
 
         assertThrows(IllegalArgumentException.class, () -> 
-            tradeService.createTrade(tradeId, order, baseFxAmount, quoteFxAmount));
+            tradeService.createTrade(tradeId, order, baseFxAmount, quoteFxAmount), "Negative quoteFx amount should throw IllegalArgumentException");
         verify(tradeRepo, never()).save(any(Trade.class));
     }
 
@@ -99,7 +99,7 @@ public class TradeServiceTest {
         when(tradeRepo.findByOrder_Portfolio_Id(portfolioId)).thenReturn(expectedTrades);
         List<Trade> actualTrades = tradeService.findTradesByPortfolioId(portfolioId);
 
-        assertEquals(expectedTrades, actualTrades);
+        assertEquals(expectedTrades, actualTrades, "List of trades should match");
         verify(tradeRepo).findByOrder_Portfolio_Id(portfolioId);
     }
 
@@ -108,7 +108,7 @@ public class TradeServiceTest {
         when(tradeRepo.findByOrder_Portfolio_Id(portfolioId)).thenReturn(Collections.emptyList());
         List<Trade> actualTrades = tradeService.findTradesByPortfolioId(portfolioId);
 
-        assertTrue(actualTrades.isEmpty());
+        assertTrue(actualTrades.isEmpty(), "List of trades should be empty");
         verify(tradeRepo).findByOrder_Portfolio_Id(portfolioId);
     }
 
@@ -117,7 +117,7 @@ public class TradeServiceTest {
         when(tradeRepo.findByOrder_Portfolio_Id(null)).thenReturn(Collections.emptyList());
         List<Trade> actualTrades = tradeService.findTradesByPortfolioId(null);
 
-        assertTrue(actualTrades.isEmpty());
+        assertTrue(actualTrades.isEmpty(), "List of trades should be empty");
         verify(tradeRepo).findByOrder_Portfolio_Id(null);
     }
 
