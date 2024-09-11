@@ -11,6 +11,6 @@ import com.fdmgroup.forex.models.composites.TradeId;
 @Repository
 public interface TradeRepo extends JpaRepository<Trade, TradeId> {
 
-    List<Trade> findByOrder_Id(UUID id);
+    List<Trade> findByOrder_Portfolio_Id(UUID id);
     
 }
