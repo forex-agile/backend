@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.fdmgroup.forex.exceptions.InternalServerErrorException;
-import com.fdmgroup.forex.exceptions.RecordNotFoundException;
+import com.fdmgroup.forex.exceptions.*;
 import com.fdmgroup.forex.models.Portfolio;
 import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.models.dto.LoginResponseDTO;

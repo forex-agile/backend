@@ -34,19 +34,20 @@ public class Matching {
 		List<Order> filteredAndSortedOrders = filterAndSortOrders(newOrder);
 		System.out.println("filteredAndSortedOrders:" +filteredAndSortedOrders.size());
 	    // if empty filtered list for market order, throw no matching order exception (keep it ACTIVE for limit order)
-	    if (newOrder.getOrderType() == OrderType.MARKET && filteredAndSortedOrders.isEmpty()) {
-	    	newOrder.setOrderStatus(OrderStatus.CANCELLED);
-	    	orderRepo.save(newOrder);
+	    if (newOrder.getOrderType() == OrderType.MARKET && filteredAndSortedOrders.isEmpty()) 
 	    	throw new NoMatchingOrderException("No matching limit order found currently. Please try again later");
-	    }
-
+	    
 	    // loop through filtered list
 	    for (Order outstandingOrder : filteredAndSortedOrders) {
 	    	// if new order is CANCELLED, CLOSED, CLEARED, break the for loop and return the status
-	        if (newOrder.getOrderStatus() != OrderStatus.ACTIVE) break;
+	        if (newOrder.getOrderStatus() != OrderStatus.ACTIVE) return newOrder;
 	        handleMatchedOrder(newOrder,outstandingOrder);
 	    }
 	    
+	    if (newOrder.getOrderType() == OrderType.MARKET && newOrder.getOrderStatus() == OrderStatus.ACTIVE) {
+	    	newOrder.setOrderStatus(OrderStatus.CLOSED);
+	    	newOrder = orderRepo.save(newOrder);
+	    }
 	    return newOrder;
 	}
 	

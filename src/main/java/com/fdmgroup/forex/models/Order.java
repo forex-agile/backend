@@ -10,7 +10,6 @@ import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -28,7 +27,6 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-    @NotNull
     private OrderSide orderSide;
 
     @Enumerated(EnumType.STRING)
@@ -37,7 +35,6 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-    @NotNull
     private OrderType orderType;
 
     @Column(nullable = false, updatable = false)
@@ -47,21 +44,18 @@ public class Order {
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
     private Date expiryDate;
 
     @ManyToOne()
     @JoinColumn(name = "FK_Base_Currency_Code", nullable = false, updatable = false)
-    @NotNull
     private Currency baseFx;
 
     @ManyToOne()
     @JoinColumn(name = "FK_Quote_Currency_Code", nullable = false, updatable = false)
-    @NotNull
+    
     private Currency quoteFx;
 
     @Column(nullable = false, updatable = false)
-    @NotNull
     @Positive
     private double total;
 
@@ -70,7 +64,7 @@ public class Order {
     private double residual;
 
     @Column(name = "order_limit", nullable = true, updatable = false)
-    @Positive
+    @PositiveOrZero
     private double limit;
 
     public Order() {}
@@ -90,7 +84,7 @@ public class Order {
         setResidual(residual);
     }
 
-    public Order(
+	public Order(
         Portfolio portfolio, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate,
         Currency baseFx, Currency quoteFx, double total, double residual, double limit
     ) {
