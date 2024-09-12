@@ -10,15 +10,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.fdmgroup.forex.enums.OrderSide;
-import com.fdmgroup.forex.enums.OrderStatus;
-import com.fdmgroup.forex.enums.OrderType;
-import com.fdmgroup.forex.models.Currency;
-import com.fdmgroup.forex.models.Order;
-import com.fdmgroup.forex.models.Portfolio;
-import com.fdmgroup.forex.models.Role;
-import com.fdmgroup.forex.models.User;
+import com.fdmgroup.forex.enums.*;
+import com.fdmgroup.forex.models.*;
 import com.fdmgroup.forex.repos.*;
+import com.fdmgroup.forex.services.*;
 
 import jakarta.transaction.Transactional;
 
@@ -48,19 +43,25 @@ public class DataLoader implements ApplicationRunner {
 	private OrderRepo orderRepo;
 	private CurrencyRepo currencyRepo;
 	private PortfolioRepo portfolioRepo;
+	private CurrencyService currencyService;
+	private FxRateService fxRateService;
 
 	public DataLoader(PasswordEncoder pwdEncoder, RoleRepo roleRepo, UserRepo userRepo, OrderRepo orderRepo,
-			CurrencyRepo currencyRepo, PortfolioRepo portfolioRepo) {
+			CurrencyRepo currencyRepo, PortfolioRepo portfolioRepo, CurrencyService currencyService,
+			FxRateService fxRateService) {
 		this.pwdEncoder = pwdEncoder;
 		this.roleRepo = roleRepo;
 		this.userRepo = userRepo;
 		this.orderRepo = orderRepo;
 		this.currencyRepo = currencyRepo;
 		this.portfolioRepo = portfolioRepo;
+		this.currencyService = currencyService;
+		this.fxRateService = fxRateService;
 	}
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+		fetchCurrenciesAndFxRates();
 		createDefaultRecordsIfNotExist();
 		if (doCreateSampleData)
 			createSampleData();
@@ -72,6 +73,14 @@ public class DataLoader implements ApplicationRunner {
 			roleRepo.save(new Role(defaultRole));
 		if (currencyRepo.findById(defaultCurrencyCode).isEmpty())
 			currencyRepo.save(new Currency(defaultCurrencyCode, defaultCurrencyName));
+	}
+
+	@Transactional
+	private void fetchCurrenciesAndFxRates() {
+		if (currencyRepo.count() == 0)
+			currencyService.fetchAndCreateCurrencies();
+		fxRateService.fetchAndUpdateFxRates();
+		fxRateService.findFxRateUpdateTime();
 	}
 
 	@Transactional

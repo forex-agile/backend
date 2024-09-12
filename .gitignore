@@ -1,9 +1,10 @@
-
+.metadata
 # Compiled class file
 *.class
 
 # Log file
 *.log
+logs/*
 
 # BlueJ files
 *.ctxt

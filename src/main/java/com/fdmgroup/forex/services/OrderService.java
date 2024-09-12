@@ -143,5 +143,14 @@ public class OrderService {
 
         return order;
     }
+    public List<Order> findOrdersByPortfolioId(UUID portfolioId) {
+        List<Order> orders = orderRepo.findByPortfolio_Id(portfolioId);
+        return orders;
+    }
+
+    public List<Order> findOrdersByPortfolioIdAndOrderStatus(UUID portfolioId, OrderStatus orderStatus) {
+        List<Order> orders = orderRepo.findByPortfolio_IdAndOrderStatus(portfolioId, orderStatus);
+        return orders;
+    }
 
 }

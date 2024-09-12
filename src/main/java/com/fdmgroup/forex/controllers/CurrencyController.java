@@ -1,14 +1,9 @@
 package com.fdmgroup.forex.controllers;
 
-import java.util.List;
+import java.util.*;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import com.fdmgroup.forex.models.Currency;
 import com.fdmgroup.forex.services.CurrencyService;
@@ -26,16 +21,25 @@ public class CurrencyController {
 
     @GetMapping
     public ResponseEntity<List<Currency>> getAllCurrencies() {
-        List<Currency> Currencies = currencyService.findAllCurrencies();
-        if (Currencies.isEmpty()) {
+        List<Currency> currencies = currencyService.findAllCurrencies();
+        if (currencies.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.ok(Currencies);
+        return ResponseEntity.ok(currencies);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Currency> getCurrency(@PathVariable String id) {
         Currency currency = currencyService.findCurrencyById(id.toUpperCase());
         return ResponseEntity.ok(currency);
+    }
+
+    @PostMapping
+    private ResponseEntity<List<Currency>> createCurrencies() {
+        List<Currency> currencies = currencyService.fetchAndCreateCurrencies();
+        if (currencies.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(currencies);
     }
 }

@@ -188,7 +188,7 @@ public class Matching {
     
 	private List<Order> filterAndSortOrders(Order newOrder) {
         // find active order with opposite currency in the DB
-		List<Order> filteredLimitOrders = orderRepo.findActiveOrdersByFx(newOrder.getQuoteFx(), newOrder.getBaseFx(), OrderStatus.ACTIVE, OrderType.LIMIT);
+		List<Order> filteredLimitOrders = orderRepo.findActiveOrdersByFx(newOrder.getQuoteFx(), newOrder.getBaseFx(), OrderStatus.ACTIVE, OrderType.LIMIT, newOrder.getPortfolio());
 		System.out.println("filteredLimitOrders:" + filteredLimitOrders.size());
         List<Order> filteredLimitOrdersWithRate = filteredLimitOrders.stream()
             .filter(outStandingOrder -> {
