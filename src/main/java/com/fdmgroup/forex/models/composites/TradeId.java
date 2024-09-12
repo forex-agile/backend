@@ -3,16 +3,34 @@ package com.fdmgroup.forex.models.composites;
 import java.io.Serializable;
 import java.util.*;
 
+import com.fdmgroup.forex.models.Order;
+
 public class TradeId implements Serializable {
 
     private UUID id;
-    private UUID orderId;
+    private Order order;
 
     public TradeId() {}
 
-    public TradeId(UUID id, UUID orderId) {
+    public TradeId(UUID id, Order order) {
         this.id = id;
-        this.orderId = orderId;
+        this.order = order;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     @Override
@@ -21,12 +39,12 @@ public class TradeId implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         TradeId tradeId = (TradeId) o;
         return Objects.equals(id, tradeId.id) &&
-               Objects.equals(orderId, tradeId.orderId);
+               Objects.equals(order, tradeId.order);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderId);
+        return Objects.hash(id, order);
     }
 
 }
