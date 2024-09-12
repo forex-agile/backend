@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fdmgroup.forex.models.Asset;
@@ -29,6 +30,9 @@ public class Asset {
     private Currency currency;
 
     private double balance;
+
+    @Version
+    private Long version;
 
     public Asset() {}
 
@@ -74,6 +78,14 @@ public class Asset {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
 }
