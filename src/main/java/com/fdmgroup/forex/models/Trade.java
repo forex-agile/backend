@@ -2,16 +2,11 @@
 package com.fdmgroup.forex.models;
 
 import java.util.*;
-
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.Immutable;
-
+import jakarta.persistence.*;
 import com.fdmgroup.forex.models.composites.TradeId;
 
-import jakarta.persistence.*;
-
 @Entity
-@Immutable
 @Table(name = "trades")
 @IdClass(TradeId.class)
 public class Trade {
