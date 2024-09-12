@@ -46,8 +46,10 @@ public class DataLoader implements ApplicationRunner {
 	private CurrencyService currencyService;
 	private FxRateService fxRateService;
 
-	public DataLoader(RoleRepo roleRepo, UserRepo userRepo, OrderRepo orderRepo, CurrencyRepo currencyRepo,
-			PortfolioRepo portfolioRepo, CurrencyService currencyService, FxRateService fxRateService) {
+	public DataLoader(PasswordEncoder pwdEncoder, RoleRepo roleRepo, UserRepo userRepo, OrderRepo orderRepo,
+			CurrencyRepo currencyRepo, PortfolioRepo portfolioRepo, CurrencyService currencyService,
+			FxRateService fxRateService) {
+		this.pwdEncoder = pwdEncoder;
 		this.roleRepo = roleRepo;
 		this.userRepo = userRepo;
 		this.orderRepo = orderRepo;
