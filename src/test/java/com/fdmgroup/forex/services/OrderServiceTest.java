@@ -1,29 +1,28 @@
 package com.fdmgroup.forex.services;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.*;
+import org.mockito.*;
 
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Order;
+import com.fdmgroup.forex.models.Portfolio;
 import com.fdmgroup.forex.repos.OrderRepo;
 
 public class OrderServiceTest {
 
     @Mock
     private OrderRepo orderRepo;
+
+    @Mock
+    private PortfolioService portfolioService;
 
     @InjectMocks
     private OrderService orderService;
@@ -33,16 +32,21 @@ public class OrderServiceTest {
     private UUID userId;
     private Order order;
     private List<Order> orders;
+    private Portfolio portfolio;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        orderService = new OrderService(orderRepo, portfolioService);
         existingId = UUID.randomUUID();
         nonExistingId = UUID.randomUUID();
         userId = UUID.randomUUID();
         order = new Order();
         orders = new ArrayList<>();
         orders.add(order);
+        portfolio = new Portfolio();
+        portfolio.setId(UUID.randomUUID());
+        order.setPortfolio(portfolio);
     }
 
     @Test
@@ -73,7 +77,7 @@ public class OrderServiceTest {
     void testFindOrderById_WhenOrderDoesNotExist() {
         when(orderRepo.findById(nonExistingId)).thenReturn(Optional.empty());
         assertThrows(RecordNotFoundException.class, () -> orderService.findOrderById(nonExistingId),
-            "OrderService should throw RecordNotFoundException for an invalid ID");
+                "OrderService should throw RecordNotFoundException for an invalid ID");
         verify(orderRepo, times(1)).findById(nonExistingId);
     }
 
@@ -107,7 +111,8 @@ public class OrderServiceTest {
         OrderStatus status = OrderStatus.ACTIVE;
         when(orderRepo.findByPortfolio_User_IdAndOrderStatus(userId, status)).thenReturn(new ArrayList<>());
         List<Order> foundOrders = orderService.findOrdersByUserIdAndOrderStatus(userId, status);
-        assertTrue(foundOrders.isEmpty(), "OrderService should return an empty list if no orders match the user ID and order status");
+        assertTrue(foundOrders.isEmpty(),
+                "OrderService should return an empty list if no orders match the user ID and order status");
         verify(orderRepo, times(1)).findByPortfolio_User_IdAndOrderStatus(userId, status);
     }
 
@@ -125,7 +130,8 @@ public class OrderServiceTest {
         OrderStatus status = OrderStatus.CLOSED;
         when(orderRepo.findByOrderStatus(status)).thenReturn(new ArrayList<>());
         List<Order> foundOrders = orderService.findOrdersByOrderStatus(status);
-        assertTrue(foundOrders.isEmpty(), "OrderService should return an empty list if no orders match the order status");
+        assertTrue(foundOrders.isEmpty(),
+                "OrderService should return an empty list if no orders match the order status");
         verify(orderRepo, times(1)).findByOrderStatus(status);
     }
 
@@ -145,5 +151,68 @@ public class OrderServiceTest {
         List<Order> foundOrders = orderService.findOrdersByOrderType(type);
         assertTrue(foundOrders.isEmpty(), "OrderService should return an empty list if no orders match the order type");
         verify(orderRepo, times(1)).findByOrderType(type);
+    }
+
+    @Test
+    void testCancelOrderByUserIdAndOrderId_SuccessfulCancellation() {
+        when(orderRepo.findById(existingId)).thenReturn(Optional.of(order));
+        when(portfolioService.findPortfolioByUserId(userId)).thenReturn(portfolio);
+        when(orderRepo.save(any(Order.class))).thenReturn(order);
+
+        Order cancelledOrder = orderService.cancelOrderByUserIdAndOrderId(userId, existingId);
+
+        assertEquals(OrderStatus.CANCELLED, cancelledOrder.getOrderStatus());
+        verify(orderRepo, times(1)).findById(existingId);
+        verify(portfolioService, times(1)).findPortfolioByUserId(userId);
+        verify(orderRepo, times(1)).save(order);
+    }
+
+    @Test
+    void testCancelOrderByUserIdAndOrderId_OrderNotFound() {
+        when(orderRepo.findById(nonExistingId)).thenReturn(Optional.empty());
+
+        assertThrows(RecordNotFoundException.class,
+                () -> orderService.cancelOrderByUserIdAndOrderId(userId, nonExistingId));
+
+        verify(orderRepo, times(1)).findById(nonExistingId);
+        verify(portfolioService, never()).findPortfolioByUserId(any(UUID.class));
+        verify(orderRepo, never()).save(any(Order.class));
+    }
+
+    @Test
+    void testCancelOrderByUserIdAndOrderId_PortfolioMismatch() {
+        Order order = new Order();
+        order.setId(existingId);
+        Portfolio orderPortfolio = new Portfolio();
+        orderPortfolio.setId(UUID.randomUUID());
+        order.setPortfolio(orderPortfolio);
+
+        Portfolio userPortfolio = new Portfolio();
+        userPortfolio.setId(UUID.randomUUID());
+
+        when(orderRepo.findById(existingId)).thenReturn(Optional.of(order));
+        when(portfolioService.findPortfolioByUserId(userId)).thenReturn(userPortfolio);
+        assertThrows(RecordNotFoundException.class,
+                () -> orderService.cancelOrderByUserIdAndOrderId(userId, existingId));
+
+        verify(orderRepo, times(1)).findById(existingId);
+        verify(portfolioService, times(1)).findPortfolioByUserId(userId);
+        verify(orderRepo, never()).save(any(Order.class));
+    }
+
+    @Test
+    void testPortfoliosMatch_True() {
+        Order matchingOrder = new Order();
+        matchingOrder.setPortfolio(portfolio);
+        assertTrue(orderService.portfoliosMatch(matchingOrder, portfolio));
+    }
+
+    @Test
+    void testPortfoliosMatch_False() {
+        Order nonMatchingOrder = new Order();
+        Portfolio differentPortfolio = new Portfolio();
+        differentPortfolio.setId(UUID.randomUUID());
+        nonMatchingOrder.setPortfolio(differentPortfolio);
+        assertFalse(orderService.portfoliosMatch(nonMatchingOrder, portfolio));
     }
 }

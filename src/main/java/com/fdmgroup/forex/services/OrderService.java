@@ -10,15 +10,18 @@ import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
 import com.fdmgroup.forex.models.Order;
+import com.fdmgroup.forex.models.Portfolio;
 import com.fdmgroup.forex.repos.OrderRepo;
 
 @Service
 public class OrderService {
 
     private OrderRepo orderRepo;
+    private PortfolioService portfolioService;
 
-    public OrderService(OrderRepo orderRepo) {
+    public OrderService(OrderRepo orderRepo, PortfolioService portfolioService) {
         this.orderRepo = orderRepo;
+        this.portfolioService = portfolioService;
     }
 
     public List<Order> findAllOrders() {
@@ -59,6 +62,21 @@ public class OrderService {
     public List<Order> findOrdersByPortfolioIdAndOrderStatus(UUID portfolioId, OrderStatus orderStatus) {
         List<Order> orders = orderRepo.findByPortfolio_IdAndOrderStatus(portfolioId, orderStatus);
         return orders;
+    }
+
+    public Order cancelOrderByUserIdAndOrderId(UUID userId, UUID orderId) throws RecordNotFoundException {
+        Order order = findOrderById(orderId);
+        Portfolio portfolio = portfolioService.findPortfolioByUserId(userId);
+        if (portfoliosMatch(order, portfolio)) {
+            order.setOrderStatus(OrderStatus.CANCELLED);
+            return orderRepo.save(order);
+        } else {
+            throw new RecordNotFoundException("No order with ID " + orderId + " was found for user ID " + userId);
+        }
+    }
+
+    public boolean portfoliosMatch(Order order, Portfolio portfolio) {
+        return order.getPortfolio().getId() == portfolio.getId();
     }
 
 }
