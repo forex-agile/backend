@@ -71,7 +71,7 @@ public class OrderController {
     @GetMapping("/user/{id}")
     public ResponseEntity<List<Order>> getOrdersByUserIdAndOptionalOrderStatus(
         @PathVariable UUID id, 
-        @RequestParam OrderStatus orderStatus
+        @RequestParam(required=false) OrderStatus orderStatus
     ) {
         List<Order> orders;
         if (orderStatus == null) {
