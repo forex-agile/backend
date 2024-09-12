@@ -17,7 +17,7 @@ import com.fdmgroup.forex.repos.AssetRepo;
 @Service
 public class AssetService {
 
-    private final static double MAX_TRIES = 5;
+    private final static double MAX_TRIES = 3;
     private AssetRepo assetRepo;
 
     public AssetService(AssetRepo assetRepo) {
