@@ -79,7 +79,8 @@ public class DataLoader implements ApplicationRunner {
 	private void fetchCurrenciesAndFxRates() {
 		if (currencyRepo.count() == 0)
 			currencyService.fetchAndCreateCurrencies();
-		fxRateService.getUpdatedFxRates();
+		fxRateService.fetchAndUpdateFxRates();
+		fxRateService.findFxRateUpdateTime();
 	}
 
 	@Transactional
