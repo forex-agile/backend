@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.forex.exceptions.InsufficientFundsException;
@@ -16,6 +17,7 @@ import com.fdmgroup.forex.repos.AssetRepo;
 @Service
 public class AssetService {
 
+    private final static double MAX_TRIES = 3;
     private AssetRepo assetRepo;
 
     public AssetService(AssetRepo assetRepo) {
@@ -43,25 +45,42 @@ public class AssetService {
     }
 
     public void depositAsset(Portfolio portfolio, Currency currency, double deposit) {
-        try {
-            Asset Asset = findAssetByPortfolioAndCurrency(portfolio, currency);
-            Asset.setBalance(Asset.getBalance() + deposit);
-            assetRepo.save(Asset);
-        
-        } catch (RecordNotFoundException e) {
-            createAsset(portfolio, currency, deposit);
+        double tries = 0;
+        while (tries < MAX_TRIES) {
+            try {
+                Asset Asset = findAssetByPortfolioAndCurrency(portfolio, currency);
+                Asset.setBalance(Asset.getBalance() + deposit);
+                assetRepo.save(Asset);
+            } catch (ObjectOptimisticLockingFailureException e) {
+                ++tries;
+                continue;
+            } catch (RecordNotFoundException e) {
+                createAsset(portfolio, currency, deposit);
+            }
+
+            break;
         }
     }
 
     public void withdrawAsset(Portfolio portfolio, Currency currency, double withdrawal) throws InsufficientFundsException, RecordNotFoundException {
-        Asset Asset = findAssetByPortfolioAndCurrency(portfolio, currency);
-        double balance = Asset.getBalance();
-        if (withdrawal > balance) {
-            throw new InsufficientFundsException("Withdrawal amount cannot exceed balance: balance=" + balance + ", withdrawal=" + withdrawal);
-        } else {
-            Asset.setBalance(balance - withdrawal);
+        double tries = 0;
+        while (tries < MAX_TRIES) {
+            try {
+                Asset Asset = findAssetByPortfolioAndCurrency(portfolio, currency);
+                double balance = Asset.getBalance();
+
+                if (withdrawal > balance)
+                    throw new InsufficientFundsException("Withdrawal amount cannot exceed balance: balance=" + balance + ", withdrawal=" + withdrawal);
+
+                Asset.setBalance(balance - withdrawal);
+                assetRepo.save(Asset);
+            } catch (ObjectOptimisticLockingFailureException e) {
+                ++tries;
+                continue;
+            }
+
+            break;
         }
-        assetRepo.save(Asset);
     }
 
     public Asset findAssetByPortfolioAndCurrency(Portfolio portfolio, Currency currency) throws RecordNotFoundException {
