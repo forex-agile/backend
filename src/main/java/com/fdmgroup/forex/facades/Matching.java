@@ -1,6 +1,7 @@
 package com.fdmgroup.forex.facades;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
@@ -174,33 +175,31 @@ public class Matching {
     
 	private List<Order> filterAndSortOrders(Order newOrder) {
 		BigDecimal newOrderRate = newOrder.getOrderType()==OrderType.MARKET ? null : getRateByOrderSide(newOrder);
-        // find active order with opposite currency in the DB
+		System.out.println("newOrderRate:"+ newOrderRate);
+		// find active order with opposite currency in the DB
 		List<Order> filteredLimitOrders = orderRepo.findActiveOrdersByFx(newOrder.getQuoteFx(), newOrder.getBaseFx(), OrderStatus.ACTIVE, OrderType.LIMIT, newOrder.getPortfolio());
 		System.out.println("filteredLimitOrders:" + filteredLimitOrders.size());
         List<Order> filteredLimitOrdersWithRate = filteredLimitOrders.stream()
             .filter(outStandingOrder -> {
             	if (newOrder.getOrderType()==OrderType.MARKET) return true;                
-            	BigDecimal outStandingOrderRate = inverseRate(getRateByOrderSide(outStandingOrder));
-                // buy order: outstanding rate > me, sell order is reverse
-                // example can refer to bottom of algo design document
-            	return newOrder.getOrderSide() == OrderSide.BUY 
-            		    ? outStandingOrderRate.compareTo(newOrderRate) >= 0 
-            		    : outStandingOrderRate.compareTo(newOrderRate) <= 0;
-            })
-            .collect(Collectors.toList());
+			BigDecimal outStandingOrderRate = inverseRate(getRateByOrderSide(outStandingOrder));
+			System.out.println("outStandingOrderRate:"+outStandingOrderRate);
+			System.out.println("outStandingOrderRate.compareTo(newOrderRate)"+ outStandingOrderRate.compareTo(newOrderRate));
+			// always look for max base/quote, i.e. selling least for most quoteFx
+			return outStandingOrderRate.compareTo(newOrderRate) >= 0;
+		}).collect(Collectors.toList());
 
         List<Order> filteredAndSortedOrders = filteredLimitOrdersWithRate.stream()
             .sorted((a, b) -> {
-            	BigDecimal rateA = inverseRate(getRateByOrderSide(a));
-            	BigDecimal rateB = inverseRate(getRateByOrderSide(b));
-                int rateComparison = rateA.compareTo(rateB);
-                
-                // For buy orders, sort by ascending rate
-                // For sell orders, sort by descending rate
-                if (newOrder.getOrderSide() == OrderSide.SELL) 
-                    rateComparison = -rateComparison;
-                if (rateComparison != 0) return rateComparison;
-                return a.getCreationDate().compareTo(b.getCreationDate());
+			BigDecimal rateA = inverseRate(getRateByOrderSide(a));
+			BigDecimal rateB = inverseRate(getRateByOrderSide(b));
+			// always look for max base/quote, i.e. selling least for most quoteFx
+			int rateComparison = rateB.compareTo(rateA);
+			if (rateComparison != 0)
+				return rateComparison;
+
+			// if rates are the same, return earlier order
+			return a.getCreationDate().compareTo(b.getCreationDate());
             })
             .collect(Collectors.toList());
 
@@ -212,12 +211,12 @@ public class Matching {
 	    BigDecimal total = BigDecimal.valueOf(order.getTotal());
 	    
 	    return order.getOrderSide() == OrderSide.BUY
-	    		?	total.divide(limit, 20, RoundingMode.HALF_UP)
-	    		:	limit.divide(total, 20, RoundingMode.HALF_UP);
+	    		?	total.divide(limit, MathContext.DECIMAL128)
+	    		:	limit.divide(total, MathContext.DECIMAL128);
 	}
 	
 	private BigDecimal inverseRate(BigDecimal rate) {
-		return BigDecimal.ONE.divide(rate, 20, RoundingMode.HALF_UP);
+		return BigDecimal.ONE.divide(rate, MathContext.DECIMAL128);
 	}	
 
 }
