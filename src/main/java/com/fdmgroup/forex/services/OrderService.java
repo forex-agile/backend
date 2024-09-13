@@ -1,42 +1,32 @@
 package com.fdmgroup.forex.services;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.forex.enums.*;
-import com.fdmgroup.forex.exceptions.BadRequestException;
-import com.fdmgroup.forex.exceptions.InsufficientFundsException;
-import com.fdmgroup.forex.exceptions.RecordNotFoundException;
+import com.fdmgroup.forex.exceptions.*;
 import com.fdmgroup.forex.facades.Matching;
-import com.fdmgroup.forex.models.Asset;
+import com.fdmgroup.forex.models.*;
 import com.fdmgroup.forex.models.Currency;
-import com.fdmgroup.forex.models.Order;
-import com.fdmgroup.forex.models.Portfolio;
-import com.fdmgroup.forex.models.User;
 import com.fdmgroup.forex.models.dto.SubmitSpotOrderDTO;
-import com.fdmgroup.forex.repos.CurrencyRepo;
-import com.fdmgroup.forex.repos.OrderRepo;
-import com.fdmgroup.forex.repos.PortfolioRepo;
+import com.fdmgroup.forex.repos.*;
 import com.fdmgroup.forex.security.AuthUserService;
 
 @Service
 public class OrderService {
 
     private OrderRepo orderRepo;
-    private PortfolioRepo portfolioRepo;
+    private PortfolioService portfolioService;
     private CurrencyRepo currencyRepo;
     private AuthUserService authUserService;
     private Matching matching;
     private AssetService assetService;
 
-    public OrderService(OrderRepo orderRepo, PortfolioRepo portfolioRepo, CurrencyRepo currencyRepo,
+    public OrderService(OrderRepo orderRepo, PortfolioService portfolioService, CurrencyRepo currencyRepo,
 			AuthUserService authUserService, Matching matching, AssetService assetService) {
 		this.orderRepo = orderRepo;
-		this.portfolioRepo = portfolioRepo;
+		this.portfolioService = portfolioService;
 		this.currencyRepo = currencyRepo;
 		this.authUserService = authUserService;
 		this.matching = matching;
@@ -117,9 +107,7 @@ public class OrderService {
 
     public Order buildSpotOrder(SubmitSpotOrderDTO dto) {
         User authUser = authUserService.getAuthenticatedUser();
-        Portfolio portfolio = portfolioRepo.findByUser_Id(authUser.getId()).orElseThrow(
-                () -> new BadRequestException(
-                        "Couldn't find portfolio for user. Please try to logout and login again. If problem persists, contact support."));
+        Portfolio portfolio = portfolioService.findPortfolioByUserId(authUser.getId());
 
         Currency baseFx = currencyRepo.findById(dto.getBaseFx()).orElseThrow(
                 () -> new BadRequestException("Base currency is not valid."));
@@ -151,6 +139,21 @@ public class OrderService {
     public List<Order> findOrdersByPortfolioIdAndOrderStatus(UUID portfolioId, OrderStatus orderStatus) {
         List<Order> orders = orderRepo.findByPortfolio_IdAndOrderStatus(portfolioId, orderStatus);
         return orders;
+    }
+
+    public Order cancelOrderByUserIdAndOrderId(UUID userId, UUID orderId) throws RecordNotFoundException {
+        Order order = findOrderById(orderId);
+        Portfolio portfolio = portfolioService.findPortfolioByUserId(userId);
+        if (portfoliosMatch(order, portfolio)) {
+            order.setOrderStatus(OrderStatus.CANCELLED);
+            return orderRepo.save(order);
+        } else {
+            throw new RecordNotFoundException("No order with ID " + orderId + " was found for user ID " + userId);
+        }
+    }
+
+    public boolean portfoliosMatch(Order order, Portfolio portfolio) {
+        return order.getPortfolio().getId() == portfolio.getId();
     }
 
 }

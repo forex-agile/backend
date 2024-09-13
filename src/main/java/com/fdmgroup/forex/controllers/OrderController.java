@@ -85,6 +85,12 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
+    @PutMapping("/user/{userId}/{orderId}")
+    public ResponseEntity<Order> cancelOrder(@PathVariable UUID userId, @PathVariable UUID orderId) {
+        Order order = orderService.cancelOrderByUserIdAndOrderId(userId, orderId);
+        return ResponseEntity.ok(order);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrder(@PathVariable UUID id) {
         Order order = orderService.findOrderById(id);
