@@ -30,24 +30,24 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-	private OrderSide orderSide;
+    private OrderSide orderSide;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-	private OrderStatus orderStatus;
+    private OrderStatus orderStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-	private OrderType orderType;
+    private OrderType orderType;
 
     @Column(nullable = false, updatable = false)
-	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date creationDate;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate;
 
     @Column(nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date expiryDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiryDate;
 
     @ManyToOne()
     @JoinColumn(name = "FK_Base_Currency_Code", nullable = false, updatable = false)
@@ -66,7 +66,7 @@ public class Order {
     private double residual;
 
     @Column(name = "order_limit", nullable = true, updatable = false)
-    @Positive
+    @PositiveOrZero
     private double limit;
 
     public Order() {}
@@ -86,11 +86,15 @@ public class Order {
         setResidual(residual);
     }
 
-    public Order(
+    public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Order(
         Portfolio portfolio, OrderType orderType, OrderSide orderSide, OrderStatus orderStatus, Date expiryDate,
         Currency baseFx, Currency quoteFx, double total, double residual, double limit
     ) {
-		this(portfolio, orderType, orderSide, orderStatus, expiryDate, baseFx, quoteFx, total, residual);
+        this(portfolio, orderType, orderSide, orderStatus, expiryDate, baseFx, quoteFx, total, residual);
         setLimit(limit);
     }
 
