@@ -83,7 +83,7 @@ public class AssetService {
         }
     }
 
-    private Asset findAssetByPortfolioAndCurrency(Portfolio portfolio, Currency currency) throws RecordNotFoundException {
+    public Asset findAssetByPortfolioAndCurrency(Portfolio portfolio, Currency currency) throws RecordNotFoundException {
         Optional<Asset> assetOptional = assetRepo.findByPortfolioAndCurrency(portfolio, currency);
         return assetOptional.orElseThrow(() -> 
             new RecordNotFoundException("Portfolio asset with portfolio ID '" + portfolio.getId() + "' and currency code '" + currency.getCurrencyCode() + "' not found"));

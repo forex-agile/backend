@@ -59,5 +59,8 @@ build/
 ### VS Code ###
 .vscode/
 
+### Eclipse ###
+.metadata
+
 ### env ###
 .env

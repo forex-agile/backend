@@ -1,7 +1,7 @@
 package com.fdmgroup.forex.services;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -12,17 +12,31 @@ import org.mockito.*;
 import com.fdmgroup.forex.enums.OrderStatus;
 import com.fdmgroup.forex.enums.OrderType;
 import com.fdmgroup.forex.exceptions.RecordNotFoundException;
+import com.fdmgroup.forex.facades.Matching;
+import com.fdmgroup.forex.models.*;
 import com.fdmgroup.forex.models.Order;
-import com.fdmgroup.forex.models.Portfolio;
-import com.fdmgroup.forex.repos.OrderRepo;
+import com.fdmgroup.forex.repos.*;
+import com.fdmgroup.forex.security.AuthUserService;
 
 public class OrderServiceTest {
+
+    @Mock
+    private CurrencyRepo currencyRepo;
 
     @Mock
     private OrderRepo orderRepo;
 
     @Mock
+    private AssetService assetService;
+
+    @Mock
     private PortfolioService portfolioService;
+
+    @Mock
+    private Matching matching;
+
+    @Mock
+    private AuthUserService authUserService;
 
     @InjectMocks
     private OrderService orderService;
@@ -37,7 +51,7 @@ public class OrderServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderService = new OrderService(orderRepo, portfolioService);
+        orderService = new OrderService(orderRepo, portfolioService, currencyRepo, authUserService, matching, assetService);
         existingId = UUID.randomUUID();
         nonExistingId = UUID.randomUUID();
         userId = UUID.randomUUID();
