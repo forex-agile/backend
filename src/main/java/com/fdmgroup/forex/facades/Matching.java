@@ -57,18 +57,18 @@ public class Matching {
 	
 	// keeping the System out for later BE integration testing
     private void handleMatchedOrder(Order newOrder, Order outstandingOrder) {
-    	// rate=base/quote of new order
-        BigDecimal rateOfNewOrderAsset = getRateForMatchedOrders(newOrder, outstandingOrder);
+    	// rate=base/quote of new order(always use outstanding order's rate to favor new comer)
+        BigDecimal rateOfNewOrderAsset = inverseRate(getRateByOrderSide(outstandingOrder));
         // rate=base/quote of ourstanding order: 1/rate because base and quote fx is reverse
-        BigDecimal rateOfOutstandingOrderAsset = BigDecimal.ONE.divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP);
+        BigDecimal rateOfOutstandingOrderAsset = BigDecimal.ONE.divide(rateOfNewOrderAsset, MathContext.DECIMAL128);
 		System.out.println("Side,Base,Quote:"+newOrder.getOrderSide()+newOrder.getBaseFx()+","+newOrder.getQuoteFx());
     	System.out.println("rateOfNewOrderAsset:"+ rateOfNewOrderAsset);
     	System.out.println("rateOfOutstandingOrderAsset:"+ rateOfOutstandingOrderAsset);
     	// get residual based on baseFx of new order asset, given that buy order base asset is in opposite currency
         BigDecimal newOrderResidual = newOrder.getOrderSide() == OrderSide.BUY
-            ? BigDecimal.valueOf(newOrder.getResidual()).divide(rateOfNewOrderAsset, 20, RoundingMode.HALF_UP)
+            ? BigDecimal.valueOf(newOrder.getResidual()).divide(rateOfNewOrderAsset, MathContext.DECIMAL128)
             : BigDecimal.valueOf(newOrder.getResidual());
-        // get residual in the quoteFx --> baseFx of new order
+        // get residual in the quoteFx of outstanding order === baseFx of new order
         BigDecimal outstandingOrderResidual = outstandingOrder.getOrderSide() == OrderSide.BUY
             ? BigDecimal.valueOf(outstandingOrder.getResidual()) 
             : BigDecimal.valueOf(outstandingOrder.getResidual()).multiply(rateOfOutstandingOrderAsset);
@@ -114,10 +114,10 @@ public class Matching {
         
         System.out.println("settledAmountInOutstandingOrderBaseFx:"+settledAmountInOutstandingOrderBaseFx);
         // Update residual amounts and balances
-        newOrder.setResidual(newOrder.getResidual() - newOrderSettledAmount.doubleValue());
-        outstandingOrder.setResidual(outstandingOrder.getResidual() - outstandingOrderSettledAmount.doubleValue());
-        newOrderBaseAsset.setBalance(newOrderBaseAsset.getBalance() - settledAmountInNewOrderBaseFx.doubleValue());
-        outstandingOrderBaseAsset.setBalance(outstandingOrderBaseAsset.getBalance() - settledAmountInOutstandingOrderBaseFx.doubleValue());    
+        newOrder.setResidual(round(newOrder.getResidual() - newOrderSettledAmount.doubleValue()));
+        outstandingOrder.setResidual(round(outstandingOrder.getResidual() - outstandingOrderSettledAmount.doubleValue()));
+        newOrderBaseAsset.setBalance(round(newOrderBaseAsset.getBalance() - settledAmountInNewOrderBaseFx.doubleValue()));
+        outstandingOrderBaseAsset.setBalance(round(outstandingOrderBaseAsset.getBalance() - settledAmountInOutstandingOrderBaseFx.doubleValue()));    
         
         // handle updating order status
         updateOrderStatus(newOrder, outstandingOrder, newOrderBaseAsset, outstandingOrderBaseAsset);
@@ -135,12 +135,12 @@ public class Matching {
         System.out.println("outstandingOrderBaseAsset--------------->balance:"+outstandingOrderBaseAsset.getBalance());
 
         // Update quoteFx Asset too
-        assetService.depositAsset(newOrder.getPortfolio(), newOrder.getQuoteFx(), settledAmountInOutstandingOrderBaseFx.doubleValue());
-        assetService.depositAsset(outstandingOrder.getPortfolio(), outstandingOrder.getQuoteFx(), settledAmountInNewOrderBaseFx.doubleValue());
+        assetService.depositAsset(newOrder.getPortfolio(), newOrder.getQuoteFx(), round(settledAmountInOutstandingOrderBaseFx.doubleValue()));
+        assetService.depositAsset(outstandingOrder.getPortfolio(), outstandingOrder.getQuoteFx(), round(settledAmountInNewOrderBaseFx.doubleValue()));
         // create trade records
 	    UUID tradeId = UUID.randomUUID();
-	    tradeRepo.save(new Trade(tradeId,newOrder,settledAmountInNewOrderBaseFx.doubleValue(), settledAmountInOutstandingOrderBaseFx.doubleValue()));
-	    tradeRepo.save(new Trade(tradeId,outstandingOrder,settledAmountInOutstandingOrderBaseFx.doubleValue(), settledAmountInNewOrderBaseFx.doubleValue()));
+	    tradeRepo.save(new Trade(tradeId, newOrder, round(settledAmountInNewOrderBaseFx.doubleValue()), round(settledAmountInOutstandingOrderBaseFx.doubleValue())));
+	    tradeRepo.save(new Trade(tradeId, outstandingOrder, round(settledAmountInOutstandingOrderBaseFx.doubleValue()), round(settledAmountInNewOrderBaseFx.doubleValue())));
     }
     
 	private void updateOrderStatus(Order newOrder, Order outstandingOrder, Asset newOrderBaseAsset,
@@ -153,21 +153,6 @@ public class Matching {
 		if (outstandingOrder.getResidual() == 0) outstandingOrder.setOrderStatus(OrderStatus.CLEARED);
 	}
 
-	private BigDecimal getRateForMatchedOrders(Order newOrder, Order outstandingOrder) {
-		// if one of them is market order, get rate of counter order
-		// if using outstanding rate, need to 1/rate to get rate base on new order baseFx/quoteFx
-		if (newOrder.getOrderType() == OrderType.MARKET) 
-            return inverseRate(getRateByOrderSide(outstandingOrder));
-        else if (outstandingOrder.getOrderType() == OrderType.MARKET) 
-        	return getRateByOrderSide(newOrder);
-        
-		// get rate of newer order
-		if (newOrder.getCreationDate().after(outstandingOrder.getCreationDate()))
-			return getRateByOrderSide(newOrder);
-		else 
-			return inverseRate(getRateByOrderSide(outstandingOrder));
-	}
-	
 	private Asset findAssetByOrderAndCurrency(Order order, Currency fx) {
 		Portfolio portfolio = order.getPortfolio();
 		return assetService.findAssetByPortfolioAndCurrency(portfolio, fx);
@@ -218,5 +203,9 @@ public class Matching {
 	private BigDecimal inverseRate(BigDecimal rate) {
 		return BigDecimal.ONE.divide(rate, MathContext.DECIMAL128);
 	}	
-
+	
+	// round a double to 10 decimal places
+	private double round(double value) {
+		return BigDecimal.valueOf(value).setScale(10, RoundingMode.HALF_UP).doubleValue();
+	}
 }
