@@ -4,6 +4,7 @@
 
 # Log file
 *.log
+logs/*
 
 # BlueJ files
 *.ctxt
@@ -58,3 +59,8 @@ build/
 ### VS Code ###
 .vscode/
 
+### Eclipse ###
+.metadata
+
+### env ###
+.env
