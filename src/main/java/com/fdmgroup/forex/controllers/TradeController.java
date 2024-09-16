@@ -21,7 +21,7 @@ public class TradeController {
     }
 
     @GetMapping("/portfolio/{id}")
-    public ResponseEntity<List<Trade>> getTradesByPortfolioId(@RequestParam UUID id) {
+    public ResponseEntity<List<Trade>> getTradesByPortfolioId(@PathVariable UUID id) {
         List<Trade> trades = tradeService.findTradesByPortfolioId(id);
         if (trades.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
