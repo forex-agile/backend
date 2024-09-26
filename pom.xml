@@ -55,6 +55,13 @@
 				<driver.artifactId>postgresql</driver.artifactId>
 			</properties>
 		</profile>
+		<profile>
+			<id>ci-h2</id>
+			<properties>
+				<driver.groupId>com.h2database</driver.groupId>
+				<driver.artifactId>h2</driver.artifactId>
+			</properties>
+		</profile>
 	</profiles>
 
 	<dependencies>
