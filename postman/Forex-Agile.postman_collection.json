@@ -1,0 +1,7134 @@
+{
+	"info": {
+		"_postman_id": "92faad18-8bb6-44c6-93b3-129ed6e88e0f",
+		"name": "Forex-Agile",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37835330",
+		"_collection_link": "https://forex-team.postman.co/workspace/forex~0b74867b-0c1e-4670-8fbc-1013481809f5/collection/30508790-92faad18-8bb6-44c6-93b3-129ed6e88e0f?action=share&source=collection_link&creator=37835330"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alice\",\n    \"email\": \"alice@example.com\",\n    \"password\": \"alicepw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup-bad-password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alice\",\n    \"email\": \"alice@example.com\",\n    \"password\": \"       \"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup-another-user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"userId2\", jsonData.id);",
+									"pm.collectionVariables.set(\"portfolioId2\", jsonData.portfolioId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"bob\",\n    \"email\": \"bob@example.com\",\n    \"password\": \"bobpw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set('Token', jsonData.token);",
+									"pm.collectionVariables.set(\"userId\", jsonData.user.id);",
+									"pm.collectionVariables.set(\"portfolioId\", jsonData.user.portfolioId);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "alicepw",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "alice",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/user/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "currency",
+			"item": [
+				{
+					"name": "get-all-currencies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/currency",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"currency"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-currency-by-id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/currency/hkd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"currency",
+								"hkd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create-all-currencies",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/currency",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"currency"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "portfolio",
+			"item": [
+				{
+					"name": "get-portfolio-by-user-id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"portfolioId\", jsonData.id);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/portfolio/user/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"portfolio",
+								"user",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-ohters-portfolio-by-user-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/portfolio/user/{{userId2}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"portfolio",
+								"user",
+								"{{userId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-portfolio-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/portfolio/{{portfolioId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"portfolio",
+								"{{portfolioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-others-portfolio-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/portfolio/9d8dd2db-c8d4-48c8-afaa-a486638bc7bc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"portfolio",
+								"9d8dd2db-c8d4-48c8-afaa-a486638bc7bc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "fund transfer",
+			"item": [
+				{
+					"name": "deposit-fund",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 100,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fund-transfer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fund-transfer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "withdraw-fund",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 30,\n    \"transferType\": \"WITHDRAWAL\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fund-transfer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fund-transfer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "withdraw-but-insufficient-fund",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 100000,\n    \"transferType\": \"WITHDRAWAL\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fund-transfer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fund-transfer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "withdraw-fund-from-others-portfolio",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 100,\n    \"transferType\": \"WITHDRAWAL\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fund-transfer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fund-transfer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-fund-transfer-by-portfolio-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fund-transfer/{{portfolioId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fund-transfer",
+								"{{portfolioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-others-fund-transfer-by-portfolio-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fund-transfer/9d8dd2db-c8d4-48c8-afaa-a486638bc7bc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fund-transfer",
+								"9d8dd2db-c8d4-48c8-afaa-a486638bc7bc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "fx rate",
+			"item": [
+				{
+					"name": "get-all-fx-rates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fx-rate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fx-rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-fx-rates",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fx-rate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fx-rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-fx-rate-by-currency-code",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fx-rate/currency/HKD",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fx-rate",
+								"currency",
+								"HKD"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-last-update-time",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fx-rate/last-update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fx-rate",
+								"last-update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "get-all-orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-orders-by-status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/status/ACTIVE",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"status",
+								"ACTIVE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-orders-invalid-status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/status/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"status",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-orders-by-portfolio-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/portfolio/{{portfolioId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"portfolio",
+								"{{portfolioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-active-orders-by-portfolio-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/portfolio/{{portfolioId}}?orderStatus=ACTIVE",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"portfolio",
+								"{{portfolioId}}"
+							],
+							"query": [
+								{
+									"key": "orderStatus",
+									"value": "ACTIVE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make-buy-market-order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const expiryDate = new Date();",
+									"expiryDate.setDate(expiryDate.getDate() + 7);",
+									"pm.collectionVariables.set(\"expiryDate\", expiryDate.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/spot",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"spot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make-buy-limit-order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const expiryDate = new Date();",
+									"expiryDate.setDate(expiryDate.getDate() + 7);",
+									"pm.collectionVariables.set(\"expiryDate\", expiryDate.toISOString());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/order/spot",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"spot"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Spot Order Logic",
+			"item": [
+				{
+					"name": "Sign up and log in",
+					"item": [
+						{
+							"name": "alice-signup",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.collectionVariables.set(\"userId\", jsonData.id);",
+											"pm.collectionVariables.set(\"portfolioId\", jsonData.portfolioId);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"alice\",\n    \"email\": \"alice@example.com\",\n    \"password\": \"alicepw\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "bob-signup",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.collectionVariables.set(\"userId2\", jsonData.id);",
+											"pm.collectionVariables.set(\"portfolioId2\", jsonData.portfolioId);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"bob\",\n    \"email\": \"bob@example.com\",\n    \"password\": \"bobpw\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "alice-login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.collectionVariables.set('Token', jsonData.token);",
+											"pm.collectionVariables.set(\"userId\", jsonData.user.id);",
+											"pm.collectionVariables.set(\"portfolioId\", jsonData.user.portfolioId);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "alicepw",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "alice",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "bob-login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.collectionVariables.set('Token2', jsonData.token);",
+											"pm.collectionVariables.set(\"userId2\", jsonData.user.id);",
+											"pm.collectionVariables.set(\"portfolioId2\", jsonData.user.portfolioId);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "bobpw",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "bob",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Utils: Check orders/assets",
+					"item": [
+						{
+							"name": "get-all-orders",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/order",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-alice-portfolio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.collectionVariables.set(\"portfolioId\", jsonData.id);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/portfolio/user/{{userId}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"portfolio",
+										"user",
+										"{{userId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-bob-portfolio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.collectionVariables.set(\"portfolioId2\", jsonData.id);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/v1/portfolio/user/{{userId2}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"portfolio",
+										"user",
+										"{{userId2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Case: place market order when there is no matching orders",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 7800 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - market buy - buy 1000 USD with HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const expiryDate = new Date();",
+											"expiryDate.setDate(expiryDate.getDate() + 7);",
+											"pm.collectionVariables.set(\"expiryDate\", expiryDate.toISOString());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const URL_PREFIX = pm.collectionVariables.get(\"urlPrefix\");",
+											"const userId = pm.collectionVariables.get(\"userId\");",
+											"const token = pm.collectionVariables.get(\"Token\");",
+											"",
+											"// TESTS",
+											"",
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});",
+											"",
+											"const response = await pm.sendRequest({",
+											"    url: URL_PREFIX + \"/order/user/\" + userId,",
+											"    method: \"GET\",",
+											"    header: {",
+											"        \"Authorization\": `Bearer ${token}` // Include the Authorization header",
+											"    }",
+											"});",
+											"",
+											"pm.test(\"Unmatched market order should not be saved\", () => {",
+											"    pm.expect(response.code).to.eql(204);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Case: place an order with insufficient fund",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 7800 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice-buy-limit-order-but-insufficient-fund",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const expiryDate = new Date();",
+											"expiryDate.setDate(expiryDate.getDate() + 7);",
+											"pm.collectionVariables.set(\"expiryDate\", expiryDate.toISOString());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const URL_PREFIX = pm.collectionVariables.get(\"urlPrefix\");",
+											"const userId = pm.collectionVariables.get(\"userId\");",
+											"const token = pm.collectionVariables.get(\"Token\");",
+											"",
+											"// TESTS",
+											"",
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"pm.test(\"Response should mention reason\", function () {",
+											"    pm.response.to.have.body(\"order amount cannot exceed balance: balance=7800.0, amount=78000.0\");",
+											"});",
+											"",
+											"const response = await pm.sendRequest({",
+											"    url: URL_PREFIX + \"/order/user/\" + userId,",
+											"    method: \"GET\",",
+											"    header: {",
+											"        \"Authorization\": `Bearer ${token}` // Include the Authorization header",
+											"    }",
+											"});",
+											"",
+											"pm.test(\"Market order should not be saved on insufficient fund\", () => {",
+											"    pm.expect(response.code).to.eql(204);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 10000,\n  \"limit\": 78000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/order/spot",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice-sell-limit-order-but-insufficient-fund",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const expiryDate = new Date();",
+											"expiryDate.setDate(expiryDate.getDate() + 7);",
+											"pm.collectionVariables.set(\"expiryDate\", expiryDate.toISOString());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const URL_PREFIX = pm.collectionVariables.get(\"urlPrefix\");",
+											"const userId = pm.collectionVariables.get(\"userId\");",
+											"const token = pm.collectionVariables.get(\"Token\");",
+											"",
+											"// TESTS",
+											"",
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"pm.test(\"Response should mention reason\", function () {",
+											"    pm.response.to.have.body(\"order amount cannot exceed balance: balance=7800.0, amount=78000.0\");",
+											"});",
+											"",
+											"const response = await pm.sendRequest({",
+											"    url: URL_PREFIX + \"/order/user/\" + userId,",
+											"    method: \"GET\",",
+											"    header: {",
+											"        \"Authorization\": `Bearer ${token}` // Include the Authorization header",
+											"    }",
+											"});",
+											"",
+											"pm.test(\"Market order should not be saved on insufficient fund\", () => {",
+											"    pm.expect(response.code).to.eql(204);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 78000,\n  \"limit\": 10000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/order/spot",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Suite: Match Limit with Market",
+					"item": [
+						{
+							"name": "Case: match limit buy with market buy fully",
+							"item": [
+								{
+									"name": "SETUP: alice deposit 7800 HKD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SETUP: bob deposit 1000 USD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: alice - limit buy order - buy 1000 USD with 7800 HKD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order1\", jsonData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: bob - market buy order - buy 7800 HKD with USD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order2\", jsonData);",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: orders",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"orders = pm.response.json();",
+													"",
+													"pm.test(\"both orders have been cleared\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+													"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+													"})",
+													"",
+													"pm.test(\"orders have 0 residual\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+													"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/order",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: alice asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: bob asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7800);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId2}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Case: match limit sell with market buy fully",
+							"item": [
+								{
+									"name": "SETUP: alice deposit 7800 HKD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SETUP: bob deposit 1000 USD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: alice - limit sell order - sell 7800 HKD for 1000 USD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order1\", jsonData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 7800,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: bob - market buy order - buy 7800 HKD with USD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order2\", jsonData);",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: orders",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"orders = pm.response.json();",
+													"",
+													"pm.test(\"both orders have been cleared\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+													"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+													"})",
+													"",
+													"pm.test(\"orders have 0 residual\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+													"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/order",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: alice asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: bob asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7800);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId2}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Case: match limit buy with market sell fully",
+							"item": [
+								{
+									"name": "SETUP: alice deposit 7800 HKD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SETUP: bob deposit 1000 USD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: alice - limit buy order - buy 1000 USD with 7800 HKD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order1\", jsonData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: bob - market sell order - sell 1000 USD for HKD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order2\", jsonData);",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: orders",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"orders = pm.response.json();",
+													"",
+													"pm.test(\"both orders have been cleared\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+													"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+													"})",
+													"",
+													"pm.test(\"orders have 0 residual\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+													"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/order",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: alice asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: bob asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7800);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId2}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Case: match limit sell with market sell fully",
+							"item": [
+								{
+									"name": "SETUP: alice deposit 7800 HKD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SETUP: bob deposit 1000 USD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: alice - limit sell order - sell 7800 HKD for 1000 USD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order1\", jsonData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 7800,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: bob - market sell order - sell 1000 USD for HKD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order2\", jsonData);",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: orders",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"orders = pm.response.json();",
+													"",
+													"pm.test(\"both orders have been cleared\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+													"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+													"})",
+													"",
+													"pm.test(\"orders have 0 residual\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+													"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/order",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: alice asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: bob asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7800);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId2}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Suite: match limit with limit",
+					"item": [
+						{
+							"name": "Case: match limit buy with limit buy fully",
+							"item": [
+								{
+									"name": "SETUP: alice deposit 7800 HKD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SETUP: bob deposit 1000 USD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: alice - limit buy - buy 1000 USD with 7800 HKD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order1\", jsonData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: bob - limit buy - buy 7800 HKD with 1000 USD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order2\", jsonData);",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 7800,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: orders",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"orders = pm.response.json();",
+													"",
+													"pm.test(\"both orders have been cleared\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+													"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+													"})",
+													"",
+													"pm.test(\"orders have 0 residual\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+													"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/order",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: alice asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: bob asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7800);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId2}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"description": "Setup:\n\n1. Alice deposit 7800 HKD\n    \n2. Bob deposit 1000 USD\n    \n\nOrders:\n\n1. Alice: Limit Buy: buy 1000 USD with at most 7800 HKD\n    \n2. Bob: Limit Buy: buy 7800 HKD with at most 1000USD\n    \n\nTests:\n\n1. Order#1: CLEARED with 0 Residual\n    \n2. Order#2: CLEARED with 0 Residual\n    \n3. Alice Portfolio: 0 HKD; 1000 USD\n    \n4. Bob Portfolio: 7800 HKD; 0 USD"
+						},
+						{
+							"name": "Case: match limit sell with limit buy fully",
+							"item": [
+								{
+									"name": "SETUP: alice deposit 7800 HKD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SETUP: bob deposit 1000 USD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: alice - limit sell - sell 7800 HKD for 1000 USD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order1\", jsonData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 7800,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: bob - limit buy - buy 7800 HKD with 1000 USD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order2\", jsonData);",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 7800,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: orders",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"orders = pm.response.json();",
+													"",
+													"pm.test(\"both orders have been cleared\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+													"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+													"})",
+													"",
+													"pm.test(\"orders have 0 residual\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+													"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/order",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: alice asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: bob asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7800);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId2}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"description": "Setup:\n\n1. Alice deposit 7800 HKD\n    \n2. Bob deposit 1000 USD\n    \n\nOrders:\n\n1. Alice: Limit Sell: sell 7800 HKD for at least 1000USD\n    \n2. Bob: Limit Buy: buy 7800 HKD with at most 1000USD\n    \n\nTests:\n\n1. Order#1: CLEARED with 0 Residual\n    \n2. Order#2: CLEARED with 0 Residual\n    \n3. Alice Portfolio: 0 HKD; 1000 USD\n    \n4. Bob Portfolio: 7800 HKD; 0 USD"
+						},
+						{
+							"name": "Case: match limit buy with limit sell fully",
+							"item": [
+								{
+									"name": "SETUP: alice deposit 7800 HKD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SETUP: bob deposit 1000 USD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: alice - limit buy - buy 1000 USD with 7800 HKD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order1\", jsonData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: bob - limit sell - sell 1000 USD for 7800 HKD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order2\", jsonData);",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: orders",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"orders = pm.response.json();",
+													"",
+													"pm.test(\"both orders have been cleared\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+													"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+													"})",
+													"",
+													"pm.test(\"orders have 0 residual\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+													"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/order",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: alice asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: bob asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7800);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId2}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"description": "Setup:\n\n1. Alice deposit 7800 HKD\n    \n2. Bob deposit 1000 USD\n    \n\nOrders:\n\n1. Alice: Limit Buy: buy 1000 USD with at most 7800 HKD\n    \n2. Bob: Limit Sell: Sell 1000 USD for at least 7800 HKD\n    \n\nTests:\n\n1. Order#1: CLEARED with 0 Residual\n    \n2. Order#2: CLEARED with 0 Residual\n    \n3. Alice Portfolio: 0 HKD; 1000 USD\n    \n4. Bob Portfolio: 7800 HKD; 0 USD"
+						},
+						{
+							"name": "Case: match limit sell with limit sell fully",
+							"item": [
+								{
+									"name": "SETUP: alice deposit 7800 HKD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "SETUP: bob deposit 1000 USD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/fund-transfer",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"fund-transfer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: alice - limit sell - sell 7800 HKD for 1000 USD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order1\", jsonData);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 7800,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "ACT: bob - limit sell - sell 1000 USD for 7800 HKD",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"utils.setExpiryDateNDaysFromNow(7);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"pm.globals.set(\"order2\", jsonData);",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{urlPrefix}}/order/spot",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order",
+												"spot"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: orders",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"orders = pm.response.json();",
+													"",
+													"pm.test(\"both orders have been cleared\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+													"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+													"})",
+													"",
+													"pm.test(\"orders have 0 residual\", () => {",
+													"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+													"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/order",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: alice asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "TEST: bob asset",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const portfolio = pm.response.json();",
+													"",
+													"pm.test(\"balance correct\", () => {",
+													"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7800);",
+													"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token2}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+											"host": [
+												"{{urlPrefix}}"
+											],
+											"path": [
+												"portfolio",
+												"{{portfolioId2}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"description": "Setup:\n\n1. Alice deposit 7800 HKD\n    \n2. Bob deposit 1000 USD\n    \n\nOrders:\n\n1. Alice: Limit Sell: Sell 7800 HKD for at least 1000 USD\n    \n2. Bob: Limit Sell: Sell 1000 USD for at least 7800 HKD\n    \n\nTests:\n\n1. Order#1: CLEARED with 0 Residual\n    \n2. Order#2: CLEARED with 0 Residual\n    \n3. Alice Portfolio: 0 HKD; 1000 USD\n    \n4. Bob Portfolio: 7800 HKD; 0 USD"
+						}
+					]
+				},
+				{
+					"name": "Case: matching limit with multiple market & limit orders",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 7820 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7820,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SETUP: bob deposit 800 USD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - limit buy - buy 780 HKD with 100 USD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order1\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 780,\n  \"limit\": 100,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit sell - sell 7820 HKD for 1000 USD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order2\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 7820,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - market buy - buy 782 HKD with USD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order3\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 782,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - market sell - sell 600 USD for HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order4\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 600,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"orders = pm.response.json();",
+											"",
+											"pm.test(\"both orders have correct status\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+											"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"ACTIVE\");",
+											"    pm.expect(utils.getOrder(orders, \"order3\").orderStatus).to.eql(\"CLEARED\");",
+											"    pm.expect(utils.getOrder(orders, \"order4\").orderStatus).to.eql(\"CLEARED\");",
+											"})",
+											"",
+											"pm.test(\"orders have correct residual\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+											"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(1566);",
+											"    pm.expect(utils.getOrder(orders, \"order3\").residual).to.eql(0);",
+											"    pm.expect(utils.getOrder(orders, \"order4\").residual).to.eql(0);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/order",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: alice asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(1566);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(800);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: bob asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(6254);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Setup:\n\n1. Alice deposit 7820 HKD\n    \n2. Bob deposit 800 USD\n    \n\nOrders:\n\n1. Bob: limit buy order: buy 780 HKD with at most 100 USD\n    \n2. Alice: limit sell order: sell 7820 HKD for at least 1000 USD\n    \n    1. Order#1: CLEARED\n        \n    2. Order#2: ACTIVE with 7040 residual\n        \n    3. Alice's portfolio: 7040 HKD; 100 USD\n        \n    4. Bob's portfolio: 780 HKD; 700 USD\n        \n3. Bob: market buy order: buy 782 HKD with USD\n    \n    1. Order#2: ACTIVE with 6258 residual\n        \n    2. Order#3: CLEARED\n        \n    3. Alice's portfolio: 6258 HKD; 200 USD\n        \n    4. Bob's portfolio: 1562 HKD; 600 USD\n        \n4. Bob: market sell order: sell 600 USD for HKD\n    \n    1. Order#2: ACTIVE with 1566 residual\n        \n    2. Order#4: CLEARED\n        \n    3. Alice's portfolio: 1566 HKD; 800 USD\n        \n    4. Bob's portfolio: 6254 HKD; 0 USD\n        \n\nTarget rules to test:\n\n- Use rates favourable for late comers\n    \n- Do partial trades with multiple orders\n    \n\nTests:\n\n1. Order#1: CLEARED with 0 residual\n    \n2. Order#2: ACTIVE with 1566 residual\n    \n3. Order#3: CLEARED with 0 Residual\n    \n4. Order#4: CLEARED with 0 residual\n    \n5. Alice Portfolio: 1566 HKD; 800 USD\n    \n6. Bob Portfolio: 6254 HKD; 0 USD"
+				},
+				{
+					"name": "Case: match limit buy with limit buy favouring late comer",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 7850 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7850,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SETUP: bob deposit 1003.84 USD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1003.84,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit buy - buy 1000 USD with 7850 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order1\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"limit\": 7850,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - limit buy - buy 7850 HKD with 1003.84 USD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order2\", jsonData);",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 7850,\n  \"limit\": 1003.84,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"orders = pm.response.json();",
+											"",
+											"pm.test(\"both orders have been cleared\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+											"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+											"})",
+											"",
+											"pm.test(\"orders have 0 residual\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+											"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/order",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: alice asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: bob asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7850);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(3.84);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Setup:\n\n1. Alice deposit 7850 HKD\n    \n2. Bob deposit 1003.84 USD\n    \n\nOrders:\n\n1. Alice: Limit Buy: Buy 1000 USD with at most 7850 HKD (HKD:USD <= 7.85)\n    \n2. Bob: Limit Buy: Buy 7850 HKD with at most 1003.84 USD (HKD:USD >= 7.82)\n    \n\nRule:\n\n1. Rate should favour Bob (late comer)\n    \n\nTests:\n\n1. Order#1: CLEARED with 0 Residual\n    \n2. Order#2: CLEARED with 0 Residual\n    \n3. Alice Portfolio: 0 HKD; 1000 USD\n    \n4. Bob Portfolio: 7850 HKD; 3.84 USD"
+				},
+				{
+					"name": "Case: match buy & sell limit with a market sell",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 7850 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7850,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SETUP: bob deposit 1000 USD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit buy order - buy 500 USD with 3950 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order1\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 500,\n  \"limit\": 3950,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT:  alice - limit sell order - sell 7800 HKD for 1000 USD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order2\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 7800,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - market sell order - sell 1000 USD for HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order3\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"orders = pm.response.json();",
+											"",
+											"pm.test(\"both orders have correct status\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+											"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLOSED\");",
+											"    pm.expect(utils.getOrder(orders, \"order3\").orderStatus).to.eql(\"CLEARED\");",
+											"})",
+											"",
+											"pm.test(\"orders have correct residual\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+											"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(3900);",
+											"    pm.expect(utils.getOrder(orders, \"order3\").residual).to.eql(0);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/order",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: alice asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: bob asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7850);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(0);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Setup:\n\n1. Alice deposit 7850 HKD\n    \n2. Bob deposit 1000 USD\n    \n\nOrders:\n\n1. Alice Limit-Buy order: buy 500 USD with 3950 HKD\n    \n2. Alice limit sell order: sell 7800 HKD for 1000 USD\n    \n3. Bob market order: SELL 1000 USD for HKD\n    \n\nTests:\n\n1. Order#1: CLEARED with 0 Residual\n    \n2. Order#2: CLOSED with 3900 HKD (CLOSED because no more HKD left in Portfolio)\n    \n3. Order#3: CLEARED with 0 Residual\n    \n4. Alice Portfolio: 0 HKD; 1000 USD\n    \n5. Bob Portfolio: 7850 HKD; 0 USD"
+				},
+				{
+					"name": "Case: match earlier outstanding order first",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 5900 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 5900,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SETUP: bob deposit 1000 USD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit buy order - buy 500 USD with 3900 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order1\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 500,\n  \"limit\": 3900,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit buy order - buy 500 USD with 3900 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order2\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 500,\n  \"limit\": 3900,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - buy limit order - buy 5850 HKD with 750 USD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order3\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 5850,\n  \"limit\": 750,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"orders = pm.response.json();",
+											"",
+											"pm.test(\"both orders have correct status\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+											"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"ACTIVE\");",
+											"    pm.expect(utils.getOrder(orders, \"order3\").orderStatus).to.eql(\"CLEARED\");",
+											"})",
+											"",
+											"pm.test(\"orders have correct residual\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+											"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(250);",
+											"    pm.expect(utils.getOrder(orders, \"order3\").residual).to.eql(0);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/order",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: alice asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(50);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(750);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: bob asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(5850);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(250);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Setup:\n\n1. Alice deposit 5900 HKD\n    \n2. Bob deposit 1000 USD\n    \n\nOrders:\n\n1. Alice: Limit Buy order: buy 500 USD with 3900 HKD\n    \n2. Alice: Limit Buy order: buy 500 USD with 3900 HKD\n    \n3. Bob: Limit Buy order: buy 5850 HKD with 750 USD\n    \n\nTarget rules to test:\n\n- Prioritise older outstanding orders if they have same accept range in rates\n    \n- When placing limit orders, system only checks if user have sufficient fund, but doesn't lock the fund, so user can place multiple orders whose total base FX amount exceeds what the user has\n    \n\nTests:\n\n1. Order#1: CLEARED with 0 Residual\n    \n2. Order#2: ACTIVE with 250 USD residual\n    \n3. Order#3: CLEARED with 0 Residual\n    \n4. Alice Portfolio: 50 HKD; 750 USD\n    \n5. Bob Portfolio: 5850 HKD; 250 USD"
+				},
+				{
+					"name": "Case: don't match with order with unacceptable range",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 7800 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7800,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SETUP: bob deposit 1000 USD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit buy order - buy 500 USD with 3890 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order1\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 500,\n  \"limit\": 3890,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit buy order - buy 500 USD with 3910 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order2\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 500,\n  \"limit\": 3910,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - sell limit order - sell 1000 USD for 7800 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order3\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"orders = pm.response.json();",
+											"",
+											"pm.test(\"both orders have correct status\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"ACTIVE\");",
+											"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+											"    pm.expect(utils.getOrder(orders, \"order3\").orderStatus).to.eql(\"ACTIVE\");",
+											"})",
+											"",
+											"pm.test(\"orders have correct residual\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(500);",
+											"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+											"    pm.expect(utils.getOrder(orders, \"order3\").residual).to.eql(500);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/order",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: alice asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(3890);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(500);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: bob asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(3910);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(500);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Setup:\n\n1. Alice deposit 7800 HKD\n    \n2. Bob deposit 1000 USD\n    \n\nOrders:\n\n1. Alice: Limit Buy order: buy 500 USD with 3890 HKD\n    \n2. Alice: Limit Buy order: buy 500 USD with 3910 HKD\n    \n3. Bob: Limit Sell order: sell 1000 USD for 7800 HKD\n    \n\nTarget rules to test:\n\n- Should filter away outstanding limit orders that doesn' fall within acceptable range of new limit order\n    \n\nTests:\n\n1. Order#1: ACTIVE with 500 Residual\n    \n2. Order#2: CLEARED with 0 residual\n    \n3. Order#3: ACTIVE with 500 Residual\n    \n4. Alice Portfolio: 3890 HKD; 500 USD\n    \n5. Bob Portfolio: 3910 HKD; 500 USD"
+				},
+				{
+					"name": "Case: prioritise cheaper order and do partial trade on insufficient fund",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 5860 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 5860,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SETUP: bob deposit 1000 USD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 1000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit sell order - sell 3900 USD for 500 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order1\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 3900,\n  \"limit\": 500,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit buy order - buy 500 USD with 3910 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order2\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 500,\n  \"limit\": 3910,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - limit buy order - buy 7800 HKD with 1000 USD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order3\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 7800,\n  \"limit\": 1000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"orders = pm.response.json();",
+											"",
+											"pm.test(\"both orders have correct status\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLOSED\");",
+											"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLEARED\");",
+											"    pm.expect(utils.getOrder(orders, \"order3\").orderStatus).to.eql(\"ACTIVE\");",
+											"})",
+											"",
+											"pm.test(\"orders have correct residual\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(1950);",
+											"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(0);",
+											"    pm.expect(utils.getOrder(orders, \"order3\").residual).to.eql(1940);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/order",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: alice asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(750);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: bob asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(5860);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(250);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Setup:\n\n1. Alice deposit 5860 HKD\n    \n2. Bob deposit 1000 USD\n    \n\nOrders:\n\n1. Alice: Limit Sell order: sell 3900 HKD for 500 USD\n    \n2. Alice: Limit Buy order: buy 500 USD with 3910 HKD\n    \n3. Bob: Limit Buy order: buy 7800 HKD with 1000 USD\n    \n\nTarget rules to test:\n\n- Prioritise outstanding orders with better rates\n    \n- Do a partial trade even if any party doesn't have sufficient fund to clear the full amount the two orders would want to trade\n    \n- Close the partially traded order when owner has 0 fund left for the base FX\n    \n\nTests:\n\n1. Order#1: CLOSED with 1950 Residual\n    \n2. Order#2: CLEARED with 0 residual\n    \n3. Order#3: ACTIVE with 1940 Residual\n    \n4. Alice Portfolio: 0 HKD; 750 USD\n    \n5. Bob Portfolio: 5860 HKD; 250 USD"
+				},
+				{
+					"name": "Case: match 2 limit orders with market orders partially",
+					"item": [
+						{
+							"name": "SETUP: alice deposit 7850 HKD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"HKD\"\n    },\n    \"amount\": 7850,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SETUP: bob deposit 2000 USD",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency\": {\n        \"currencyCode\": \"USD\"\n    },\n    \"amount\": 2000,\n    \"transferType\": \"DEPOSIT\",\n    \"portfolio\": {\n        \"id\": \"{{portfolioId2}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/fund-transfer",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"fund-transfer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: alice - limit buy - buy 500 HKD with 3950 USD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order1\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 500,\n  \"limit\": 3950,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT:  alice - limit buy - buy 1000 USD with 7800 HKD",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order2\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"LIMIT\",\n  \"orderSide\": \"BUY\",\n  \"baseFx\": \"HKD\",\n  \"quoteFx\": \"USD\",\n  \"total\": 1000,\n  \"limit\": 7800,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ACT: bob - market sell",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"utils.setExpiryDateNDaysFromNow(7);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.globals.set(\"order3\", jsonData);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orderType\": \"MARKET\",\n  \"orderSide\": \"SELL\",\n  \"baseFx\": \"USD\",\n  \"quoteFx\": \"HKD\",\n  \"total\": 2000,\n  \"expiryDate\": \"{{expiryDate}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlPrefix}}/order/spot",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order",
+										"spot"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: orders",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"orders = pm.response.json();",
+											"",
+											"pm.test(\"both orders have correct status\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").orderStatus).to.eql(\"CLEARED\");",
+											"    pm.expect(utils.getOrder(orders, \"order2\").orderStatus).to.eql(\"CLOSED\");",
+											"    pm.expect(utils.getOrder(orders, \"order3\").orderStatus).to.eql(\"CLOSED\"); // Closed since no more limit orders",
+											"})",
+											"",
+											"pm.test(\"orders have correct residual\", () => {",
+											"    pm.expect(utils.getOrder(orders, \"order1\").residual).to.eql(0);",
+											"    pm.expect(utils.getOrder(orders, \"order2\").residual).to.eql(500);",
+											"    pm.expect(utils.getOrder(orders, \"order3\").residual).to.eql(1000);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/order",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: alice asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(0);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TEST: bob asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const portfolio = pm.response.json();",
+											"",
+											"pm.test(\"balance correct\", () => {",
+											"    pm.expect(utils.balance(portfolio, \"HKD\")).to.eql(7850);",
+											"    pm.expect(utils.balance(portfolio, \"USD\")).to.eql(1000);",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{urlPrefix}}/portfolio/{{portfolioId2}}",
+									"host": [
+										"{{urlPrefix}}"
+									],
+									"path": [
+										"portfolio",
+										"{{portfolioId2}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Setup:\n\n1. Alice portfolio: 7850 HKD\n    \n2. Bob portfolio: 2000 USD\n    \n\nOrders:\n\n1. Alice Limit-Buy order: Buy 500 USD; Sell <= 3950 HKD\n    \n2. Alice Limit-Buy order: Buy 1000 USD; Sell <= 7800 HKD\n    \n3. Bob Market-Sell order: SELL 2000 USD for HKD\n    \n\nTests:\n\n1. Order#1 - CLEARED - With 0 residual\n    \n2. Order#2 - CLOSED - With 500 residual\n    \n3. Order#3 - CLOSED - With 1000 residual\n    \n4. Alice porfolio: 0 HKD; 1000 USD\n    \n5. Bob portfolio: 7850 HKD; 1000 USD"
+				}
+			],
+			"description": "Each folder is a test case. You can click a folder and run all items inside with one button click.\n\nNotes:\n\n- Make sure `alice` and `bob` are already signed up, and logged in (their tokens will be stored when they are logged in, respectively.)\n    \n- Clear the `order` and `asset` table in the database before each test case",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "trade",
+			"item": [
+				{
+					"name": "find-trade-by-portfolio-id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{Token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const URL_PREFIX = pm.collectionVariables.get(\"urlPrefix\");",
+					"",
+					"userDict = {",
+					"    alice: {",
+					"        id: pm.collectionVariables.get(\"userId\"),",
+					"        portfolioId: pm.collectionVariables.get(\"portfolioId\"),",
+					"        token: pm.collectionVariables.get(\"Token\"),",
+					"    },",
+					"    bob: {",
+					"        id: pm.collectionVariables.get(\"userId2\"),",
+					"        portfolioId: pm.collectionVariables.get(\"portfolioId2\"),",
+					"        token: pm.collectionVariables.get(\"Token2\"),",
+					"    }",
+					"}",
+					"",
+					"utils = {",
+					"    getOrder: (orders, orderName) => {",
+					"        const order = pm.globals.get(orderName);",
+					"        return orders.filter((o) => o.id == order.id)[0];",
+					"    },",
+					"",
+					"    setExpiryDateNDaysFromNow: (numOfDays) => {",
+					"        const expiryDate = new Date();",
+					"        expiryDate.setDate(expiryDate.getDate() + numOfDays);",
+					"        pm.collectionVariables.set(\"expiryDate\", expiryDate.toISOString());",
+					"    },",
+					"",
+					"    depositReq: (username, amount, currencyCode) => {",
+					"        return {",
+					"            url: URL_PREFIX + \"/fund-transfer\",",
+					"            method: \"POST\",",
+					"            header: {",
+					"                'Content-Type': 'application/json',",
+					"                \"Authorization\": `Bearer ${userDict[username].token}`",
+					"            },",
+					"            body: {",
+					"                mode: \"raw\",",
+					"                raw: JSON.stringify({",
+					"                    \"currency\": {",
+					"                        \"currencyCode\": currencyCode,",
+					"                    },",
+					"                    \"amount\": amount,",
+					"                    \"transferType\": \"DEPOSIT\",",
+					"                    \"portfolio\": {",
+					"                        \"id\": `${userDict[username].portfolioId}`",
+					"                    }",
+					"                })",
+					"            }",
+					"        }",
+					"    },",
+					"",
+					"    balance: (portfolio, currencyCode) => {",
+					"        return portfolio.assets.filter((a) => a.currency.currencyCode === currencyCode)[0].balance;",
+					"    }",
+					"",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Token",
+			"value": ""
+		},
+		{
+			"key": "Token2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "portfolioId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "portfolioId2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "expiryDate",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "urlPrefix",
+			"value": "http://localhost:8080/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "orderId1",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "orderId2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "orderId3",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "order1",
+			"value": ""
+		},
+		{
+			"key": "order2",
+			"value": ""
+		},
+		{
+			"key": "order3",
+			"value": ""
+		}
+	]
+}
