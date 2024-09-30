@@ -11,6 +11,7 @@ import org.mockito.*;
 
 import com.fdmgroup.forex.models.Order;
 import com.fdmgroup.forex.models.Trade;
+import com.fdmgroup.forex.models.dto.TradeHistoryResponseDTO;
 import com.fdmgroup.forex.repos.TradeRepo;
 
 public class TradeServiceTest {
@@ -97,7 +98,7 @@ public class TradeServiceTest {
             new Trade(UUID.randomUUID(), new Order(), 150.0, 300.0)
         );
         when(tradeRepo.findByOrder_Portfolio_Id(portfolioId)).thenReturn(expectedTrades);
-        List<Trade> actualTrades = tradeService.findTradesByPortfolioId(portfolioId);
+        List<TradeHistoryResponseDTO> actualTrades = tradeService.findTradesByPortfolioId(portfolioId);
 
         assertEquals(expectedTrades, actualTrades, "List of trades should match");
         verify(tradeRepo).findByOrder_Portfolio_Id(portfolioId);
@@ -106,7 +107,7 @@ public class TradeServiceTest {
     @Test
     void testFindTradesByPortfolioId_ReturnsEmptyList_WhenNoTradesFound() {
         when(tradeRepo.findByOrder_Portfolio_Id(portfolioId)).thenReturn(Collections.emptyList());
-        List<Trade> actualTrades = tradeService.findTradesByPortfolioId(portfolioId);
+        List<TradeHistoryResponseDTO> actualTrades = tradeService.findTradesByPortfolioId(portfolioId);
 
         assertTrue(actualTrades.isEmpty(), "List of trades should be empty");
         verify(tradeRepo).findByOrder_Portfolio_Id(portfolioId);
@@ -115,7 +116,7 @@ public class TradeServiceTest {
     @Test
     void testFindTradesByPortfolioId_HandlesNullPortfolioId() {
         when(tradeRepo.findByOrder_Portfolio_Id(null)).thenReturn(Collections.emptyList());
-        List<Trade> actualTrades = tradeService.findTradesByPortfolioId(null);
+        List<TradeHistoryResponseDTO> actualTrades = tradeService.findTradesByPortfolioId(null);
 
         assertTrue(actualTrades.isEmpty(), "List of trades should be empty");
         verify(tradeRepo).findByOrder_Portfolio_Id(null);

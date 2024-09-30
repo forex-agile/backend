@@ -1,10 +1,13 @@
 package com.fdmgroup.forex.services;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.fdmgroup.forex.models.*;
+import com.fdmgroup.forex.models.Order;
+import com.fdmgroup.forex.models.Trade;
+import com.fdmgroup.forex.models.dto.TradeHistoryResponseDTO;
 import com.fdmgroup.forex.repos.TradeRepo;
 
 @Service
@@ -34,8 +37,9 @@ public class TradeService {
         }
     }
 
-    public List<Trade> findTradesByPortfolioId(UUID id) {
-        return tradeRepo.findByOrder_Portfolio_Id(id);
+    public List<TradeHistoryResponseDTO> findTradesByPortfolioId(UUID id) {
+        return tradeRepo.findByOrder_Portfolio_Id(id).stream().map(TradeHistoryResponseDTO::new).toList();
+        
     }
 
 }
