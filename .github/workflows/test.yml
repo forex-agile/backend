@@ -19,15 +19,17 @@ jobs:
         DB_USER: root
         DB_PASSWORD: 'root'
         DB_HOST: localhost
+        SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        CORS_ALLOWED_ORIGINS: http://localhost:5173
         DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
         DATASOURCE_URL: jdbc:mysql://localhost:3306/pending
-        DATASOURCE_BRAND: MYSQL
         DATASOURCE_USERNAME: root
         DATASOURCE_PASSWORD: 'root'
+        DATASOURCE_BRAND: MYSQL
         FOREX_DEFAULT_ROLE: ${{ secrets.FOREX_DEFAULT_ROLE }}
+        FOREX_DEFAULT_CURRENCY_CODE: USD
+        FOREX_DEFAULT_CURRENCY_NAME: US Dollar
         FXRATES_API_KEY: ${{ secrets.FXRATES_API_KEY}}
-        SERVER_PORT: ${{ secrets.SERVER_PORT }}
-
 
     steps:
     - name: Start MySQL and create database
@@ -51,14 +53,25 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+    
+    - name: Create key files
+      run: |
+        echo "${{ secrets.PUBLIC_KEY }}" > public.pem
+        echo "${{ secrets.PRIVATE_KEY }}" > private.pem
         
     - name: Build Spring Boot app using Maven
       run: mvn clean install -P prod
+      env:
+          RSA_PUBLIC_KEY_PATH: public.pem
+          RSA_PRIVATE_KEY_PATH: private.pem
 
     - name: Run Spring Boot app
       run: |
         nohup mvn spring-boot:run -P prod > spring-boot.log 2>&1 &
         sleep 30
+      env:
+          RSA_PUBLIC_KEY_PATH: public.pem
+          RSA_PRIVATE_KEY_PATH: private.pem
       
     - name: Upload Spring Boot Logs
       uses: actions/upload-artifact@v4
