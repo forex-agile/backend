@@ -22,6 +22,12 @@ jobs:
         DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
         DATASOURCE_URL: jdbc:mysql://localhost:3306/pending
         DATASOURCE_BRAND: MYSQL
+        DATASOURCE_USERNAME: root
+        DATASOURCE_PASSWORD: 'root'
+        FOREX_DEFAULT_ROLE: ${{ secrets.FOREX_DEFAULT_ROLE }}
+        FXRATES_API_KEY: ${{ secrets.FXRATES_API_KEY}}
+        SERVER_PORT: ${{ secrets.SERVER_PORT }}
+
 
     steps:
     - name: Start MySQL and create database
