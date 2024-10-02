@@ -49,3 +49,21 @@ To change the Maven profile for an existing project:
 1. Right click on the project in the Project Explorer and click `Properties`
 2. In `Maven` tab, fill in the desired profile in `Active Maven Profiles`
 3. `Apply`
+
+## Building a docker image locally and run it
+
+First, follow step 1 **and** 3 from [How To Run](#how-to-run) section, to set up
+the `.env` and generate a pair of RSA keys.
+
+Then to use H2 memory as database:
+
+```bash
+mvn clean package -P "ci-h2"
+docker build -t <docker-image-name> .
+docker run --env-file src/main/resources/.env --env RSA_PUBLIC_KEY="$(cat src/main/resources/certs/public.pem)" --env RSA_PRIVATE_KEY="$(cat src/main/resources/certs/private.pem)" -p <host-port>:<container-port> --rm <docker-image-name>
+```
+
+Here, `<container-port>` is the port the application inside the container runs
+on, which should be the same as `SERVER_PORT` in the `.env` file. `<host-port>`
+defines the port on the host machine that the container port should be mapped
+to.
