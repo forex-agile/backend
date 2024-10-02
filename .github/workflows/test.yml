@@ -29,6 +29,8 @@ jobs:
         FOREX_DEFAULT_ROLE: ${{ secrets.FOREX_DEFAULT_ROLE }}
         FOREX_DEFAULT_CURRENCY_CODE: USD
         FOREX_DEFAULT_CURRENCY_NAME: US Dollar
+        FXRATES_API_BASE_URL: https://v6.exchangerate-api.com/v6/
+        FXRATES_API_USD_URL: https://open.er-api.com/v6/latest/USD
         FXRATES_API_KEY: ${{ secrets.FXRATES_API_KEY}}
 
     steps:
