@@ -86,11 +86,11 @@ jobs:
         npm install -g newman
         npm install -g newman-reporter-html
 
-    - name: Run Postman Collection and Generate Report
-      run: newman run postman/Forex-Agile.postman_collection.json --reporters cli,html --reporter-html-export newman-report.html
+    # - name: Run Postman Collection and Generate Report
+    #   run: newman run postman/Forex-Agile.postman_collection.json --reporters cli,html --reporter-html-export newman-report.html
 
-    - name: Upload HTML Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: newman-report
-        path: newman-report.html
+    # - name: Upload HTML Report
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: newman-report
+    #     path: newman-report.html
